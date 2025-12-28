@@ -16,9 +16,7 @@ struct RecipeView: View {
             )
             
             Form {
-                Section("Info") {
-                    Text("Test")
-                }
+                MacrosView()
             }
         }
     }
@@ -27,3 +25,4 @@ struct RecipeView: View {
 #Preview {
     RecipeView()
 }
+
