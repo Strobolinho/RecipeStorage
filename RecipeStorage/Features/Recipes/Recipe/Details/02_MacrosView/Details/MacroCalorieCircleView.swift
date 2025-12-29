@@ -12,7 +12,7 @@ struct MacroCalorieCircleView: View {
     let protein: Int
     let carbs: Int
     let fats: Int
-    let additionalCalories: Int
+    let customCalories: Int
     
     var calories: Int {
         Int(
@@ -54,7 +54,11 @@ struct MacroCalorieCircleView: View {
             )
             
             VStack {
-                Text("\(calories + additionalCalories)")
+                if customCalories > 0 {
+                    Text("\(customCalories)")
+                } else {
+                    Text("\(calories)")
+                }
                 Text("kcal")
             }
         }
@@ -67,7 +71,7 @@ struct MacroCalorieCircleView: View {
         protein: 148,
         carbs: 188,
         fats: 77,
-        additionalCalories: 0
+        customCalories: 0
     )
 }
 

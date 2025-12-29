@@ -11,10 +11,12 @@ struct MacroDetailView: View {
     
     let macroName: String
     let macroAmount: Int
+    let color: Color
     
     var body: some View {
         VStack {
             Text(macroName)
+                .foregroundStyle(color)
             Text("\(macroAmount) g")
         }
     }
@@ -22,6 +24,6 @@ struct MacroDetailView: View {
 
 #Preview {
     MacroDetailView(
-        macroName: "Protein", macroAmount: 78
+        macroName: "Protein", macroAmount: 78, color: .protein
     )
 }

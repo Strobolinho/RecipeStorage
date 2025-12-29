@@ -16,20 +16,20 @@ struct MacrosView: View {
                     protein: 148,
                     carbs: 188,
                     fats: 77,
-                    additionalCalories: 0
+                    customCalories: 0
                 )
                 
                 Spacer()
                 
-                MacroDetailView(macroName: "Protein", macroAmount: 78)
+                MacroDetailView(macroName: "Protein", macroAmount: 78, color: .protein)
                 
                 Spacer()
                 
-                MacroDetailView(macroName: "Carbs", macroAmount: 150)
+                MacroDetailView(macroName: "Carbs", macroAmount: 150, color: .carbs)
                 
                 Spacer()
                 
-                MacroDetailView(macroName: "Fats", macroAmount: 45)
+                MacroDetailView(macroName: "Fats", macroAmount: 45, color: .fats)
             }
         }
     }
