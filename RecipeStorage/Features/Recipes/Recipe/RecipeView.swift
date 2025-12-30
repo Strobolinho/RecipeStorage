@@ -8,21 +8,26 @@
 import SwiftUI
 
 struct RecipeView: View {
+    
+    let recipe: Recipe
+    
     var body: some View {
         VStack {
             RecipeTopImageView(
-                image: "lasagna",
-                name: "Lasagne"
+                image: recipe.imageName,
+                name: recipe.name
             )
             
             Form {
-                MacrosView()
+                MacrosView(recipe: recipe)
             }
         }
+        .navigationTitle(recipe.name)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    RecipeView()
+    RecipeView(recipe: mockRecipes[0])
 }
 

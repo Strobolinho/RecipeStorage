@@ -9,19 +9,10 @@ import SwiftUI
 
 struct MacroCalorieCircleView: View {
     
-    let protein: Int
-    let carbs: Int
-    let fats: Int
-    let customCalories: Int
-    
-    var calories: Int {
-        Int(
-            (Double(protein + carbs) * 4.1) + (Double(fats) * 9.3)
-        )
-    }
+    let recipe: Recipe
     
     func calcMacroPercentage(amount: Int, multiplier: Double) -> Double {
-        return ((Double(amount) * multiplier) / Double(calories))
+        return ((Double(amount) * multiplier) / Double(recipe.calories))
     }
     
     var body: some View {
@@ -30,34 +21,34 @@ struct MacroCalorieCircleView: View {
             RingSegment(
                 start: 0.005,
                 end: calcMacroPercentage(
-                    amount: protein,
+                    amount: recipe.protein,
                     multiplier: 4.1) - 0.005,
                 color: .protein
             )
             
             RingSegment(
                 start: calcMacroPercentage(
-                    amount: protein,
+                    amount: recipe.protein,
                     multiplier: 4.1) + 0.005,
                 end: calcMacroPercentage(
-                    amount: protein + carbs,
+                    amount: recipe.protein + recipe.carbs,
                     multiplier: 4.1) - 0.005,
                 color: .carbs
             )
             
             RingSegment(
                 start: calcMacroPercentage(
-                    amount: protein + carbs,
+                    amount: recipe.protein + recipe.carbs,
                     multiplier: 4.1) + 0.005,
                 end: 0.995,
                 color: .fats
             )
             
             VStack {
-                if customCalories > 0 {
-                    Text("\(customCalories)")
+                if recipe.customCalories > 0 {
+                    Text("\(recipe.customCalories)")
                 } else {
-                    Text("\(calories)")
+                    Text("\(recipe.calories)")
                 }
                 Text("kcal")
             }
@@ -67,12 +58,7 @@ struct MacroCalorieCircleView: View {
 }
 
 #Preview {
-    MacroCalorieCircleView(
-        protein: 148,
-        carbs: 188,
-        fats: 77,
-        customCalories: 0
-    )
+    MacroCalorieCircleView(recipe: mockRecipes[0])
 }
 
 

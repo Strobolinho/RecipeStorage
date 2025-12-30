@@ -9,32 +9,30 @@ import SwiftUI
 
 
 struct MacrosView: View {
+    
+    let recipe: Recipe
+    
     var body: some View {
         Section("Macros") {
             HStack {
-                MacroCalorieCircleView(
-                    protein: 148,
-                    carbs: 188,
-                    fats: 77,
-                    customCalories: 0
-                )
+                MacroCalorieCircleView(recipe: recipe)
                 
                 Spacer()
                 
-                MacroDetailView(macroName: "Protein", macroAmount: 78, color: .protein)
+                MacroDetailView(macroName: "Protein", macroAmount: recipe.protein, color: .protein)
                 
                 Spacer()
                 
-                MacroDetailView(macroName: "Carbs", macroAmount: 150, color: .carbs)
+                MacroDetailView(macroName: "Carbs", macroAmount: recipe.carbs, color: .carbs)
                 
                 Spacer()
                 
-                MacroDetailView(macroName: "Fats", macroAmount: 45, color: .fats)
+                MacroDetailView(macroName: "Fats", macroAmount: recipe.fats, color: .fats)
             }
         }
     }
 }
 
 #Preview {
-    MacrosView()
+    MacrosView(recipe: mockRecipes[0])
 }

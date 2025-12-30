@@ -8,10 +8,26 @@
 import SwiftUI
 
 struct RecipesView: View {
+
+    let recipes: [Recipe] = mockRecipes
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 16) {
+                ForEach(recipes) { recipe in
+                    NavigationLink {
+                        RecipeView(recipe: recipe)
+                    } label: {
+                        RecipeCardView(recipe: recipe)
+                    }
+                }
+            }
+            .padding(.horizontal)
+        }
+        .frame(height: 260)
     }
 }
+
 
 #Preview {
     RecipesView()
