@@ -22,7 +22,7 @@ struct HorizontalRecipeScrollbarView: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 16) {
-                    ForEach(recipes) { recipe in
+                    ForEach(recipes.sorted { $0.name < $1.name }) { recipe in
                         NavigationLink {
                             RecipeView(recipe: recipe)
                         } label: {
