@@ -22,8 +22,6 @@ struct RecipeView: View {
                 MacrosView(recipe: recipe)
             }
         }
-        .navigationTitle(recipe.name)
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

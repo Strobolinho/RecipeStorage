@@ -10,9 +10,7 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            NavigationStack {
-                    RecipesView()
-                }
+            RecipesView()
                 .tabItem {
                     Label("Rezepte", systemImage: "book")
                 }

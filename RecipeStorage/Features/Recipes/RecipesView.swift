@@ -12,19 +12,21 @@ struct RecipesView: View {
     let recipes: [Recipe] = mockRecipes
 
     var body: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: 16) {
-                ForEach(recipes) { recipe in
-                    NavigationLink {
-                        RecipeView(recipe: recipe)
-                    } label: {
-                        RecipeCardView(recipe: recipe)
+        NavigationStack {
+            ScrollView(.horizontal) {
+                LazyHStack(spacing: 16) {
+                    ForEach(recipes) { recipe in
+                        NavigationLink {
+                            RecipeView(recipe: recipe)
+                        } label: {
+                            RecipeCardView(recipe: recipe)
+                        }
                     }
                 }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .frame(height: 260)
         }
-        .frame(height: 260)
     }
 }
 
