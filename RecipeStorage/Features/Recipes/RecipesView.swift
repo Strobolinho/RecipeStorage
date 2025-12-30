@@ -13,19 +13,33 @@ struct RecipesView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView(.horizontal) {
-                LazyHStack(spacing: 16) {
-                    ForEach(recipes) { recipe in
-                        NavigationLink {
-                            RecipeView(recipe: recipe)
-                        } label: {
-                            RecipeCardView(recipe: recipe)
-                        }
+            ScrollView(.vertical) {
+                HorizontalRecipeScrollbarView(
+                    title: "Alle Rezepte 🍽️",
+                    recipes: recipes
+                )
+                
+                HorizontalRecipeScrollbarView(
+                    title: "Proteinreich 💪",
+                    recipes: recipes.filter { recipe in
+                        recipe.protein >= 150
                     }
-                }
-                .padding(.horizontal)
+                )
+                
+                HorizontalRecipeScrollbarView(
+                    title: "Kalorienarm 🔥",
+                    recipes: recipes.filter { recipe in
+                        (recipe.calories / recipe.servings) < 600
+                    }
+                )
+                
+                HorizontalRecipeScrollbarView(
+                    title: "Low Carb 🚫🍞",
+                    recipes: recipes.filter { recipe in
+                        recipe.carbs < 120
+                    }
+                )
             }
-            .frame(height: 260)
         }
     }
 }
