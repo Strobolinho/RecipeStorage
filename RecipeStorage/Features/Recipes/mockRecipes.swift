@@ -233,6 +233,119 @@ let mockRecipes: [Recipe] = [
             "Mit Kokosmilch und Gewürzen köcheln lassen.",
             "Mit Reis servieren."
         ]
+    ),
+    
+    Recipe(
+        name: "Hähnchen mit Quinoa & Gemüse",
+        imageName: "chickenQuinoa",
+        servings: 2,
+        duration: 30,
+        protein: 140,
+        carbs: 90,
+        fats: 30,
+        customCalories: 0,
+        ingredients: [
+            Ingredient(name: "Hähnchenbrust", amount: 400, unit: "g"),
+            Ingredient(name: "Quinoa", amount: 120, unit: "g"),
+            Ingredient(name: "Paprika", amount: 1, unit: "pcs"),
+            Ingredient(name: "Zucchini", amount: 1, unit: "pcs"),
+            Ingredient(name: "Olivenöl", amount: 1, unit: "tbsp")
+        ],
+        spices: [
+            Spice(name: "Salz", amount: 1, unit: "tsp"),
+            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
+            Spice(name: "Paprikapulver", amount: 1, unit: "tsp")
+        ],
+        steps: [
+            "Quinoa nach Packungsanweisung kochen.",
+            "Hähnchenbrust anbraten und würzen.",
+            "Gemüse schneiden und kurz mitbraten.",
+            "Alles zusammen servieren."
+        ]
+    ),
+    
+    Recipe(
+        name: "Lachs mit Ofengemüse",
+        imageName: "salmonVeggies",
+        servings: 2,
+        duration: 25,
+        protein: 120,
+        carbs: 60,
+        fats: 70,
+        customCalories: 0,
+        ingredients: [
+            Ingredient(name: "Lachsfilet", amount: 350, unit: "g"),
+            Ingredient(name: "Brokkoli", amount: 300, unit: "g"),
+            Ingredient(name: "Karotten", amount: 200, unit: "g"),
+            Ingredient(name: "Olivenöl", amount: 1, unit: "tbsp")
+        ],
+        spices: [
+            Spice(name: "Salz", amount: 1, unit: "tsp"),
+            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
+            Spice(name: "Zitronenpfeffer", amount: 1, unit: "tsp")
+        ],
+        steps: [
+            "Backofen auf 200°C vorheizen.",
+            "Gemüse schneiden und würzen.",
+            "Lachs salzen und auf das Blech legen.",
+            "Alles im Ofen garen."
+        ]
+    ),
+    
+    Recipe(
+        name: "Zucchini-Nudeln mit Garnelen",
+        imageName: "zucchiniShrimp",
+        servings: 2,
+        duration: 20,
+        protein: 90,
+        carbs: 40,
+        fats: 35,
+        customCalories: 0,
+        ingredients: [
+            Ingredient(name: "Garnelen", amount: 300, unit: "g"),
+            Ingredient(name: "Zucchini", amount: 3, unit: "pcs"),
+            Ingredient(name: "Knoblauch", amount: 2, unit: "pcs"),
+            Ingredient(name: "Olivenöl", amount: 1, unit: "tbsp")
+        ],
+        spices: [
+            Spice(name: "Salz", amount: 1, unit: "tsp"),
+            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
+            Spice(name: "Chiliflocken", amount: 1, unit: "pinch")
+        ],
+        steps: [
+            "Zucchini spiralisieren.",
+            "Garnelen scharf anbraten.",
+            "Knoblauch kurz mitbraten.",
+            "Zucchini unterheben und servieren."
+        ]
+    ),
+
+    Recipe(
+        name: "Omelette mit Spinat & Feta",
+        imageName: "omeletteSpinach",
+        servings: 1,
+        duration: 15,
+        protein: 45,
+        carbs: 12,
+        fats: 40,
+        customCalories: 0,
+        ingredients: [
+            Ingredient(name: "Eier", amount: 3, unit: "pcs"),
+            Ingredient(name: "Feta", amount: 80, unit: "g"),
+            Ingredient(name: "Spinat", amount: 100, unit: "g"),
+            Ingredient(name: "Butter", amount: 1, unit: "tbsp")
+        ],
+        spices: [
+            Spice(name: "Salz", amount: 1, unit: "tsp"),
+            Spice(name: "Pfeffer", amount: 1, unit: "tsp")
+        ],
+        steps: [
+            "Eier verquirlen und würzen.",
+            "Spinat kurz anbraten.",
+            "Eier hinzugeben und stocken lassen.",
+            "Feta darüber bröseln."
+        ]
     )
+
 
 ]

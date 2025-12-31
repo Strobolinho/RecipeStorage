@@ -17,22 +17,29 @@ struct HorizontalRecipeScrollbarView: View {
             Text(title)
                 .font(.title2)
                 .fontWeight(.bold)
-                .padding(.horizontal)
                 .foregroundStyle(.brandPrimary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 16) {
-                    ForEach(recipes.sorted { $0.name < $1.name }) { recipe in
-                        NavigationLink {
-                            RecipeView(recipe: recipe)
-                        } label: {
-                            RecipeCardView(recipe: recipe)
+
+            if recipes.count > 0 {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(spacing: 16) {
+                        ForEach(recipes.sorted { $0.name < $1.name }) { recipe in
+                            NavigationLink {
+                                RecipeView(recipe: recipe)
+                            } label: {
+                                RecipeCardView(recipe: recipe)
+                            }
                         }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
+                .frame(height: 220)
+            } else {
+                Text("Keine Rezepte verfügbar...")
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
-            .frame(height: 220)
         }
         .padding(.vertical)
     }

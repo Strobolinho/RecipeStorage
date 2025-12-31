@@ -20,7 +20,14 @@ struct RecipeView: View {
             
             Form {
                 MacrosView(recipe: recipe)
+                
+                IngredientListView(recipe: recipe)
+                
+                SpiceListView(recipe: recipe)
+                
+                StepsListView(recipe: recipe)
             }
+            
         }
     }
 }
@@ -28,4 +35,3 @@ struct RecipeView: View {
 #Preview {
     RecipeView(recipe: mockRecipes[0])
 }
-

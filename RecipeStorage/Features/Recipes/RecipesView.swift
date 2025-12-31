@@ -22,12 +22,12 @@ struct RecipesView: View {
                 HorizontalRecipeScrollbarView(
                     title: "Proteinreich 💪",
                     recipes: recipes.filter { recipe in
-                        recipe.protein >= 150
+                        ((Double(recipe.protein) / Double(recipe.calories)) * 10 ) >= 0.75
                     }
                 )
                 
                 HorizontalRecipeScrollbarView(
-                    title: "Kalorienarm 🔥",
+                    title: "Kalorienarm 🥗",
                     recipes: recipes.filter { recipe in
                         (recipe.calories / recipe.servings) < 600
                     }
@@ -36,7 +36,14 @@ struct RecipesView: View {
                 HorizontalRecipeScrollbarView(
                     title: "Low Carb 🚫🍞",
                     recipes: recipes.filter { recipe in
-                        recipe.carbs < 120
+                        (recipe.carbs / recipe.servings) < 30
+                    }
+                )
+                
+                HorizontalRecipeScrollbarView(
+                    title: "Low Fat 🚫🥑",
+                    recipes: recipes.filter { recipe in
+                        (recipe.fats / recipe.servings) < 15
                     }
                 )
             }
