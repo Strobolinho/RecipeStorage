@@ -41,7 +41,7 @@ struct HorizontalRecipeScrollbarView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
             }
         }
-        .padding(.vertical)
+        .padding(.vertical, 2)
     }
 }
 

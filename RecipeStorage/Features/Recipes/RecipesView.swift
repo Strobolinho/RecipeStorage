@@ -13,39 +13,43 @@ struct RecipesView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView(.vertical) {
-                HorizontalRecipeScrollbarView(
-                    title: "Alle Rezepte 🍽️",
-                    recipes: recipes
-                )
+            ZStack {
+                ScrollView(.vertical) {
+                    HorizontalRecipeScrollbarView(
+                        title: "Alle Rezepte 🍽️",
+                        recipes: recipes
+                    )
+                    
+                    HorizontalRecipeScrollbarView(
+                        title: "Proteinreich 💪",
+                        recipes: recipes.filter { recipe in
+                            ((Double(recipe.protein) / Double(recipe.calories)) * 10 ) >= 0.75
+                        }
+                    )
+                    
+                    HorizontalRecipeScrollbarView(
+                        title: "Kalorienarm 🥗",
+                        recipes: recipes.filter { recipe in
+                            (recipe.calories / recipe.servings) < 600
+                        }
+                    )
+                    
+                    HorizontalRecipeScrollbarView(
+                        title: "Low Carb 🚫🍞",
+                        recipes: recipes.filter { recipe in
+                            (recipe.carbs / recipe.servings) < 30
+                        }
+                    )
+                    
+                    HorizontalRecipeScrollbarView(
+                        title: "Low Fat 🚫🥑",
+                        recipes: recipes.filter { recipe in
+                            (recipe.fats / recipe.servings) < 15
+                        }
+                    )
+                }
                 
-                HorizontalRecipeScrollbarView(
-                    title: "Proteinreich 💪",
-                    recipes: recipes.filter { recipe in
-                        ((Double(recipe.protein) / Double(recipe.calories)) * 10 ) >= 0.75
-                    }
-                )
-                
-                HorizontalRecipeScrollbarView(
-                    title: "Kalorienarm 🥗",
-                    recipes: recipes.filter { recipe in
-                        (recipe.calories / recipe.servings) < 600
-                    }
-                )
-                
-                HorizontalRecipeScrollbarView(
-                    title: "Low Carb 🚫🍞",
-                    recipes: recipes.filter { recipe in
-                        (recipe.carbs / recipe.servings) < 30
-                    }
-                )
-                
-                HorizontalRecipeScrollbarView(
-                    title: "Low Fat 🚫🥑",
-                    recipes: recipes.filter { recipe in
-                        (recipe.fats / recipe.servings) < 15
-                    }
-                )
+                NewRecipeButtonView()
             }
         }
     }
@@ -55,3 +59,5 @@ struct RecipesView: View {
 #Preview {
     RecipesView()
 }
+
+
