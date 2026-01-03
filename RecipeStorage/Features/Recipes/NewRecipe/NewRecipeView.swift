@@ -15,13 +15,13 @@ struct NewRecipeView: View {
         Form {
             ImageView()
             
-            BasicsView()
+            BasicsView(viewModel: viewModel)
             
-            SetMacrosView()
+            SetMacrosView(viewModel: viewModel)
             
-            AddIngredientsView()
+            AddIngredientsButtonView(viewModel: viewModel)
             
-            AddSpicesView()
+            AddSpicesButtonView(viewModel: viewModel)
         }
         .navigationTitle("New Recipe")
     }
@@ -30,3 +30,5 @@ struct NewRecipeView: View {
 #Preview {
     NewRecipeView()
 }
+
+

@@ -26,10 +26,7 @@ final class NewRecipeViewModel: ObservableObject {
     @Published var customCalories: Int? = nil
 
     // Ingredients
-    @Published var ingredients: [Ingredient] = [
-        Ingredient(name: "Test", amount: 11, unit: "g"),
-        Ingredient(name: "Hack", amount: 1, unit: "kg")
-    ]
+    @Published var ingredients: [Ingredient] = []
 
     // New Ingredient Inputs
     @Published var ingredientName: String = ""
@@ -42,10 +39,7 @@ final class NewRecipeViewModel: ObservableObject {
     
     
     // Ingredients
-    @Published var spices: [Spice] = [
-        Spice(name: "Salz", amount: 1, unit: "EL"),
-        Spice(name: "Pfeffer", amount: 3, unit: "TL")
-    ]
+    @Published var spices: [Spice] = []
     
     // New Spice Inputs
     @Published var spiceName: String = ""

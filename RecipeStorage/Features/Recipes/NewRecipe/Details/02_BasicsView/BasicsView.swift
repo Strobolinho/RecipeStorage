@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BasicsView: View {
     
-    @StateObject private var viewModel = NewRecipeViewModel()
+    @ObservedObject var viewModel: NewRecipeViewModel
     
     var body: some View {
         
@@ -27,6 +27,6 @@ struct BasicsView: View {
 
 #Preview {
     Form {
-        BasicsView()
+        BasicsView(viewModel: NewRecipeViewModel())
     }
 }

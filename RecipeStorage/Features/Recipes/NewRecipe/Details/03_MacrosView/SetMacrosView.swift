@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SetMacrosView: View {
     
-    @StateObject private var viewModel = NewRecipeViewModel()
+    @ObservedObject  var viewModel: NewRecipeViewModel
     
     var body: some View {
         
@@ -42,6 +42,6 @@ struct SetMacrosView: View {
 
 #Preview {
     Form {
-        SetMacrosView()
+        SetMacrosView(viewModel: NewRecipeViewModel())
     }
 }
