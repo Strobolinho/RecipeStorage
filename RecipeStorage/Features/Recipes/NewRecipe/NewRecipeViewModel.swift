@@ -49,6 +49,9 @@ final class NewRecipeViewModel: ObservableObject {
     @Published var spiceUnits: [String] = ["Custom Unit", "TL", "EL", "Prise"]
     @Published var newSpiceUnit: String = ""
     
+    // Steps
+    @Published var steps: [String] = []
+    @Published var step: String = ""
     
     var calories: Int {
         let p = Double(protein ?? 0)
@@ -56,6 +59,25 @@ final class NewRecipeViewModel: ObservableObject {
         let f = Double(fats ?? 0)
         let total = (p + c) * 4.1 + f * 9.3
         return Int(total)
+    }
+    
+    
+    var isValid: Bool {
+        guard
+            !name.trimmingCharacters(in: .whitespaces).isEmpty,
+            let servings, servings > 0,
+            // image
+            let duration, duration >= 0,
+            let protein, protein >= 0,
+            let carbs, carbs >= 0,
+            let fats, fats >= 0,
+            !ingredients.isEmpty,
+            !steps.isEmpty
+        else {
+            return false
+        }
+        
+        return true
     }
     
     
@@ -110,6 +132,12 @@ final class NewRecipeViewModel: ObservableObject {
     
     func deleteSpice(_ spice: Spice) {
         spices.removeAll { $0.id == spice.id }
+    }
+    
+    
+    func deleteStep(at index: Int) {
+        guard steps.indices.contains(index) else { return }
+        steps.remove(at: index)
     }
 }
 

@@ -24,7 +24,7 @@ struct Recipe: Identifiable {
             (4.1 * Double(protein + carbs)) + (9.3 * Double(fats))
         )
     }
-
+    
     let customCalories: Int?
 
     let ingredients: [Ingredient]
@@ -39,9 +39,9 @@ struct Recipe: Identifiable {
         protein: Int,
         carbs: Int,
         fats: Int,
-        customCalories: Int? = nil,
+        customCalories: Int?,
         ingredients: [Ingredient],
-        spices: [Spice] = [],
+        spices: [Spice],
         steps: [String]
     ) {
         self.id = UUID()

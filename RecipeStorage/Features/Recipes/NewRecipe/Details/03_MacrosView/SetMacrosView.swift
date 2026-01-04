@@ -19,6 +19,7 @@ struct SetMacrosView: View {
             if viewModel.isCustomCalories {
                 TextField("Custom Calories", value: $viewModel.customCalories, format: .number)
                     .keyboardType(.numberPad)
+                    .focused(focusedField, equals: .customCalories)
             } else {
                 HStack {
                     Text("Calories:")

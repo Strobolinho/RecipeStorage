@@ -8,7 +8,7 @@
 import Foundation
 
 
-let mockRecipes: [Recipe] = [
+var mockRecipes: [Recipe] = [
 
     Recipe(
         name: "Lasagne",
@@ -18,7 +18,7 @@ let mockRecipes: [Recipe] = [
         protein: 152,
         carbs: 248,
         fats: 136,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Lasagneplatten", amount: 300, unit: "g"),
             Ingredient(name: "Rinderhackfleisch", amount: 600, unit: "g"),
@@ -48,7 +48,7 @@ let mockRecipes: [Recipe] = [
         protein: 90,
         carbs: 66,
         fats: 84,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Rinderhackfleisch (20 % Fett)", amount: 400, unit: "g"),
             Ingredient(name: "Burger Buns", amount: 2, unit: "pcs"),
@@ -75,7 +75,7 @@ let mockRecipes: [Recipe] = [
         protein: 56,
         carbs: 110,
         fats: 60,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Baguette", amount: 1, unit: "pcs"),
             Ingredient(name: "Crème fraîche", amount: 200, unit: "g"),
@@ -103,7 +103,7 @@ let mockRecipes: [Recipe] = [
         protein: 138,
         carbs: 210,
         fats: 36,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Hähnchenbrust", amount: 600, unit: "g"),
             Ingredient(name: "Basmatireis", amount: 300, unit: "g"),
@@ -131,7 +131,7 @@ let mockRecipes: [Recipe] = [
         protein: 124,
         carbs: 360,
         fats: 148,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Spaghetti", amount: 400, unit: "g"),
             Ingredient(name: "Guanciale", amount: 200, unit: "g"),
@@ -158,7 +158,7 @@ let mockRecipes: [Recipe] = [
         protein: 88,
         carbs: 120,
         fats: 72,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Lachsfilet", amount: 400, unit: "g"),
             Ingredient(name: "Kartoffeln", amount: 600, unit: "g"),
@@ -186,7 +186,7 @@ let mockRecipes: [Recipe] = [
         protein: 176,
         carbs: 160,
         fats: 120,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Rinderhackfleisch", amount: 800, unit: "g"),
             Ingredient(name: "Kidneybohnen", amount: 400, unit: "g"),
@@ -215,7 +215,7 @@ let mockRecipes: [Recipe] = [
         protein: 66,
         carbs: 198,
         fats: 54,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Kichererbsen", amount: 480, unit: "g"),
             Ingredient(name: "Kokosmilch", amount: 400, unit: "ml"),
@@ -243,7 +243,7 @@ let mockRecipes: [Recipe] = [
         protein: 140,
         carbs: 90,
         fats: 30,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Hähnchenbrust", amount: 400, unit: "g"),
             Ingredient(name: "Quinoa", amount: 120, unit: "g"),
@@ -272,7 +272,7 @@ let mockRecipes: [Recipe] = [
         protein: 120,
         carbs: 60,
         fats: 70,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Lachsfilet", amount: 350, unit: "g"),
             Ingredient(name: "Brokkoli", amount: 300, unit: "g"),
@@ -300,7 +300,7 @@ let mockRecipes: [Recipe] = [
         protein: 90,
         carbs: 40,
         fats: 35,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Garnelen", amount: 300, unit: "g"),
             Ingredient(name: "Zucchini", amount: 3, unit: "pcs"),
@@ -328,7 +328,7 @@ let mockRecipes: [Recipe] = [
         protein: 45,
         carbs: 12,
         fats: 40,
-        customCalories: 0,
+        customCalories: nil,
         ingredients: [
             Ingredient(name: "Eier", amount: 3, unit: "pcs"),
             Ingredient(name: "Feta", amount: 80, unit: "g"),

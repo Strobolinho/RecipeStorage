@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddSpicesButtonView: View {
     
-    @ObservedObject  var viewModel: NewRecipeViewModel
+    @ObservedObject var viewModel: NewRecipeViewModel
     
     var body: some View {
         Section("Spices") {
