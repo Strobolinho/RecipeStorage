@@ -37,8 +37,7 @@ final class NewRecipeViewModel: ObservableObject {
     @Published var ingredientUnits: [String] = ["Custom Unit", "g", "ml", "Stück"]
     @Published var newIngredientUnit: String = ""
     
-    
-    // Ingredients
+    // Spices
     @Published var spices: [Spice] = []
     
     // New Spice Inputs
@@ -102,6 +101,17 @@ final class NewRecipeViewModel: ObservableObject {
             spiceName = ""
             spiceAmount = nil
             spiceUnit = "TL"
+        }
+    }
+}
+
+extension View {
+    func keyboardDoneButton(_ action: @escaping () -> Void) -> some View {
+        toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done", action: action)
+            }
         }
     }
 }
