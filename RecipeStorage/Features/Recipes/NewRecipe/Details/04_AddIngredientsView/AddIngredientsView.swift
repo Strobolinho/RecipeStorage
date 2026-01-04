@@ -20,6 +20,14 @@ struct AddIngredientsView: View {
     @ObservedObject var viewModel: NewRecipeViewModel
     @FocusState private var focusedField: ingredientField?
     
+    private func focusNext() {
+        switch focusedField {
+        case .ingredientName: focusedField = .amount
+        case .amount: focusedField = nil
+        default: focusedField = nil
+        }
+    }
+    
     var body: some View {
         
         Form {
@@ -78,8 +86,25 @@ struct AddIngredientsView: View {
                             Spacer()
                             Text("\(ingredient.amount) \(ingredient.unit)")
                         }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                viewModel.deleteIngredient(ingredient)
+                            } label: {
+                                Label("Löschen", systemImage: "trash")
+                            }
+                        }
+                    }
+                    .onMove { indices, newOffset in
+                        viewModel.ingredients.move(fromOffsets: indices, toOffset: newOffset)
                     }
                 }
+            }
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Button("Next") { focusNext() }
+                Spacer()
+                Button("Done") { focusedField = nil }
             }
         }
         .onAppear {

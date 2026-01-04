@@ -9,9 +9,15 @@ import Foundation
 
 
 struct Spice: Identifiable {
-    let id = UUID()
-    
+    let id: UUID
     let name: String
     let amount: Int
     let unit: String
+
+    init(name: String, amount: Int, unit: String) {
+        self.id = UUID()
+        self.name = name
+        self.amount = amount
+        self.unit = unit
+    }
 }

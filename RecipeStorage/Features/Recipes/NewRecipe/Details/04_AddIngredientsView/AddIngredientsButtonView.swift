@@ -34,6 +34,16 @@ struct AddIngredientsButtonView: View {
                         Spacer()
                         Text("\(ingredient.amount) \(ingredient.unit)")
                     }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(role: .destructive) {
+                            viewModel.deleteIngredient(ingredient)
+                        } label: {
+                            Label("Löschen", systemImage: "trash")
+                        }
+                    }
+                }
+                .onMove { indices, newOffset in
+                    viewModel.ingredients.move(fromOffsets: indices, toOffset: newOffset)
                 }
             }
         }

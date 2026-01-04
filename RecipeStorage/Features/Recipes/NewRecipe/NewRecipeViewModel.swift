@@ -81,6 +81,10 @@ final class NewRecipeViewModel: ObservableObject {
         }
     }
     
+    func deleteIngredient(_ ingredient: Ingredient) {
+        ingredients.removeAll { $0.id == ingredient.id }
+    }
+    
     
     func addNewSpiceUnit() {
         if (newSpiceUnit != "") && !(spiceUnits.contains(newSpiceUnit)) {
@@ -102,6 +106,10 @@ final class NewRecipeViewModel: ObservableObject {
             spiceAmount = nil
             spiceUnit = "TL"
         }
+    }
+    
+    func deleteSpice(_ spice: Spice) {
+        spices.removeAll { $0.id == spice.id }
     }
 }
 

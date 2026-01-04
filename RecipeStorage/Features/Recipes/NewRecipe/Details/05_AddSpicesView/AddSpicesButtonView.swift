@@ -34,6 +34,16 @@ struct AddSpicesButtonView: View {
                         Spacer()
                         Text("\(spice.amount) \(spice.unit)")
                     }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(role: .destructive) {
+                            viewModel.deleteSpice(spice)
+                        } label: {
+                            Label("Löschen", systemImage: "trash")
+                        }
+                    }
+                }
+                .onMove { indices, newOffset in
+                    viewModel.spices.move(fromOffsets: indices, toOffset: newOffset)
                 }
             }
         }

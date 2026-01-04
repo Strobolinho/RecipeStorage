@@ -45,11 +45,7 @@ struct MacroCalorieCircleView: View {
             )
             
             VStack {
-                if recipe.customCalories > 0 {
-                    Text("\(recipe.customCalories)")
-                } else {
-                    Text("\(recipe.calories)")
-                }
+                Text("\(recipe.customCalories ?? recipe.calories)")
                 Text("kcal")
             }
         }
