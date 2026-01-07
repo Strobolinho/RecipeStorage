@@ -14,6 +14,7 @@ final class NewRecipeViewModel: ObservableObject {
     
     // Basic Data
     @Published var name: String = ""
+    @Published var imageData: Data? = nil
     @Published var servings: Int? = nil
     @Published var duration: Int? = nil
 
@@ -66,7 +67,7 @@ final class NewRecipeViewModel: ObservableObject {
         guard
             !name.trimmingCharacters(in: .whitespaces).isEmpty,
             let servings, servings > 0,
-            // image
+            let imageData,
             let duration, duration >= 0,
             let protein, protein >= 0,
             let carbs, carbs >= 0,

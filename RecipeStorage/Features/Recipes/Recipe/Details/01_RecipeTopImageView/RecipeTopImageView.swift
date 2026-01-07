@@ -9,18 +9,31 @@ import SwiftUI
 
 struct RecipeTopImageView: View {
     
-    let image: String
+    let imageData: Data?
     let name: String
     
     var body: some View {
         ZStack {
-            Image(image)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 400, height: 230)
-                .clipped()
-                .cornerRadius(15)
-                .padding(.horizontal, 5)
+            Group {
+                if
+                    let imageData,
+                    let uiImage = UIImage(data: imageData)
+                {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                } else {
+                    Image(systemName: "photo")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.secondary)
+                        .padding(40)
+                }
+            }
+            .scaledToFill()
+            .frame(width: 400, height: 230)
+            .clipped()
+            .cornerRadius(15)
+            .padding(.horizontal, 5)
             
             VStack(alignment: .leading) {
                 Spacer()
@@ -49,5 +62,8 @@ struct RecipeTopImageView: View {
 
 
 #Preview {
-    RecipeTopImageView(image: "lasagna", name: "Lasagne")
+    RecipeTopImageView(
+        imageData: UIImage(named: "lasagna")?.jpegData(compressionQuality: 0.8),
+        name: "Lasagne"
+    )
 }

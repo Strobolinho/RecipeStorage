@@ -5,14 +5,14 @@
 //  Created by Nicolas Ströbel on 30.12.25.
 //
 
-import Foundation
+import SwiftUI
 
 
 var mockRecipes: [Recipe] = [
 
     Recipe(
+        imageData: UIImage(named: "lasagna")?.jpegData(compressionQuality: 0.8),
         name: "Lasagne",
-        imageName: "lasagna",
         servings: 4,
         duration: 60,
         protein: 152,
@@ -41,8 +41,8 @@ var mockRecipes: [Recipe] = [
     ),
 
     Recipe(
+        imageData: UIImage(named: "smashBurger")?.jpegData(compressionQuality: 0.8),
         name: "Smash Burger",
-        imageName: "smashBurger",
         servings: 2,
         duration: 25,
         protein: 90,
@@ -68,8 +68,8 @@ var mockRecipes: [Recipe] = [
     ),
 
     Recipe(
+        imageData: UIImage(named: "flammkuchenBaguettes")?.jpegData(compressionQuality: 0.8),
         name: "Flammkuchen-Baguettes",
-        imageName: "flammkuchenBaguettes",
         servings: 2,
         duration: 20,
         protein: 56,
@@ -96,8 +96,8 @@ var mockRecipes: [Recipe] = [
     ),
     
     Recipe(
+        imageData: UIImage(named: "chickenTeriyaki")?.jpegData(compressionQuality: 0.8),
         name: "Hähnchen Teriyaki mit Reis",
-        imageName: "chickenTeriyaki",
         servings: 3,
         duration: 35,
         protein: 138,
@@ -124,8 +124,8 @@ var mockRecipes: [Recipe] = [
     ),
 
     Recipe(
+        imageData: UIImage(named: "carbonara")?.jpegData(compressionQuality: 0.8),
         name: "Pasta Carbonara",
-        imageName: "carbonara",
         servings: 4,
         duration: 25,
         protein: 124,
@@ -151,8 +151,8 @@ var mockRecipes: [Recipe] = [
     ),
 
     Recipe(
+        imageData: UIImage(named: "lasagna")?.jpegData(compressionQuality: 0.8),
         name: "Lachs mit Ofenkartoffeln",
-        imageName: "salmonPotatoes",
         servings: 2,
         duration: 40,
         protein: 88,
@@ -176,176 +176,6 @@ var mockRecipes: [Recipe] = [
             "Lachs würzen und auf das Blech legen.",
             "Alles im Ofen goldbraun backen."
         ]
-    ),
-
-    Recipe(
-        name: "Chili con Carne",
-        imageName: "chiliConCarne",
-        servings: 4,
-        duration: 50,
-        protein: 176,
-        carbs: 160,
-        fats: 120,
-        customCalories: nil,
-        ingredients: [
-            Ingredient(name: "Rinderhackfleisch", amount: 800, unit: "g"),
-            Ingredient(name: "Kidneybohnen", amount: 400, unit: "g"),
-            Ingredient(name: "Mais", amount: 300, unit: "g"),
-            Ingredient(name: "Tomaten aus der Dose", amount: 800, unit: "g")
-        ],
-        spices: [
-            Spice(name: "Salz", amount: 2, unit: "tsp"),
-            Spice(name: "Chilipulver", amount: 2, unit: "tsp"),
-            Spice(name: "Paprikapulver", amount: 2, unit: "tsp"),
-            Spice(name: "Kreuzkümmel", amount: 1, unit: "tsp")
-        ],
-        steps: [
-            "Hackfleisch scharf anbraten.",
-            "Tomaten, Bohnen und Mais hinzufügen.",
-            "Gewürze einrühren und köcheln lassen.",
-            "Abschmecken und servieren."
-        ]
-    ),
-
-    Recipe(
-        name: "Vegetarisches Curry mit Kichererbsen",
-        imageName: "chickpeaCurry",
-        servings: 3,
-        duration: 30,
-        protein: 66,
-        carbs: 198,
-        fats: 54,
-        customCalories: nil,
-        ingredients: [
-            Ingredient(name: "Kichererbsen", amount: 480, unit: "g"),
-            Ingredient(name: "Kokosmilch", amount: 400, unit: "ml"),
-            Ingredient(name: "Basmatireis", amount: 250, unit: "g"),
-            Ingredient(name: "Paprika", amount: 2, unit: "pcs")
-        ],
-        spices: [
-            Spice(name: "Currypulver", amount: 2, unit: "tbsp"),
-            Spice(name: "Salz", amount: 1, unit: "tsp"),
-            Spice(name: "Ingwer", amount: 1, unit: "tsp")
-        ],
-        steps: [
-            "Reis kochen.",
-            "Gemüse anbraten und Kichererbsen hinzufügen.",
-            "Mit Kokosmilch und Gewürzen köcheln lassen.",
-            "Mit Reis servieren."
-        ]
-    ),
-    
-    Recipe(
-        name: "Hähnchen mit Quinoa & Gemüse",
-        imageName: "chickenQuinoa",
-        servings: 2,
-        duration: 30,
-        protein: 140,
-        carbs: 90,
-        fats: 30,
-        customCalories: nil,
-        ingredients: [
-            Ingredient(name: "Hähnchenbrust", amount: 400, unit: "g"),
-            Ingredient(name: "Quinoa", amount: 120, unit: "g"),
-            Ingredient(name: "Paprika", amount: 1, unit: "pcs"),
-            Ingredient(name: "Zucchini", amount: 1, unit: "pcs"),
-            Ingredient(name: "Olivenöl", amount: 1, unit: "tbsp")
-        ],
-        spices: [
-            Spice(name: "Salz", amount: 1, unit: "tsp"),
-            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
-            Spice(name: "Paprikapulver", amount: 1, unit: "tsp")
-        ],
-        steps: [
-            "Quinoa nach Packungsanweisung kochen.",
-            "Hähnchenbrust anbraten und würzen.",
-            "Gemüse schneiden und kurz mitbraten.",
-            "Alles zusammen servieren."
-        ]
-    ),
-    
-    Recipe(
-        name: "Lachs mit Ofengemüse",
-        imageName: "salmonVeggies",
-        servings: 2,
-        duration: 25,
-        protein: 120,
-        carbs: 60,
-        fats: 70,
-        customCalories: nil,
-        ingredients: [
-            Ingredient(name: "Lachsfilet", amount: 350, unit: "g"),
-            Ingredient(name: "Brokkoli", amount: 300, unit: "g"),
-            Ingredient(name: "Karotten", amount: 200, unit: "g"),
-            Ingredient(name: "Olivenöl", amount: 1, unit: "tbsp")
-        ],
-        spices: [
-            Spice(name: "Salz", amount: 1, unit: "tsp"),
-            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
-            Spice(name: "Zitronenpfeffer", amount: 1, unit: "tsp")
-        ],
-        steps: [
-            "Backofen auf 200°C vorheizen.",
-            "Gemüse schneiden und würzen.",
-            "Lachs salzen und auf das Blech legen.",
-            "Alles im Ofen garen."
-        ]
-    ),
-    
-    Recipe(
-        name: "Zucchini-Nudeln mit Garnelen",
-        imageName: "zucchiniShrimp",
-        servings: 2,
-        duration: 20,
-        protein: 90,
-        carbs: 40,
-        fats: 35,
-        customCalories: nil,
-        ingredients: [
-            Ingredient(name: "Garnelen", amount: 300, unit: "g"),
-            Ingredient(name: "Zucchini", amount: 3, unit: "pcs"),
-            Ingredient(name: "Knoblauch", amount: 2, unit: "pcs"),
-            Ingredient(name: "Olivenöl", amount: 1, unit: "tbsp")
-        ],
-        spices: [
-            Spice(name: "Salz", amount: 1, unit: "tsp"),
-            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
-            Spice(name: "Chiliflocken", amount: 1, unit: "pinch")
-        ],
-        steps: [
-            "Zucchini spiralisieren.",
-            "Garnelen scharf anbraten.",
-            "Knoblauch kurz mitbraten.",
-            "Zucchini unterheben und servieren."
-        ]
-    ),
-
-    Recipe(
-        name: "Omelette mit Spinat & Feta",
-        imageName: "omeletteSpinach",
-        servings: 1,
-        duration: 15,
-        protein: 45,
-        carbs: 12,
-        fats: 40,
-        customCalories: nil,
-        ingredients: [
-            Ingredient(name: "Eier", amount: 3, unit: "pcs"),
-            Ingredient(name: "Feta", amount: 80, unit: "g"),
-            Ingredient(name: "Spinat", amount: 100, unit: "g"),
-            Ingredient(name: "Butter", amount: 1, unit: "tbsp")
-        ],
-        spices: [
-            Spice(name: "Salz", amount: 1, unit: "tsp"),
-            Spice(name: "Pfeffer", amount: 1, unit: "tsp")
-        ],
-        steps: [
-            "Eier verquirlen und würzen.",
-            "Spinat kurz anbraten.",
-            "Eier hinzugeben und stocken lassen.",
-            "Feta darüber bröseln."
-        ]
     )
-
-
 ]
+

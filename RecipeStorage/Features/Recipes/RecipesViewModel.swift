@@ -9,5 +9,5 @@ import SwiftUI
 
 
 final class RecipesViewModel: ObservableObject {
-    @Published var recipes: [Recipe] = mockRecipes
+    @Published var recipes: [Recipe] = []
 }

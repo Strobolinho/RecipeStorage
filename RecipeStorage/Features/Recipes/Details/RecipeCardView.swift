@@ -13,12 +13,26 @@ struct RecipeCardView: View {
     var body: some View {
         
         ZStack {
-            Image(recipe.imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 180, height: 200)
-                .clipped()
-                .cornerRadius(15)
+            Group {
+                if
+                    let imageData = recipe.imageData,
+                    let uiImage = UIImage(data: imageData)
+                {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                } else {
+                    // Placeholder wenn kein Bild vorhanden
+                    Image(systemName: "photo")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.secondary)
+                        .padding(30)
+                }
+            }
+            .scaledToFill()
+            .frame(width: 180, height: 200)
+            .clipped()
+            .cornerRadius(15)
             
             VStack(alignment: .leading) {
                 Spacer()
@@ -77,5 +91,5 @@ struct RecipeCardView: View {
 }
 
 #Preview {
-    RecipeCardView(recipe: mockRecipes[7])
+    RecipeCardView(recipe: mockRecipes[3])
 }

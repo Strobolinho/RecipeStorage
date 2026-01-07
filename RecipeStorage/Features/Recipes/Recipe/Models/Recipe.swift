@@ -9,9 +9,10 @@ import Foundation
 
 struct Recipe: Identifiable {
     let id: UUID
+    
+    let imageData: Data?
 
     let name: String
-    let imageName: String
     let servings: Int
     let duration: Int
 
@@ -32,8 +33,8 @@ struct Recipe: Identifiable {
     let steps: [String]
 
     init(
+        imageData: Data? = nil,
         name: String,
-        imageName: String,
         servings: Int,
         duration: Int,
         protein: Int,
@@ -46,7 +47,7 @@ struct Recipe: Identifiable {
     ) {
         self.id = UUID()
         self.name = name
-        self.imageName = imageName
+        self.imageData = imageData
         self.servings = servings
         self.duration = duration
         self.protein = protein

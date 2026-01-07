@@ -14,7 +14,7 @@ struct RecipeView: View {
     var body: some View {
         VStack {
             RecipeTopImageView(
-                image: recipe.imageName,
+                imageData: recipe.imageData,
                 name: recipe.name
             )
             
@@ -29,6 +29,7 @@ struct RecipeView: View {
             }
             
         }
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

@@ -13,16 +13,16 @@ struct HorizontalRecipeScrollbarView: View {
     let recipes: [Recipe]
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundStyle(.brandPrimary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-
-
-            if recipes.count > 0 {
+        if !recipes.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                Text(title)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.brandPrimary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                
+                
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 16) {
                         ForEach(recipes.sorted { $0.name < $1.name }) { recipe in
@@ -36,12 +36,9 @@ struct HorizontalRecipeScrollbarView: View {
                     .padding(.horizontal)
                 }
                 .frame(height: 220)
-            } else {
-                Text("Keine Rezepte verfügbar...")
-                    .frame(maxWidth: .infinity, alignment: .center)
             }
+            .padding(.vertical, 2)
         }
-        .padding(.vertical, 2)
     }
 }
 

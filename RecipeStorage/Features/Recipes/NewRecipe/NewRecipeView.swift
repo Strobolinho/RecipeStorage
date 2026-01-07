@@ -25,7 +25,6 @@ struct NewRecipeView: View {
     @ObservedObject var recipesViewModel: RecipesViewModel
     @StateObject private var viewModel = NewRecipeViewModel()
     @FocusState private var focusedField: newRecipeField?
-    @Environment(\.dismiss) private var dismiss
     
     private func focusNext() {
         switch focusedField {
@@ -50,7 +49,7 @@ struct NewRecipeView: View {
     
     var body: some View {
         Form {
-            ImageView()
+            ImageView(viewModel: viewModel)
             
             BasicsView(viewModel: viewModel, focusedField: $focusedField)
             
@@ -62,36 +61,7 @@ struct NewRecipeView: View {
             
             AddStepsView(viewModel: viewModel, focusedField: $focusedField)
             
-            Section {
-                Button {
-                    guard viewModel.isValid else { return }
-                    
-                    recipesViewModel.recipes.append(
-                        Recipe(
-                            name: viewModel.name,
-                            imageName: "kaiserschmarrn",
-                            servings: viewModel.servings!,
-                            duration: viewModel.duration!,
-                            protein: viewModel.protein!,
-                            carbs: viewModel.carbs!,
-                            fats: viewModel.fats!,
-                            customCalories: viewModel.customCalories,
-                            ingredients: viewModel.ingredients,
-                            spices: viewModel.spices,
-                            steps: viewModel.steps
-                        )
-                    )
-                    
-                    dismiss()
-                } label: {
-                    Text("Save Recipe")
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.brandPrimary)
-                }
-                .disabled(!viewModel.isValid)
-            }
+            RecipeSaveButtonView(recipesViewModel: recipesViewModel, viewModel: viewModel)
         }
         .navigationTitle("New Recipe")
         .toolbar {
@@ -101,6 +71,7 @@ struct NewRecipeView: View {
                 Button("Done") { focusedField = nil }
             }
         }
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 
