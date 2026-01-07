@@ -6,13 +6,15 @@
 //
 
 import Foundation
+import SwiftData
 
-
-struct Spice: Identifiable {
-    let id: UUID
-    let name: String
-    let amount: Int
-    let unit: String
+@Model
+final class Spice {
+    @Attribute(.unique) var id: UUID
+    
+    var name: String
+    var amount: Int
+    var unit: String
 
     init(name: String, amount: Int, unit: String) {
         self.id = UUID()

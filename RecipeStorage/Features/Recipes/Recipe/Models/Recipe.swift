@@ -6,19 +6,22 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Recipe: Identifiable {
-    let id: UUID
+
+@Model
+final class Recipe {
+    @Attribute(.unique) var id: UUID
     
-    let imageData: Data?
+    @Attribute(.externalStorage) var imageData: Data?
 
-    let name: String
-    let servings: Int
-    let duration: Int
+    var name: String
+    var servings: Int
+    var duration: Int
 
-    let protein: Int
-    let carbs: Int
-    let fats: Int
+    var protein: Int
+    var carbs: Int
+    var fats: Int
 
     var calories: Int {
         Int(
@@ -26,11 +29,11 @@ struct Recipe: Identifiable {
         )
     }
     
-    let customCalories: Int?
+    var customCalories: Int?
 
-    let ingredients: [Ingredient]
-    let spices: [Spice]
-    let steps: [String]
+    @Relationship(deleteRule: .cascade) var ingredients: [Ingredient]
+    @Relationship(deleteRule: .cascade) var spices: [Spice]
+    var steps: [String]
 
     init(
         imageData: Data? = nil,

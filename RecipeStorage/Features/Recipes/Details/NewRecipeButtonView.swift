@@ -9,14 +9,12 @@ import SwiftUI
 
 struct NewRecipeButtonView: View {
     
-    @ObservedObject var viewModel: RecipesViewModel
-    
     var body: some View {
         VStack() {
             Spacer()
             
             NavigationLink {
-                NewRecipeView(recipesViewModel: viewModel)
+                NewRecipeView()
             } label: {
                 ZStack {
                     Text("New Recipe")
@@ -39,5 +37,5 @@ struct NewRecipeButtonView: View {
 }
 
 #Preview {
-    NewRecipeButtonView(viewModel: RecipesViewModel())
+    NewRecipeButtonView()
 }

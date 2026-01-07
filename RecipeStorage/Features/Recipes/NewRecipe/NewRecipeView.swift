@@ -22,7 +22,6 @@ enum newRecipeField: Hashable {
 
 struct NewRecipeView: View {
     
-    @ObservedObject var recipesViewModel: RecipesViewModel
     @StateObject private var viewModel = NewRecipeViewModel()
     @FocusState private var focusedField: newRecipeField?
     
@@ -61,7 +60,7 @@ struct NewRecipeView: View {
             
             AddStepsView(viewModel: viewModel, focusedField: $focusedField)
             
-            RecipeSaveButtonView(recipesViewModel: recipesViewModel, viewModel: viewModel)
+            RecipeSaveButtonView(viewModel: viewModel)
         }
         .navigationTitle("New Recipe")
         .toolbar {
@@ -76,5 +75,5 @@ struct NewRecipeView: View {
 }
 
 #Preview {
-    NewRecipeView(recipesViewModel: RecipesViewModel())
+    NewRecipeView()
 }

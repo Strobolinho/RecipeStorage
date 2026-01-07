@@ -6,45 +6,46 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RecipesView: View {
 
-    @StateObject private var viewModel = RecipesViewModel()
+    @Query(sort: \Recipe.name) private var recipes: [Recipe]
 
     var body: some View {
         NavigationStack {
             ZStack {
-                if !viewModel.recipes.isEmpty {
+                if !recipes.isEmpty {
                     ScrollView(.vertical) {
                         HorizontalRecipeScrollbarView(
                             title: "Alle Rezepte 🍽️",
-                            recipes: viewModel.recipes
+                            recipes: recipes
                         )
                         
                         HorizontalRecipeScrollbarView(
                             title: "Proteinreich 💪",
-                            recipes: viewModel.recipes.filter { recipe in
+                            recipes: recipes.filter { recipe in
                                 ((Double(recipe.protein) / Double(recipe.calories)) * 10 ) >= 0.75
                             }
                         )
                         
                         HorizontalRecipeScrollbarView(
                             title: "Kalorienarm 🥗",
-                            recipes: viewModel.recipes.filter { recipe in
+                            recipes: recipes.filter { recipe in
                                 (recipe.calories / recipe.servings) < 600
                             }
                         )
                         
                         HorizontalRecipeScrollbarView(
                             title: "Low Carb 🚫🍞",
-                            recipes: viewModel.recipes.filter { recipe in
+                            recipes: recipes.filter { recipe in
                                 (recipe.carbs / recipe.servings) < 30
                             }
                         )
                         
                         HorizontalRecipeScrollbarView(
                             title: "Low Fat 🚫🥑",
-                            recipes: viewModel.recipes.filter { recipe in
+                            recipes: recipes.filter { recipe in
                                 (recipe.fats / recipe.servings) < 15
                             }
                         )
@@ -72,7 +73,7 @@ struct RecipesView: View {
                     .padding()
                 }
                 
-                NewRecipeButtonView(viewModel: viewModel)
+                NewRecipeButtonView()
             }
         }
     }

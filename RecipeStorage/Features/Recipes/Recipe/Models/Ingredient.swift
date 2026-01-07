@@ -6,13 +6,15 @@
 //
 
 import Foundation
+import SwiftData
 
-
-struct Ingredient: Identifiable {
-    let id: UUID
-    let name: String
-    let amount: Int
-    let unit: String
+@Model
+final class Ingredient {
+    @Attribute(.unique) var id: UUID
+    
+    var name: String
+    var amount: Int
+    var unit: String
 
     init(name: String, amount: Int, unit: String) {
         self.id = UUID()

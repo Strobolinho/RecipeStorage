@@ -5,35 +5,42 @@
 //  Created by Nicolas Ströbel on 07.01.26.
 //
 
+
 import SwiftUI
+import SwiftData
 
 struct RecipeSaveButtonView: View {
-    
-    @ObservedObject var recipesViewModel: RecipesViewModel
-    @ObservedObject var viewModel = NewRecipeViewModel()
+
+    @Environment(\.modelContext) private var modelContext
+    @ObservedObject var viewModel: NewRecipeViewModel
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         Section {
             Button {
-                guard viewModel.isValid else { return }
-                
-                recipesViewModel.recipes.append(
-                    Recipe(
-                        imageData: viewModel.imageData,
-                        name: viewModel.name,
-                        servings: viewModel.servings!,
-                        duration: viewModel.duration!,
-                        protein: viewModel.protein!,
-                        carbs: viewModel.carbs!,
-                        fats: viewModel.fats!,
-                        customCalories: viewModel.customCalories,
-                        ingredients: viewModel.ingredients,
-                        spices: viewModel.spices,
-                        steps: viewModel.steps
-                    )
+                guard viewModel.isValid,
+                      let servings = viewModel.servings,
+                      let duration = viewModel.duration,
+                      let protein = viewModel.protein,
+                      let carbs = viewModel.carbs,
+                      let fats = viewModel.fats
+                else { return }
+
+                let recipe = Recipe(
+                    imageData: viewModel.imageData,
+                    name: viewModel.name,
+                    servings: servings,
+                    duration: duration,
+                    protein: protein,
+                    carbs: carbs,
+                    fats: fats,
+                    customCalories: viewModel.customCalories,
+                    ingredients: viewModel.ingredients,
+                    spices: viewModel.spices,
+                    steps: viewModel.steps
                 )
-                
+
+                modelContext.insert(recipe)
                 dismiss()
             } label: {
                 Text("Save Recipe")
@@ -47,8 +54,10 @@ struct RecipeSaveButtonView: View {
     }
 }
 
+
 #Preview {
     Form {
-        RecipeSaveButtonView(recipesViewModel: RecipesViewModel(), viewModel: NewRecipeViewModel())
+        RecipeSaveButtonView(viewModel: NewRecipeViewModel())
     }
+    .modelContainer(for: Recipe.self, inMemory: true)
 }
