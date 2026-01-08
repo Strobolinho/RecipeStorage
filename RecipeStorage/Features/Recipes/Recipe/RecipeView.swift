@@ -20,7 +20,7 @@ struct RecipeView: View {
         VStack {
             RecipeTopImageView(
                 imageData: recipe.imageData,
-                name: recipe.name
+                recipe: recipe
             )
             
             Form {

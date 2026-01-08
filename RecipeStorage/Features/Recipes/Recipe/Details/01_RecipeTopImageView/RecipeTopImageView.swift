@@ -10,7 +10,7 @@ import SwiftUI
 struct RecipeTopImageView: View {
     
     let imageData: Data?
-    let name: String
+    let recipe: Recipe
     
     var body: some View {
         ZStack {
@@ -36,9 +36,34 @@ struct RecipeTopImageView: View {
             .padding(.horizontal, 5)
             
             VStack(alignment: .leading) {
+                HStack {
+                    Image(systemName: "person.fill")
+                    Text("\(recipe.servings)")
+                    
+                    Spacer()
+                    
+                    Image(systemName: "clock.fill")
+                    Text("\(recipe.duration) min")
+                }
+                .fontWeight(.bold)
+                .font(.title3)
+                .padding(.horizontal)
+                .padding(.top, 5)
+                .foregroundStyle(.recipeTitle)
+                .background(
+                    LinearGradient(
+                        colors: [
+                            Color.black.opacity(0.9),
+                            Color.black.opacity(0.0)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                
                 Spacer()
                 
-                Text(name)
+                Text(recipe.name)
                     .fontWeight(.bold)
                     .font(.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -55,6 +80,7 @@ struct RecipeTopImageView: View {
                         )
                     )
             }
+            
         }
         .frame(width: 400, height: 230)
     }
@@ -64,6 +90,6 @@ struct RecipeTopImageView: View {
 #Preview {
     RecipeTopImageView(
         imageData: UIImage(named: "lasagna")?.jpegData(compressionQuality: 0.8),
-        name: "Lasagne"
+        recipe: mockRecipes[0]
     )
 }

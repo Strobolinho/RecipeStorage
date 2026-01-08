@@ -60,12 +60,18 @@ struct RecipeCardView: View {
             VStack(alignment: .leading) {
                 HStack(alignment: .bottom) {
                     
+                    Image(systemName: "person.fill")
+                    
+                    Text("\(recipe.servings)")
+                        .font(.footnote)
+                        .fontWeight(.bold)
+                    
                     Spacer()
                     
                     Image(systemName: "clock.fill")
                     
                     Text("\(recipe.duration) min")
-                        .font(.subheadline)
+                        .font(.footnote)
                         .fontWeight(.bold)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
