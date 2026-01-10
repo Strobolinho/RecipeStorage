@@ -12,14 +12,16 @@ struct SpiceListView: View {
     let recipe: Recipe
     
     var body: some View {
-        Section("Spices") {
-            ForEach(recipe.spices) { spice in
-                HStack {
-                    Text(spice.name)
-                    
-                    Spacer()
-                    
-                    Text("\(spice.amount) \(spice.unit)")
+        if !recipe.spices.isEmpty {
+            Section("Spices") {
+                ForEach(recipe.spices) { spice in
+                    HStack {
+                        Text(spice.name)
+                        
+                        Spacer()
+                        
+                        Text("\(spice.amount) \(spice.unit)")
+                    }
                 }
             }
         }
@@ -27,5 +29,7 @@ struct SpiceListView: View {
 }
 
 #Preview {
-    SpiceListView(recipe: mockRecipes[0])
+    Form {
+        SpiceListView(recipe: mockRecipes[0])
+    }
 }

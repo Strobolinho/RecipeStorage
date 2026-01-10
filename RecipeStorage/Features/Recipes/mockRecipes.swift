@@ -151,7 +151,7 @@ var mockRecipes: [Recipe] = [
     ),
 
     Recipe(
-        imageData: UIImage(named: "lasagna")?.jpegData(compressionQuality: 0.8),
+        imageData: UIImage(named: "salmonPotatoes")?.jpegData(compressionQuality: 0.8),
         name: "Lachs mit Ofenkartoffeln",
         servings: 2,
         duration: 40,

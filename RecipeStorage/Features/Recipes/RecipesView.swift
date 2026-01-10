@@ -11,6 +11,7 @@ import SwiftData
 struct RecipesView: View {
 
     @Query(sort: \Recipe.name) private var recipes: [Recipe]
+    //private var recipes: [Recipe] = mockRecipes
 
     var body: some View {
         NavigationStack {

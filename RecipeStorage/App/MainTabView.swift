@@ -12,7 +12,7 @@ struct MainTabView: View {
         TabView {
             RecipesView()
                 .tabItem {
-                    Label("Rezepte", systemImage: "book")
+                    Label("Recipes", systemImage: "book")
                 }
             
             WeekPlannerView()
