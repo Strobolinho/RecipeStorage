@@ -13,7 +13,7 @@ struct IngredientListView: View {
     
     var body: some View {
         Section("Ingredients") {
-            ForEach(recipe.ingredients) { ingredient in
+            ForEach(recipe.ingredients.sorted { ($0.position ?? 0) < ($1.position ?? 0) }) { ingredient in
                 HStack {
                     Text(ingredient.name)
                     

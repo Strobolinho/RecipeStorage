@@ -52,6 +52,16 @@ struct RecipeView: View {
             }
         }
         .toolbar(.hidden, for: .tabBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    NewRecipeView(recipeToEdit: recipe)
+                } label: {
+                    Image(systemName: "square.and.pencil.circle")
+                        .font(.system(size: 22))
+                }
+            }
+        }
     }
 }
 

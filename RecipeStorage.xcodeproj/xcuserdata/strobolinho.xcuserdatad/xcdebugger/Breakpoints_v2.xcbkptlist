@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "2BFA6B2D-DFDB-4E38-A211-5F96AAFDDEC5"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7562658C-1AC9-46CE-AE06-208AB2BB3383"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../../../var/folders/sj/7s1hn4c95gqdlyfpd_tr5ff00000gn/T/swift-generated-sources/@__swiftmacro_13RecipeStorage0031RecipeSaveButtonViewswift_yFFIifMX59_0_33_0B496EFC238CBAAC5991BF183C0CF39DLl7PreviewfMf_.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1"
+            endingLineNumber = "1"
+            landmarkName = "$s13RecipeStorage0031RecipeSaveButtonViewswift_yFFIifMX59_0_33_0B496EFC238CBAAC5991BF183C0CF39DLl7PreviewfMf_15PreviewRegistryfMu_"
+            landmarkType = "37">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

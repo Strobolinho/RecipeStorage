@@ -14,7 +14,7 @@ struct NewRecipeButtonView: View {
             Spacer()
             
             NavigationLink {
-                NewRecipeView()
+                NewRecipeView(recipeToEdit: nil)
             } label: {
                 ZStack {
                     Text("New Recipe")

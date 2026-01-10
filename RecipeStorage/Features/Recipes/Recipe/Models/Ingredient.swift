@@ -15,12 +15,14 @@ final class Ingredient {
     var name: String
     var amount: Int
     var unit: String
+    var position: Int?
 
-    init(name: String, amount: Int, unit: String) {
+    init(name: String, amount: Int, unit: String, position: Int? = nil) {
         self.id = UUID()
         self.name = name
         self.amount = amount
         self.unit = unit
+        self.position = position
     }
 }
 

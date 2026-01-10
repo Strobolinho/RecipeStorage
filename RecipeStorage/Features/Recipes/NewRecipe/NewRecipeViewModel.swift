@@ -60,6 +60,23 @@ final class NewRecipeViewModel: ObservableObject {
         return Int(total)
     }
     
+    init(recipe: Recipe? = nil) {
+        if let recipe { load(from: recipe) }
+    }
+    
+    func load(from recipe: Recipe) {
+            imageData = recipe.imageData
+            name = recipe.name
+            servings = recipe.servings
+            duration = recipe.duration
+            protein = recipe.protein
+            carbs = recipe.carbs
+            fats = recipe.fats
+            customCalories = recipe.customCalories
+            ingredients = recipe.ingredients
+            spices = recipe.spices
+            steps = recipe.steps
+        }
     
     var isValid: Bool {
         guard
@@ -80,14 +97,25 @@ final class NewRecipeViewModel: ObservableObject {
     }
     
     func addIngredient() {
-        if (!ingredientName.isEmpty &&
-            ingredientUnit != "Custom Unit"), let amount = ingredientAmount {
-            ingredients.append(
-                Ingredient(name: ingredientName, amount: amount, unit: ingredientUnit)
-            )
-            ingredientName = ""
-            ingredientAmount = nil
-            ingredientUnit = "g"
+        guard !ingredientName.isEmpty,
+              ingredientUnit != "Custom Unit",
+              let amount = ingredientAmount
+        else { return }
+
+        let nextPos = ingredients.count
+
+        ingredients.append(
+            Ingredient(name: ingredientName, amount: amount, unit: ingredientUnit, position: nextPos)
+        )
+
+        ingredientName = ""
+        ingredientAmount = nil
+        ingredientUnit = "g"
+    }
+
+    func reindexIngredients() {
+        for i in ingredients.indices {
+            ingredients[i].position = i
         }
     }
     
@@ -96,14 +124,25 @@ final class NewRecipeViewModel: ObservableObject {
     }
     
     func addSpice() {
-        if (!spiceName.isEmpty &&
-            spiceUnit != "Custom Unit"), let amount = spiceAmount {
-            spices.append(
-                Spice(name: spiceName, amount: amount, unit: spiceUnit)
-            )
-            spiceName = ""
-            spiceAmount = nil
-            spiceUnit = "TL"
+        guard !spiceName.isEmpty,
+              spiceUnit != "Custom Unit",
+              let amount = spiceAmount
+        else { return }
+
+        let nextPos = spices.count
+
+        spices.append(
+            Spice(name: spiceName, amount: amount, unit: spiceUnit, position: nextPos)
+        )
+
+        spiceName = ""
+        spiceAmount = nil
+        spiceUnit = "g"
+    }
+
+    func reindexSpices() {
+        for i in spices.indices {
+            spices[i].position = i
         }
     }
     

@@ -1,12 +1,4 @@
-//
-//  mockRecipes.swift
-//  RecipeStorage
-//
-//  Created by Nicolas Ströbel on 30.12.25.
-//
-
 import SwiftUI
-
 
 var mockRecipes: [Recipe] = [
 
@@ -20,17 +12,17 @@ var mockRecipes: [Recipe] = [
         fats: 136,
         customCalories: nil,
         ingredients: [
-            Ingredient(name: "Lasagneplatten", amount: 300, unit: "g"),
-            Ingredient(name: "Rinderhackfleisch", amount: 600, unit: "g"),
-            Ingredient(name: "Tomatensauce", amount: 700, unit: "ml"),
-            Ingredient(name: "Mozzarella", amount: 250, unit: "g"),
-            Ingredient(name: "Olivenöl", amount: 2, unit: "tbsp")
+            Ingredient(name: "Lasagneplatten", amount: 300, unit: "g", position: 0),
+            Ingredient(name: "Rinderhackfleisch", amount: 600, unit: "g", position: 1),
+            Ingredient(name: "Tomatensauce", amount: 700, unit: "ml", position: 2),
+            Ingredient(name: "Mozzarella", amount: 250, unit: "g", position: 3),
+            Ingredient(name: "Olivenöl", amount: 2, unit: "tbsp", position: 4)
         ],
         spices: [
-            Spice(name: "Salz", amount: 2, unit: "tsp"),
-            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
-            Spice(name: "Oregano", amount: 2, unit: "tsp"),
-            Spice(name: "Muskat", amount: 1, unit: "pinch")
+            Spice(name: "Salz", amount: 2, unit: "tsp", position: 0),
+            Spice(name: "Pfeffer", amount: 1, unit: "tsp", position: 1),
+            Spice(name: "Oregano", amount: 2, unit: "tsp", position: 2),
+            Spice(name: "Muskat", amount: 1, unit: "pinch", position: 3)
         ],
         steps: [
             "Backofen auf 180°C Ober-/Unterhitze vorheizen.",
@@ -50,14 +42,14 @@ var mockRecipes: [Recipe] = [
         fats: 84,
         customCalories: nil,
         ingredients: [
-            Ingredient(name: "Rinderhackfleisch (20 % Fett)", amount: 400, unit: "g"),
-            Ingredient(name: "Burger Buns", amount: 2, unit: "pcs"),
-            Ingredient(name: "Cheddar Käse", amount: 4, unit: "pcs"),
-            Ingredient(name: "Butter", amount: 1, unit: "tbsp")
+            Ingredient(name: "Rinderhackfleisch (20 % Fett)", amount: 400, unit: "g", position: 0),
+            Ingredient(name: "Burger Buns", amount: 2, unit: "pcs", position: 1),
+            Ingredient(name: "Cheddar Käse", amount: 4, unit: "pcs", position: 2),
+            Ingredient(name: "Butter", amount: 1, unit: "tbsp", position: 3)
         ],
         spices: [
-            Spice(name: "Salz", amount: 1, unit: "tsp"),
-            Spice(name: "Pfeffer", amount: 1, unit: "tsp")
+            Spice(name: "Salz", amount: 1, unit: "tsp", position: 0),
+            Spice(name: "Pfeffer", amount: 1, unit: "tsp", position: 1)
         ],
         steps: [
             "Pfanne sehr stark erhitzen.",
@@ -77,15 +69,15 @@ var mockRecipes: [Recipe] = [
         fats: 60,
         customCalories: nil,
         ingredients: [
-            Ingredient(name: "Baguette", amount: 1, unit: "pcs"),
-            Ingredient(name: "Crème fraîche", amount: 200, unit: "g"),
-            Ingredient(name: "Speckwürfel", amount: 150, unit: "g"),
-            Ingredient(name: "Zwiebel", amount: 1, unit: "pcs")
+            Ingredient(name: "Baguette", amount: 1, unit: "pcs", position: 0),
+            Ingredient(name: "Crème fraîche", amount: 200, unit: "g", position: 1),
+            Ingredient(name: "Speckwürfel", amount: 150, unit: "g", position: 2),
+            Ingredient(name: "Zwiebel", amount: 1, unit: "pcs", position: 3)
         ],
         spices: [
-            Spice(name: "Salz", amount: 1, unit: "tsp"),
-            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
-            Spice(name: "Muskat", amount: 1, unit: "pinch")
+            Spice(name: "Salz", amount: 1, unit: "tsp", position: 0),
+            Spice(name: "Pfeffer", amount: 1, unit: "tsp", position: 1),
+            Spice(name: "Muskat", amount: 1, unit: "pinch", position: 2)
         ],
         steps: [
             "Baguette längs halbieren.",
@@ -94,7 +86,7 @@ var mockRecipes: [Recipe] = [
             "Im Ofen knusprig backen."
         ]
     ),
-    
+
     Recipe(
         imageData: UIImage(named: "chickenTeriyaki")?.jpegData(compressionQuality: 0.8),
         name: "Hähnchen Teriyaki mit Reis",
@@ -105,15 +97,15 @@ var mockRecipes: [Recipe] = [
         fats: 36,
         customCalories: nil,
         ingredients: [
-            Ingredient(name: "Hähnchenbrust", amount: 600, unit: "g"),
-            Ingredient(name: "Basmatireis", amount: 300, unit: "g"),
-            Ingredient(name: "Teriyaki Sauce", amount: 150, unit: "ml"),
-            Ingredient(name: "Sesamöl", amount: 1, unit: "tbsp")
+            Ingredient(name: "Hähnchenbrust", amount: 600, unit: "g", position: 0),
+            Ingredient(name: "Basmatireis", amount: 300, unit: "g", position: 1),
+            Ingredient(name: "Teriyaki Sauce", amount: 150, unit: "ml", position: 2),
+            Ingredient(name: "Sesamöl", amount: 1, unit: "tbsp", position: 3)
         ],
         spices: [
-            Spice(name: "Salz", amount: 1, unit: "tsp"),
-            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
-            Spice(name: "Knoblauchpulver", amount: 1, unit: "tsp")
+            Spice(name: "Salz", amount: 1, unit: "tsp", position: 0),
+            Spice(name: "Pfeffer", amount: 1, unit: "tsp", position: 1),
+            Spice(name: "Knoblauchpulver", amount: 1, unit: "tsp", position: 2)
         ],
         steps: [
             "Reis nach Packungsanleitung kochen.",
@@ -133,14 +125,14 @@ var mockRecipes: [Recipe] = [
         fats: 148,
         customCalories: nil,
         ingredients: [
-            Ingredient(name: "Spaghetti", amount: 400, unit: "g"),
-            Ingredient(name: "Guanciale", amount: 200, unit: "g"),
-            Ingredient(name: "Eier", amount: 4, unit: "pcs"),
-            Ingredient(name: "Parmesan", amount: 120, unit: "g")
+            Ingredient(name: "Spaghetti", amount: 400, unit: "g", position: 0),
+            Ingredient(name: "Guanciale", amount: 200, unit: "g", position: 1),
+            Ingredient(name: "Eier", amount: 4, unit: "pcs", position: 2),
+            Ingredient(name: "Parmesan", amount: 120, unit: "g", position: 3)
         ],
         spices: [
-            Spice(name: "Pfeffer", amount: 2, unit: "tsp"),
-            Spice(name: "Salz", amount: 1, unit: "tsp")
+            Spice(name: "Pfeffer", amount: 2, unit: "tsp", position: 0),
+            Spice(name: "Salz", amount: 1, unit: "tsp", position: 1)
         ],
         steps: [
             "Spaghetti in Salzwasser kochen.",
@@ -160,15 +152,15 @@ var mockRecipes: [Recipe] = [
         fats: 72,
         customCalories: nil,
         ingredients: [
-            Ingredient(name: "Lachsfilet", amount: 400, unit: "g"),
-            Ingredient(name: "Kartoffeln", amount: 600, unit: "g"),
-            Ingredient(name: "Olivenöl", amount: 3, unit: "tbsp"),
-            Ingredient(name: "Zitrone", amount: 1, unit: "pcs")
+            Ingredient(name: "Lachsfilet", amount: 400, unit: "g", position: 0),
+            Ingredient(name: "Kartoffeln", amount: 600, unit: "g", position: 1),
+            Ingredient(name: "Olivenöl", amount: 3, unit: "tbsp", position: 2),
+            Ingredient(name: "Zitrone", amount: 1, unit: "pcs", position: 3)
         ],
         spices: [
-            Spice(name: "Salz", amount: 2, unit: "tsp"),
-            Spice(name: "Pfeffer", amount: 1, unit: "tsp"),
-            Spice(name: "Paprikapulver", amount: 1, unit: "tsp")
+            Spice(name: "Salz", amount: 2, unit: "tsp", position: 0),
+            Spice(name: "Pfeffer", amount: 1, unit: "tsp", position: 1),
+            Spice(name: "Paprikapulver", amount: 1, unit: "tsp", position: 2)
         ],
         steps: [
             "Backofen auf 200°C vorheizen.",
@@ -178,4 +170,3 @@ var mockRecipes: [Recipe] = [
         ]
     )
 ]
-

@@ -14,6 +14,8 @@ struct RecipeSaveButtonView: View {
     @Environment(\.modelContext) private var modelContext
     @ObservedObject var viewModel: NewRecipeViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    let recipeToEdit: Recipe?
 
     var body: some View {
         Section {
@@ -26,24 +28,39 @@ struct RecipeSaveButtonView: View {
                       let fats = viewModel.fats
                 else { return }
 
-                let recipe = Recipe(
-                    imageData: viewModel.imageData,
-                    name: viewModel.name,
-                    servings: servings,
-                    duration: duration,
-                    protein: protein,
-                    carbs: carbs,
-                    fats: fats,
-                    customCalories: viewModel.customCalories,
-                    ingredients: viewModel.ingredients,
-                    spices: viewModel.spices,
-                    steps: viewModel.steps
-                )
+                if let recipeToEdit {
+                    recipeToEdit.imageData = viewModel.imageData
+                    recipeToEdit.name = viewModel.name
+                    recipeToEdit.servings = servings
+                    recipeToEdit.duration = duration
+                    recipeToEdit.protein = protein
+                    recipeToEdit.carbs = carbs
+                    recipeToEdit.fats = fats
+                    recipeToEdit.customCalories = viewModel.customCalories
+                    recipeToEdit.ingredients = viewModel.ingredients
+                    recipeToEdit.spices = viewModel.spices
+                    recipeToEdit.steps = viewModel.steps
+                } else {
+                    let recipe = Recipe(
+                        imageData: viewModel.imageData,
+                        name: viewModel.name,
+                        servings: servings,
+                        duration: duration,
+                        protein: protein,
+                        carbs: carbs,
+                        fats: fats,
+                        customCalories: viewModel.customCalories,
+                        ingredients: viewModel.ingredients,
+                        spices: viewModel.spices,
+                        steps: viewModel.steps
+                    )
+                    
+                    modelContext.insert(recipe)
+                }
 
-                modelContext.insert(recipe)
                 dismiss()
             } label: {
-                Text("Save Recipe")
+                Text(recipeToEdit == nil ? "Save Recipe" : "Update Recipe")
                     .frame(maxWidth: .infinity, alignment: .center)
                     .font(.title3)
                     .fontWeight(.bold)
@@ -57,7 +74,7 @@ struct RecipeSaveButtonView: View {
 
 #Preview {
     Form {
-        RecipeSaveButtonView(viewModel: NewRecipeViewModel())
+        RecipeSaveButtonView(viewModel: NewRecipeViewModel(), recipeToEdit: nil)
     }
     .modelContainer(for: Recipe.self, inMemory: true)
 }

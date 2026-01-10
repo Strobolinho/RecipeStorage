@@ -101,7 +101,7 @@ struct AddIngredientsView: View {
         
             if !viewModel.ingredients.isEmpty {
                 Section("Added Ingredients") {
-                    ForEach(viewModel.ingredients) { ingredient in
+                    ForEach(viewModel.ingredients.sorted { ($0.position ?? 0) < ($1.position ?? 0) }) { ingredient in
                         HStack {
                             Text(ingredient.name)
                             Spacer()
@@ -117,6 +117,7 @@ struct AddIngredientsView: View {
                     }
                     .onMove { indices, newOffset in
                         viewModel.ingredients.move(fromOffsets: indices, toOffset: newOffset)
+                        viewModel.reindexIngredients()
                     }
                 }
             }

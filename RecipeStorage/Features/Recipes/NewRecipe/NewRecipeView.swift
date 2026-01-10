@@ -26,8 +26,15 @@ struct NewRecipeView: View {
     @Query private var unitStores: [UnitStore]
     @Environment(\.modelContext) private var modelContext
     
-    @StateObject private var viewModel = NewRecipeViewModel()
+    @StateObject private var viewModel: NewRecipeViewModel
     @FocusState private var focusedField: newRecipeField?
+    
+    let recipeToEdit: Recipe?
+    
+    init(recipeToEdit: Recipe? = nil) {
+        self.recipeToEdit = recipeToEdit
+        _viewModel = StateObject(wrappedValue: NewRecipeViewModel(recipe: recipeToEdit))
+    }
     
     private func focusNext() {
         switch focusedField {
@@ -64,7 +71,7 @@ struct NewRecipeView: View {
             
             AddStepsView(viewModel: viewModel, focusedField: $focusedField)
             
-            RecipeSaveButtonView(viewModel: viewModel)
+            RecipeSaveButtonView(viewModel: viewModel, recipeToEdit: recipeToEdit)
         }
         .navigationTitle("New Recipe")
         .toolbar {
@@ -84,5 +91,5 @@ struct NewRecipeView: View {
 }
 
 #Preview {
-    NewRecipeView()
+    NewRecipeView(recipeToEdit: nil)
 }
