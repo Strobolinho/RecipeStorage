@@ -35,7 +35,6 @@ final class NewRecipeViewModel: ObservableObject {
     @Published var ingredientUnit: String = "g"
 
     // Ingredient Units
-    @Published var ingredientUnits: [String] = ["Custom Unit", "g", "ml", "Stück"]
     @Published var newIngredientUnit: String = ""
     
     // Spices
@@ -47,7 +46,6 @@ final class NewRecipeViewModel: ObservableObject {
     @Published var spiceUnit: String = "TL"
 
     // Spice Units
-    @Published var spiceUnits: [String] = ["Custom Unit", "TL", "EL", "Prise"]
     @Published var newSpiceUnit: String = ""
     
     // Steps
@@ -81,17 +79,6 @@ final class NewRecipeViewModel: ObservableObject {
         return true
     }
     
-    
-    func addNewIngredientUnit() {
-        if (newIngredientUnit != "") && !(ingredientUnits.contains(newIngredientUnit)) {
-            ingredientUnits.append(newIngredientUnit)
-            ingredientUnit = newIngredientUnit
-            newIngredientUnit = ""
-        } else {
-            return
-        }
-    }
-    
     func addIngredient() {
         if (!ingredientName.isEmpty &&
             ingredientUnit != "Custom Unit"), let amount = ingredientAmount {
@@ -106,17 +93,6 @@ final class NewRecipeViewModel: ObservableObject {
     
     func deleteIngredient(_ ingredient: Ingredient) {
         ingredients.removeAll { $0.id == ingredient.id }
-    }
-    
-    
-    func addNewSpiceUnit() {
-        if (newSpiceUnit != "") && !(spiceUnits.contains(newSpiceUnit)) {
-            spiceUnits.append(newSpiceUnit)
-            spiceUnit = newSpiceUnit
-            newSpiceUnit = ""
-        } else {
-            return
-        }
     }
     
     func addSpice() {

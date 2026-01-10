@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 
 enum ingredientField: Hashable {
@@ -17,6 +18,9 @@ enum ingredientField: Hashable {
 
 struct AddIngredientsView: View {
     
+    @Query private var unitStores: [UnitStore]
+    private var unitStore: UnitStore? { unitStores.first }
+    
     @ObservedObject var viewModel: NewRecipeViewModel
     @FocusState private var focusedField: ingredientField?
     
@@ -27,6 +31,23 @@ struct AddIngredientsView: View {
         default: focusedField = nil
         }
     }
+    
+    private func addNewIngredientUnit() {
+        guard let unitStore else { return }
+        
+        let newUnit = viewModel.newIngredientUnit
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !newUnit.isEmpty else { return }
+
+        if !unitStore.ingredientUnits.contains(newUnit) {
+            unitStore.ingredientUnits.append(newUnit)
+        }
+
+        viewModel.ingredientUnit = newUnit
+        viewModel.newIngredientUnit = ""
+    }
+
     
     var body: some View {
         
@@ -40,8 +61,8 @@ struct AddIngredientsView: View {
                     .focused($focusedField, equals: .amount)
                 
                 Picker("Unit", selection: $viewModel.ingredientUnit) {
-                    ForEach(viewModel.ingredientUnits, id: \.self) {
-                        Text("\($0)")
+                    ForEach(unitStore?.ingredientUnits ?? ["Custom Unit", "g", "ml"], id: \.self) { unit in
+                        Text(unit)
                     }
                 }
                 .onChange(of: viewModel.ingredientUnit) {
@@ -59,7 +80,7 @@ struct AddIngredientsView: View {
                             .focused($focusedField, equals: .newUnit)
                         
                         Button {
-                            viewModel.addNewIngredientUnit()
+                            addNewIngredientUnit()
                         } label: {
                             Text("+")
                                 .font(.title)
@@ -114,6 +135,7 @@ struct AddIngredientsView: View {
         }
     }
 }
+
 
 #Preview {
     AddIngredientsView(viewModel: NewRecipeViewModel())

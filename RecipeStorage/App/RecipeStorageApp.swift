@@ -14,6 +14,6 @@ struct RecipeStorageApp: App {
         WindowGroup {
             MainTabView()
         }
-        .modelContainer(for: [Recipe.self, Ingredient.self, Spice.self])
+        .modelContainer(for: [Recipe.self, Ingredient.self, Spice.self, UnitStore.self])
     }
 }

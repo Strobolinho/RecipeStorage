@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 
 enum spiceField: Hashable {
@@ -17,6 +18,9 @@ enum spiceField: Hashable {
 
 struct AddSpicesView: View {
     
+    @Query private var unitStores: [UnitStore]
+    private var unitStore: UnitStore? { unitStores.first }
+    
     @ObservedObject var viewModel: NewRecipeViewModel
     @FocusState private var focusedField: spiceField?
     
@@ -26,6 +30,22 @@ struct AddSpicesView: View {
         case .amount: focusedField = nil
         default: focusedField = nil
         }
+    }
+    
+    private func addNewSpiceUnit() {
+        guard let unitStore else { return }
+        
+        let newUnit = viewModel.newSpiceUnit
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !newUnit.isEmpty else { return }
+
+        if !unitStore.spiceUnits.contains(newUnit) {
+            unitStore.spiceUnits.append(newUnit)
+        }
+
+        viewModel.spiceUnit = newUnit
+        viewModel.newSpiceUnit = ""
     }
     
     var body: some View {
@@ -40,8 +60,8 @@ struct AddSpicesView: View {
                     .focused($focusedField, equals: .amount)
                 
                 Picker("Unit", selection: $viewModel.spiceUnit) {
-                    ForEach(viewModel.spiceUnits, id: \.self) {
-                        Text("\($0)")
+                    ForEach(unitStore?.spiceUnits ?? ["Custom Unit", "TL", "EL"], id: \.self) { unit in
+                        Text(unit)
                     }
                 }
                 .onChange(of: viewModel.spiceUnit) {
@@ -58,7 +78,7 @@ struct AddSpicesView: View {
                             .focused($focusedField, equals: .newUnit)
                         
                         Button {
-                            viewModel.addNewSpiceUnit()
+                            addNewSpiceUnit()
                         } label: {
                             Text("+")
                                 .font(.title)

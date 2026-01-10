@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 
 enum newRecipeField: Hashable {
@@ -21,6 +22,9 @@ enum newRecipeField: Hashable {
 
 
 struct NewRecipeView: View {
+    
+    @Query private var unitStores: [UnitStore]
+    @Environment(\.modelContext) private var modelContext
     
     @StateObject private var viewModel = NewRecipeViewModel()
     @FocusState private var focusedField: newRecipeField?
@@ -71,6 +75,11 @@ struct NewRecipeView: View {
             }
         }
         .toolbar(.hidden, for: .tabBar)
+        .onAppear {
+            if unitStores.isEmpty {
+                modelContext.insert(UnitStore())
+            }
+        }
     }
 }
 
