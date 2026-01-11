@@ -33,6 +33,7 @@ struct RecipeSaveButtonView: View {
                     recipeToEdit.name = viewModel.name
                     recipeToEdit.servings = servings
                     recipeToEdit.duration = duration
+                    recipeToEdit.categories = viewModel.categories
                     recipeToEdit.protein = protein
                     recipeToEdit.carbs = carbs
                     recipeToEdit.fats = fats
@@ -46,6 +47,7 @@ struct RecipeSaveButtonView: View {
                         name: viewModel.name,
                         servings: servings,
                         duration: duration,
+                        categories: viewModel.categories,
                         protein: protein,
                         carbs: carbs,
                         fats: fats,

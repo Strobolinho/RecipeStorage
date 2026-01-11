@@ -14,6 +14,7 @@ final class Recipe {
     var name: String = ""
     var servings: Int = 0
     var duration: Int = 0
+    var categories: Set<String> = []
 
     var protein: Int = 0
     var carbs: Int = 0
@@ -43,6 +44,7 @@ final class Recipe {
         name: String,
         servings: Int,
         duration: Int,
+        categories: Set<String>,
         protein: Int,
         carbs: Int,
         fats: Int,
@@ -58,6 +60,7 @@ final class Recipe {
         self.name = name
         self.servings = servings
         self.duration = duration
+        self.categories = categories
         self.protein = protein
         self.carbs = carbs
         self.fats = fats

@@ -17,6 +17,7 @@ final class NewRecipeViewModel: ObservableObject {
     @Published var imageData: Data? = nil
     @Published var servings: Int? = nil
     @Published var duration: Int? = nil
+    @Published var categories: Set<String> = []
 
     // Macros
     @Published var protein: Int? = nil
@@ -69,6 +70,7 @@ final class NewRecipeViewModel: ObservableObject {
             name = recipe.name
             servings = recipe.servings
             duration = recipe.duration
+            categories = recipe.categories
             protein = recipe.protein
             carbs = recipe.carbs
             fats = recipe.fats

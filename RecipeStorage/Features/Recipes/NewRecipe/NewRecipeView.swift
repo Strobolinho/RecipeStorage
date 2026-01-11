@@ -24,6 +24,7 @@ enum newRecipeField: Hashable {
 struct NewRecipeView: View {
     
     @Query private var unitStores: [UnitStore]
+    @Query private var categoryStores: [CategoryStore]
     @Environment(\.modelContext) private var modelContext
     
     @StateObject private var viewModel: NewRecipeViewModel
@@ -71,6 +72,8 @@ struct NewRecipeView: View {
             
             AddStepsView(viewModel: viewModel, focusedField: $focusedField)
             
+            CategoriesScrollView(viewModel: viewModel)
+            
             RecipeSaveButtonView(viewModel: viewModel, recipeToEdit: recipeToEdit)
         }
         .navigationTitle("New Recipe")
@@ -85,6 +88,9 @@ struct NewRecipeView: View {
         .onAppear {
             if unitStores.isEmpty {
                 modelContext.insert(UnitStore())
+            }
+            if categoryStores.isEmpty {
+                modelContext.insert(CategoryStore())
             }
         }
     }
