@@ -73,8 +73,8 @@ final class NewRecipeViewModel: ObservableObject {
             carbs = recipe.carbs
             fats = recipe.fats
             customCalories = recipe.customCalories
-            ingredients = recipe.ingredients
-            spices = recipe.spices
+            ingredients = recipe.ingredients ?? []
+            spices = recipe.spices ?? []
             steps = recipe.steps
         }
     
@@ -137,7 +137,7 @@ final class NewRecipeViewModel: ObservableObject {
 
         spiceName = ""
         spiceAmount = nil
-        spiceUnit = "g"
+        spiceUnit = "TL"
     }
 
     func reindexSpices() {

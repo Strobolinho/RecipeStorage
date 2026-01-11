@@ -10,10 +10,32 @@ import SwiftData
 
 @main
 struct RecipeStorageApp: App {
+    
+    private var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            Recipe.self,
+            Ingredient.self,
+            Spice.self,
+            UnitStore.self
+        ])
+
+        let config = ModelConfiguration(
+            schema: schema,
+            cloudKitDatabase: .automatic
+        )
+
+        do {
+            return try ModelContainer(for: schema, configurations: [config])
+        } catch {
+            fatalError("ModelContainer konnte nicht erstellt werden: \(error)")
+        }
+    }()
+    
+    
     var body: some Scene {
         WindowGroup {
             MainTabView()
         }
-        .modelContainer(for: [Recipe.self, Ingredient.self, Spice.self, UnitStore.self])
+        .modelContainer(sharedModelContainer)
     }
 }

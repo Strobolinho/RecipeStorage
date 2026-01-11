@@ -12,9 +12,12 @@ struct SpiceListView: View {
     let recipe: Recipe
     
     var body: some View {
-        if !recipe.spices.isEmpty {
+        
+        let spices = (recipe.spices ?? []).sorted { ($0.position ?? 0) < ($1.position ?? 0) }
+        
+        if !spices.isEmpty {
             Section("Spices") {
-                ForEach(recipe.spices.sorted { ($0.position ?? 0) < ($1.position ?? 0) }) { spice in
+                ForEach(spices) { spice in
                     HStack {
                         Text(spice.name)
                         

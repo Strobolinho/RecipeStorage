@@ -13,7 +13,9 @@ struct IngredientListView: View {
     
     var body: some View {
         Section("Ingredients") {
-            ForEach(recipe.ingredients.sorted { ($0.position ?? 0) < ($1.position ?? 0) }) { ingredient in
+            let ingredients = (recipe.ingredients ?? []).sorted { ($0.position ?? 0) < ($1.position ?? 0) }
+            
+            ForEach(ingredients) { ingredient in
                 HStack {
                     Text(ingredient.name)
                     

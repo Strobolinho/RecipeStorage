@@ -7,12 +7,13 @@
 
 import SwiftData
 
-
 @Model
 final class UnitStore {
-    var ingredientUnits: [String]
-    var spiceUnits: [String]
-    
+
+    // ✅ CloudKit: Default muss am Property stehen (nicht nur im init)
+    var ingredientUnits: [String] = ["Custom Unit", "g", "ml", "Stück"]
+    var spiceUnits: [String] = ["Custom Unit", "TL", "EL", "Prise"]
+
     init(
         ingredientUnits: [String] = ["Custom Unit", "g", "ml", "Stück"],
         spiceUnits: [String] = ["Custom Unit", "TL", "EL", "Prise"]

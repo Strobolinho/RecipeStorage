@@ -87,12 +87,16 @@ struct RecipesView: View {
         let recipes = (try? modelContext.fetch(descriptor)) ?? []
 
         for recipe in recipes {
-            for (idx, ing) in recipe.ingredients.enumerated() {
+            
+            let ingredients = recipe.ingredients ?? []
+            let spices = recipe.spices ?? []
+            
+            for (idx, ing) in ingredients.enumerated() {
                 if ing.position == nil {
                     ing.position = idx
                 }
             }
-            for (idx, sp) in recipe.spices.enumerated() {
+            for (idx, sp) in spices.enumerated() {
                 if sp.position == nil {
                     sp.position = idx
                 }

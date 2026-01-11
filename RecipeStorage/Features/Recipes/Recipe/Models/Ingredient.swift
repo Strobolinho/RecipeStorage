@@ -10,12 +10,18 @@ import SwiftData
 
 @Model
 final class Ingredient {
-    @Attribute(.unique) var id: UUID
-    
-    var name: String
-    var amount: Int
-    var unit: String
+
+    // ✅ CloudKit: .unique raus + Default
+    var id: UUID = UUID()
+
+    // ✅ CloudKit: Defaults
+    var name: String = ""
+    var amount: Int = 0
+    var unit: String = ""
     var position: Int?
+
+    // ✅ CloudKit: Inverse Relationship (muss optional sein)
+    var recipe: Recipe?
 
     init(name: String, amount: Int, unit: String, position: Int? = nil) {
         self.id = UUID()
@@ -25,4 +31,3 @@ final class Ingredient {
         self.position = position
     }
 }
-
