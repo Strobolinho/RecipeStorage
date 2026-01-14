@@ -24,22 +24,7 @@ struct RecipeView: View {
             )
             
             Form {
-                Section("Categories") {
-                    ScrollView(.horizontal) {
-                        LazyHStack {
-                            ForEach(Array(recipe.categories), id: \.self) { category in
-                                Text(category)
-                                    .foregroundStyle(.black)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 8)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 999)
-                                            .fill(.brandPrimary)
-                                    )
-                            }
-                        }
-                    }
-                }
+                CategoriesView(recipe: recipe)
                 
                 MacrosView(recipe: recipe)
                 
@@ -85,3 +70,4 @@ struct RecipeView: View {
 #Preview {
     RecipeView(recipe: mockRecipes[0])
 }
+

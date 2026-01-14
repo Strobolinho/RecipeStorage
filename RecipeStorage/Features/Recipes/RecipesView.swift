@@ -12,6 +12,13 @@ struct RecipesView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Recipe.name) private var recipes: [Recipe]
+    
+    @Query private var categoryStores: [CategoryStore]
+    private var categoryStore: CategoryStore? { categoryStores.first }
+
+    private var categories: [String] {
+        categoryStore?.categories ?? ["High Protein", "Low Calorie", "Vegetarian", "Vegan", "Low Carb"]
+    }
 
     var body: some View {
         NavigationStack {
@@ -23,33 +30,15 @@ struct RecipesView: View {
                             recipes: recipes
                         )
 
-                        HorizontalRecipeScrollbarView(
-                            title: "Proteinreich 💪",
-                            recipes: recipes.filter { recipe in
-                                ((Double(recipe.protein) / Double(recipe.calories)) * 10 ) >= 0.75
+                        ForEach(categories, id: \.self) { category in
+                            let filtered = recipes.filter { $0.categories.contains(category) }
+                            
+                            if !filtered.isEmpty {
+                                HorizontalRecipeScrollbarView(title: category, recipes: filtered)
                             }
-                        )
-
-                        HorizontalRecipeScrollbarView(
-                            title: "Kalorienarm 🥗",
-                            recipes: recipes.filter { recipe in
-                                (recipe.calories / recipe.servings) < 600
-                            }
-                        )
-
-                        HorizontalRecipeScrollbarView(
-                            title: "Low Carb 🚫🍞",
-                            recipes: recipes.filter { recipe in
-                                (recipe.carbs / recipe.servings) < 30
-                            }
-                        )
-
-                        HorizontalRecipeScrollbarView(
-                            title: "Low Fat 🚫🥑",
-                            recipes: recipes.filter { recipe in
-                                (recipe.fats / recipe.servings) < 15
-                            }
-                        )
+                        }
+                        
+                        VStack {}.frame(height: 50)
                     }
                 } else {
                     VStack(spacing: 16) {
@@ -76,7 +65,6 @@ struct RecipesView: View {
                 NewRecipeButtonView()
             }
         }
-        // 👇 GENAU HIER
         .task {
             backfillIngredientPositionsIfNeeded()
         }

@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 
-
 enum newRecipeField: Hashable {
     case recipeName
     case servings
@@ -20,34 +19,35 @@ enum newRecipeField: Hashable {
     case steps
 }
 
-
 struct NewRecipeView: View {
-    
+
     @Query private var unitStores: [UnitStore]
     @Query private var categoryStores: [CategoryStore]
     @Environment(\.modelContext) private var modelContext
-    
+
     @StateObject private var viewModel: NewRecipeViewModel
     @FocusState private var focusedField: newRecipeField?
-    
+
     let recipeToEdit: Recipe?
-    
+
+    @State private var showAddCategorySheet = false
+    @State private var draftCategoryName = ""
+
     init(recipeToEdit: Recipe? = nil) {
         self.recipeToEdit = recipeToEdit
         _viewModel = StateObject(wrappedValue: NewRecipeViewModel(recipe: recipeToEdit))
     }
-    
+
     private func focusNext() {
         switch focusedField {
         case .recipeName: focusedField = .servings
         case .servings: focusedField = .duration
-        case .duration: do {
+        case .duration:
             if viewModel.isCustomCalories {
                 focusedField = .customCalories
             } else {
                 focusedField = .protein
             }
-        }
         case .customCalories: focusedField = .protein
         case .protein: focusedField = .carbs
         case .carbs: focusedField = .fats
@@ -56,24 +56,26 @@ struct NewRecipeView: View {
         default: focusedField = nil
         }
     }
-    
-    
+
     var body: some View {
         Form {
             ImageView(viewModel: viewModel)
-            
+
             BasicsView(viewModel: viewModel, focusedField: $focusedField)
-            
+
             SetMacrosView(viewModel: viewModel, focusedField: $focusedField)
-            
+
             AddIngredientsButtonView(viewModel: viewModel)
-            
+
             AddSpicesButtonView(viewModel: viewModel)
-            
+
             AddStepsView(viewModel: viewModel, focusedField: $focusedField)
-            
-            CategoriesScrollView(viewModel: viewModel)
-            
+
+            CategoriesScrollView(viewModel: viewModel) {
+                draftCategoryName = ""
+                showAddCategorySheet = true
+            }
+
             RecipeSaveButtonView(viewModel: viewModel, recipeToEdit: recipeToEdit)
         }
         .navigationTitle("New Recipe")
@@ -93,6 +95,51 @@ struct NewRecipeView: View {
                 modelContext.insert(CategoryStore())
             }
         }
+        .sheet(isPresented: $showAddCategorySheet) {
+            NavigationStack {
+                Form {
+                    TextField("Neue Kategorie", text: $draftCategoryName)
+                        .textInputAutocapitalization(.words)
+                }
+                .navigationTitle("Kategorie")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Abbrechen") {
+                            showAddCategorySheet = false
+                        }
+                    }
+
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Speichern") {
+                            saveCategory(draftCategoryName)
+                            showAddCategorySheet = false
+                        }
+                        .disabled(draftCategoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+                }
+            }
+            .presentationDetents([.medium])
+        }
+    }
+
+    private func saveCategory(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        // current store (if it exists)
+        let store = categoryStores.first
+
+        let existing = store?.categories ?? []
+        guard !existing.contains(where: { $0.lowercased() == trimmed.lowercased() }) else { return }
+
+        if let store {
+            store.categories.append(trimmed)
+        } else {
+            modelContext.insert(CategoryStore(categories: [trimmed]))
+        }
+
+        // optional: directly select the new category for the recipe
+        // viewModel.categories.insert(trimmed)
     }
 }
 

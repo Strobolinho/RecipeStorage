@@ -13,7 +13,7 @@ struct SettingsView: View {
             Form {
                 Section("Recipe Categories") {
                     NavigationLink {
-                        
+                        CategorySettingsView()
                     } label: {
                         Text("Recipe Category Settings")
                     }
