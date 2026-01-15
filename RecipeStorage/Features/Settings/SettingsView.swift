@@ -18,6 +18,14 @@ struct SettingsView: View {
                         Text("Recipe Category Settings")
                     }
                 }
+                
+                Section("Ingredients") {
+                    NavigationLink {
+                        IngredientsListView()
+                    } label: {
+                        Text("Ingredients")
+                    }
+                }
             }
         }
     }

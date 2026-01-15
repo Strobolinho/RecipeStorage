@@ -36,4 +36,5 @@ struct MainTabView: View {
 
 #Preview {
     MainTabView()
+        .environmentObject(IngredientStore())
 }

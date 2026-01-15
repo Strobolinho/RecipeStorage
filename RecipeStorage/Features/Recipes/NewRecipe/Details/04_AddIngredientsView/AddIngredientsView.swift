@@ -24,6 +24,8 @@ struct AddIngredientsView: View {
     @ObservedObject var viewModel: NewRecipeViewModel
     @FocusState private var focusedField: ingredientField?
     
+    @EnvironmentObject private var ingredientsStore: IngredientStore
+    
     private func focusNext() {
         switch focusedField {
         case .ingredientName: focusedField = .amount
@@ -47,6 +49,20 @@ struct AddIngredientsView: View {
         viewModel.ingredientUnit = newUnit
         viewModel.newIngredientUnit = ""
     }
+    
+    
+    private var ingredientSuggestions: [String] {
+        let input = viewModel.ingredientName
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        
+        guard !input.isEmpty else { return [] }
+        
+        return ingredientsStore.ingredientNames
+            .filter { $0.lowercased().contains(input) }
+            .prefix(3)
+            .map { $0 }
+    }
 
     
     var body: some View {
@@ -55,6 +71,27 @@ struct AddIngredientsView: View {
             Section("New Ingredients") {
                 TextField("Ingredient Name", text: $viewModel.ingredientName)
                     .focused($focusedField, equals: .ingredientName)
+                
+                if focusedField == .ingredientName && !ingredientSuggestions.isEmpty {
+                    VStack(alignment: .leading, spacing: 10) {
+                        ForEach(ingredientSuggestions, id: \.self) { suggestion in
+                            Button {
+                                viewModel.ingredientName = suggestion
+                                focusedField = .amount
+                            } label: {
+                                Text(suggestion)
+                                    .foregroundStyle(.black)
+                                    .padding(.horizontal, 5)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 999)
+                                            .foregroundStyle(.brandPrimary)
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
                 
                 TextField("Amount", value: $viewModel.ingredientAmount, format: .number)
                     .keyboardType(.numberPad)
@@ -140,4 +177,9 @@ struct AddIngredientsView: View {
 
 #Preview {
     AddIngredientsView(viewModel: NewRecipeViewModel())
+        .environmentObject({
+            let store = IngredientStore()
+            store.ingredientNames = ["Tomato", "Tomato Sauce", "Salt", "Sugar", "Olive Oil"]
+            return store
+        }())
 }
