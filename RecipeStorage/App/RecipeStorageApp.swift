@@ -39,26 +39,9 @@ struct RecipeStorageApp: App {
             MainTabView()
                 .environmentObject(ingredientsStore)
                 .task {
-                    loadIngredientNames()
+                    ingredientsStore.load(from: sharedModelContainer)
                 }
         }
         .modelContainer(sharedModelContainer)
-    }
-
-    
-    @MainActor
-    private func loadIngredientNames() {
-        do {
-            let context = sharedModelContainer.mainContext
-            let recipes = try context.fetch(FetchDescriptor<Recipe>())
-
-            let names = recipes
-                .flatMap { $0.ingredients! }
-                .map { $0.name }
-
-            ingredientsStore.ingredientNames = Array(Set(names)).sorted()
-        } catch {
-            print("Fehler beim Laden der Ingredients:", error)
-        }
     }
 }

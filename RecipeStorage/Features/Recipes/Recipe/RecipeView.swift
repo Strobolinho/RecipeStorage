@@ -14,6 +14,8 @@ struct RecipeView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showDeleteDialog = false
     
+    @EnvironmentObject var ingredientsStore: IngredientStore
+    
     let recipe: Recipe
     
     var body: some View {
@@ -47,6 +49,9 @@ struct RecipeView: View {
                 .confirmationDialog("Rezept wirklich löschen?", isPresented: $showDeleteDialog) {
                     Button("Löschen", role: .destructive) {
                         modelContext.delete(recipe)
+                        
+                        ingredientsStore.load(from: modelContext.container)
+                        
                         dismiss()
                     }
                     Button("Abbrechen", role: .cancel) {}

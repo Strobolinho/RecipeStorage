@@ -15,6 +15,8 @@ struct RecipeSaveButtonView: View {
     @ObservedObject var viewModel: NewRecipeViewModel
     @Environment(\.dismiss) private var dismiss
     
+    @EnvironmentObject var ingredientsStore : IngredientStore
+    
     let recipeToEdit: Recipe?
 
     var body: some View {
@@ -59,6 +61,8 @@ struct RecipeSaveButtonView: View {
                     
                     modelContext.insert(recipe)
                 }
+                
+                ingredientsStore.load(from: modelContext.container)
 
                 dismiss()
             } label: {
