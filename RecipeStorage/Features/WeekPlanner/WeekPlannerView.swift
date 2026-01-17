@@ -8,8 +8,17 @@
 import SwiftUI
 
 struct WeekPlannerView: View {
+
+    @StateObject private var viewModel = CalendarScrollViewModel()
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        GeometryReader { geo in
+            VStack {
+                CalendarScrollView(viewModel: viewModel, width: geo.size.width)
+
+                Spacer()
+            }
+        }
     }
 }
 
