@@ -38,6 +38,9 @@ final class Recipe {
 
     // ✅ CloudKit: Default
     var steps: [String] = []
+    
+    @Relationship(deleteRule: .nullify)
+    var mealPlanEntries: [MealPlanEntry]? = []
 
     init(
         imageData: Data? = nil,

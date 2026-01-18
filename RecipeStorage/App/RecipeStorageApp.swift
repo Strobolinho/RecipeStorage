@@ -19,7 +19,8 @@ struct RecipeStorageApp: App {
             Ingredient.self,
             Spice.self,
             UnitStore.self,
-            CategoryStore.self
+            CategoryStore.self,
+            MealPlanEntry.self
         ])
 
         let config = ModelConfiguration(
