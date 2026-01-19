@@ -13,14 +13,14 @@ enum MealType: String, Codable, CaseIterable {
     case breakfast
     case lunch
     case dinner
-    case snack
+    case snacks
 
     var title: String {
         switch self {
         case .breakfast: return "Breakfast"
         case .lunch:     return "Lunch"
         case .dinner:    return "Dinner"
-        case .snack:     return "Snack"
+        case .snacks:     return "Snacks"
         }
     }
 }
@@ -31,7 +31,7 @@ final class MealPlanEntry {
 
     var id: UUID = UUID()
 
-    /// Am besten immer "Start of day" speichern (00:00), damit du sauber nach Tagen filtern kannst
+    /// Am besten immer "Start of day" speichern (00:00), damit man sauber nach Tagen filtern kann
     var day: Date = Date()
 
     var mealType: MealType = MealType.lunch
