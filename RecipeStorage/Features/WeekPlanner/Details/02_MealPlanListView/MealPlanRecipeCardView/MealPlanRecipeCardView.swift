@@ -46,7 +46,7 @@ struct MealPlanRecipeCardView: View {
                     Text("\(recipe.duration) min")
                 }
                 .fontWeight(.semibold)
-                .font(.title3)
+                .font(.callout)
                 .padding(.horizontal)
                 .padding(.top, 5)
                 .foregroundStyle(.recipeTitle)
@@ -65,7 +65,7 @@ struct MealPlanRecipeCardView: View {
                 
                 Text(recipe.name)
                     .fontWeight(.semibold)
-                    .font(.title2)
+                    .font(.title3)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                     .foregroundStyle(.recipeTitle)

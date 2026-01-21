@@ -11,7 +11,7 @@ struct WeekPlannerView: View {
 
     @StateObject private var viewModel = CalendarScrollViewModel()
     
-    private let entry1: MealPlanEntry = MealPlanEntry(day: Date(), mealType: .lunch, recipe: mockRecipes[0])
+    private let entry1: MealPlanEntry = MealPlanEntry(day: Date(), mealType: .snacks, recipe: mockRecipes[0])
     private let entry2: MealPlanEntry = MealPlanEntry(day: Date(), mealType: .dinner, recipe: mockRecipes[1])
     private let entry3: MealPlanEntry = MealPlanEntry(day: Date(), mealType: .breakfast, recipe: mockRecipes[2])
     private let entry4: MealPlanEntry = MealPlanEntry(day: Date(), mealType: .snacks, recipe: mockRecipes[3])
@@ -26,23 +26,15 @@ struct WeekPlannerView: View {
     private var snacks: [MealPlanEntry] {entries.filter({ $0.mealType == .snacks })}
 
     var body: some View {
-        GeometryReader { geo in
-            VStack(spacing: 30) {
-                CalendarScrollView(viewModel: viewModel, width: geo.size.width)
-                
-                
-                VStack {
-                        
-                    MealPlanListSection(entries: breakfast, mealType: "Breakfast")
+        NavigationStack {
+            GeometryReader { geo in
+                VStack(spacing: 30) {
+                    CalendarScrollView(viewModel: viewModel, width: geo.size.width)
                     
-                    MealPlanListSection(entries: lunch, mealType: "Lunch")
+                    MealPlanListView(breakfast: breakfast, lunch: lunch, dinner: dinner, snacks: snacks)
                     
-                    MealPlanListSection(entries: dinner, mealType: "Dinner")
-                    
-                    MealPlanListSection(entries: snacks, mealType: "Snacks")
+                    Spacer()
                 }
-                
-                Spacer()
             }
         }
     }

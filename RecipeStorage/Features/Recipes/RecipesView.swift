@@ -11,8 +11,8 @@ import SwiftData
 struct RecipesView: View {
 
     @Environment(\.modelContext) private var modelContext
-    //@Query(sort: \Recipe.name) private var recipes: [Recipe]
-    private var recipes: [Recipe] = mockRecipes
+    @Query(sort: \Recipe.name) private var recipes: [Recipe]
+    //private var recipes: [Recipe] = mockRecipes
     
     @Query private var categoryStores: [CategoryStore]
     private var categoryStore: CategoryStore? { categoryStores.first }

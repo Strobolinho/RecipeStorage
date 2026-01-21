@@ -26,6 +26,14 @@ struct SettingsView: View {
                         Text("Ingredients")
                     }
                 }
+                
+                Section("Controls Playground") {
+                    NavigationLink {
+                        ControlsPlaygroundView()
+                    } label: {
+                        Text("Controls Playground")
+                    }
+                }
             }
         }
     }

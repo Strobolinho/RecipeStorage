@@ -22,16 +22,16 @@ struct MealPlanListSection: View {
                 .foregroundStyle(.brandPrimary)
             
             if !entries.isEmpty {
-                MealPlanRecipeCardView(imageData: entries[0].recipe!.imageData, recipe: entries[0].recipe!)
+                NavigationLink {
+                    RecipeView(recipe: entries[0].recipe!)
+                } label: {
+                    MealPlanRecipeCardView(imageData: entries[0].recipe!.imageData, recipe: entries[0].recipe!)
+                }
             } else {
-                Text("No Recipes stored yet...")
-                    .font(.subheadline)
-                    .foregroundStyle(.recipeTitle)
-                    .padding(.top, 5)
+                EmptyRecipeCardView()
             }
         }
         .frame(maxWidth: 350, alignment: .leading)
-        .padding(.bottom, 20)
         
     }
 }
