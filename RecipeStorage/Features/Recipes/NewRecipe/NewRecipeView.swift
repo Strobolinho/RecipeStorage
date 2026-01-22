@@ -96,29 +96,27 @@ struct NewRecipeView: View {
             }
         }
         .sheet(isPresented: $showAddCategorySheet) {
-            NavigationStack {
-                Form {
-                    TextField("Neue Kategorie", text: $draftCategoryName)
+            List {
+                Section {
+                    TextField("New Category", text: $draftCategoryName)
                         .textInputAutocapitalization(.words)
                 }
-                .navigationTitle("Kategorie")
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Abbrechen") {
-                            showAddCategorySheet = false
-                        }
-                    }
-
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Speichern") {
+                
+                Section {
+                    Button {
+                        if !(draftCategoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
                             saveCategory(draftCategoryName)
                             showAddCategorySheet = false
                         }
-                        .disabled(draftCategoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    } label: {
+                        Text("Add Category")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .fontWeight(.bold)
                     }
                 }
             }
-            .presentationDetents([.medium])
+            .presentationDetents([.height(160)])
+            .scrollDisabled(true)
         }
     }
 

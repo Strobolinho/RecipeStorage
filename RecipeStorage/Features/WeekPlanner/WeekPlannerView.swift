@@ -6,36 +6,69 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct WeekPlannerView: View {
+    
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \MealPlanEntry.day) private var entries: [MealPlanEntry]
 
     @StateObject private var viewModel = CalendarScrollViewModel()
     
-    private let entry1: MealPlanEntry = MealPlanEntry(day: Date(), mealType: .snacks, recipe: mockRecipes[0])
-    private let entry2: MealPlanEntry = MealPlanEntry(day: Date(), mealType: .dinner, recipe: mockRecipes[1])
-    private let entry3: MealPlanEntry = MealPlanEntry(day: Date(), mealType: .breakfast, recipe: mockRecipes[2])
-    private let entry4: MealPlanEntry = MealPlanEntry(day: Date(), mealType: .snacks, recipe: mockRecipes[3])
+    private var breakfast: [MealPlanEntry] {entries.filter({ ($0.mealType == .breakfast) && ($0.day.formatted(.dateTime.year().month().day()) == date.formatted(.dateTime.year().month().day())) })}
     
-    private var entries: [MealPlanEntry] {
-        [entry1, entry2, entry3, entry4]
-    }
+    private var lunch: [MealPlanEntry] {entries.filter({ ($0.mealType == .lunch) && ($0.day.formatted(.dateTime.year().month().day()) == date.formatted(.dateTime.year().month().day())) })}
     
-    private var breakfast: [MealPlanEntry] {entries.filter({ $0.mealType == .breakfast })}
-    private var lunch: [MealPlanEntry] {entries.filter({ $0.mealType == .lunch })}
-    private var dinner: [MealPlanEntry] {entries.filter({ $0.mealType == .dinner })}
-    private var snacks: [MealPlanEntry] {entries.filter({ $0.mealType == .snacks })}
+    private var dinner: [MealPlanEntry] {entries.filter({ ($0.mealType == .dinner) && ($0.day.formatted(.dateTime.year().month().day()) == date.formatted(.dateTime.year().month().day())) })}
+    
+    private var snacks: [MealPlanEntry] {entries.filter({ ($0.mealType == .snacks) && ($0.day.formatted(.dateTime.year().month().day()) == date.formatted(.dateTime.year().month().day())) })}
+    
 
+    
+    @State private var date: Date = Date()
+    
+    
     var body: some View {
         NavigationStack {
-            GeometryReader { geo in
-                VStack(spacing: 30) {
-                    CalendarScrollView(viewModel: viewModel, width: geo.size.width)
+            VStack(spacing: 30) {
+                
+                HStack {
+                    Button {
+                        goToPreviousDay()
+                    } label: {
+                        Image(systemName: "arrowtriangle.left.circle")
+                            .font(.system(size: 30))
+                    }
+                    .padding(.leading, 40)
                     
-                    MealPlanListView(breakfast: breakfast, lunch: lunch, dinner: dinner, snacks: snacks)
+                    DatePicker("", selection: $date, displayedComponents: [.date])
+                        .labelsHidden()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .scaleEffect(1.3)
                     
-                    Spacer()
+                    Button {
+                        goToNextDay()
+                    } label: {
+                        Image(systemName: "arrowtriangle.right.circle")
+                            .font(.system(size: 30))
+                    }
+                    .padding(.trailing, 40)
                 }
+                
+                MealPlanListView(breakfast: breakfast, lunch: lunch, dinner: dinner, snacks: snacks)
             }
+        }
+    }
+    
+    private func goToPreviousDay() {
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+            date = Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date
+        }
+    }
+
+    private func goToNextDay() {
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+            date = Calendar.current.date(byAdding: .day, value: 1, to: date) ?? date
         }
     }
 }

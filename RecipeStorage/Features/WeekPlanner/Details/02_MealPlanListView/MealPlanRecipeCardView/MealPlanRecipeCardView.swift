@@ -30,7 +30,7 @@ struct MealPlanRecipeCardView: View {
                 }
             }
             .scaledToFill()
-            .frame(width: 350, height: 100)
+            .frame(width: 320, height: 100)
             .clipped()
             .cornerRadius(15)
             .padding(.horizontal, 5)
@@ -82,7 +82,7 @@ struct MealPlanRecipeCardView: View {
             }
             
         }
-        .frame(width: 350, height: 100)
+        .frame(width: 320, height: 100)
     }
 }
 

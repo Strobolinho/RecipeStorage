@@ -12,9 +12,12 @@ struct RecipeView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @State private var showDeleteDialog = false
     
     @EnvironmentObject var ingredientsStore: IngredientStore
+    
+    @Query(sort: \MealPlanEntry.day) private var entries: [MealPlanEntry]
+    
+    @ObservedObject private var viewModel: RecipeViewModel = RecipeViewModel()
     
     let recipe: Recipe
     
@@ -37,7 +40,7 @@ struct RecipeView: View {
                 StepsListView(recipe: recipe)
                 
                 Button(role: .destructive) {
-                    showDeleteDialog = true
+                    viewModel.showDeleteDialog = true
                 } label: {
                     HStack {
                         Text("Delete Recipe").fontWeight(.bold)
@@ -46,7 +49,7 @@ struct RecipeView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .foregroundStyle(.brandPrimary)
                 }
-                .confirmationDialog("Rezept wirklich löschen?", isPresented: $showDeleteDialog) {
+                .confirmationDialog("Rezept wirklich löschen?", isPresented: $viewModel.showDeleteDialog) {
                     Button("Löschen", role: .destructive) {
                         modelContext.delete(recipe)
                         
@@ -61,6 +64,15 @@ struct RecipeView: View {
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    viewModel.showAddToWeekPlannerSheet = true
+                } label: {
+                    Image(systemName: "calendar.circle")
+                        .font(.system(size: 22))
+                }
+            }
+            
+            ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
                     NewRecipeView(recipeToEdit: recipe)
                 } label: {
@@ -68,6 +80,39 @@ struct RecipeView: View {
                         .font(.system(size: 22))
                 }
             }
+        }
+        .sheet(isPresented: $viewModel.showAddToWeekPlannerSheet) {
+            viewModel.showAddToWeekPlannerSheet = false
+            viewModel.date = Date()
+            viewModel.mealType = .dinner
+        } content: {
+            List {
+                Section {
+                    DatePicker("Date", selection: $viewModel.date, displayedComponents: [.date])
+                    
+                    Picker("Meal Type", selection: $viewModel.mealType) {
+                        ForEach(MealType.allCases, id: \.self) { type in
+                            Text(type.title).tag(type)
+                        }
+                    }
+                }
+                
+                Section {
+                    Button {
+                        let entry = MealPlanEntry(day: viewModel.date, mealType: viewModel.mealType, recipe: recipe)
+                        modelContext.insert(entry)
+                        try? modelContext.save()
+                        
+                        viewModel.showAddToWeekPlannerSheet = false
+                    } label: {
+                        Text("Add to Week Planner")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .fontWeight(.bold)
+                    }
+                }
+            }
+            .presentationDetents([.height(230)])
+            .scrollDisabled(true)
         }
     }
 }

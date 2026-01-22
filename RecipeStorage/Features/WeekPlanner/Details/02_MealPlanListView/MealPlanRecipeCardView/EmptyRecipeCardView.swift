@@ -12,7 +12,7 @@ struct EmptyRecipeCardView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15)
-                .frame(width: 350, height: 100)
+                .frame(width: 320, height: 100)
                 .padding(.horizontal, 5)
                 .foregroundStyle(
                     LinearGradient(
@@ -27,7 +27,7 @@ struct EmptyRecipeCardView: View {
                 .foregroundStyle(.recipeTitle)
             
         }
-        .frame(width: 350, height: 100)
+        .frame(width: 320, height: 100)
     }
 }
 
