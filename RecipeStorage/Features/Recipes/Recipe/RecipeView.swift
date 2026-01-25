@@ -17,7 +17,7 @@ struct RecipeView: View {
     
     @Query(sort: \MealPlanEntry.day) private var entries: [MealPlanEntry]
     
-    @ObservedObject private var viewModel: RecipeViewModel = RecipeViewModel()
+    @StateObject private var viewModel = RecipeViewModel()
     
     let recipe: Recipe
     
@@ -65,6 +65,8 @@ struct RecipeView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
+                    viewModel.date = Date()
+                    viewModel.mealType = .dinner
                     viewModel.showAddToWeekPlannerSheet = true
                 } label: {
                     Image(systemName: "calendar.circle")
@@ -82,27 +84,23 @@ struct RecipeView: View {
             }
         }
         .sheet(isPresented: $viewModel.showAddToWeekPlannerSheet) {
-            viewModel.showAddToWeekPlannerSheet = false
-            viewModel.date = Date()
-            viewModel.mealType = .dinner
-        } content: {
             List {
                 Section {
                     DatePicker("Date", selection: $viewModel.date, displayedComponents: [.date])
-                    
+
                     Picker("Meal Type", selection: $viewModel.mealType) {
                         ForEach(MealType.allCases, id: \.self) { type in
                             Text(type.title).tag(type)
                         }
                     }
                 }
-                
+
                 Section {
                     Button {
                         let entry = MealPlanEntry(day: viewModel.date, mealType: viewModel.mealType, recipe: recipe)
                         modelContext.insert(entry)
                         try? modelContext.save()
-                        
+
                         viewModel.showAddToWeekPlannerSheet = false
                     } label: {
                         Text("Add to Week Planner")

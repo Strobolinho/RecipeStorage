@@ -14,16 +14,18 @@ struct MealPlanListView: View {
     let dinner: [MealPlanEntry]
     let snacks: [MealPlanEntry]
     
+    @Binding var date: Date
+    
     @State private var isEditing: Bool = false
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
 
-                MealPlanListSection(entries: breakfast, mealType: "Breakfast", isEditing: isEditing)
-                MealPlanListSection(entries: lunch, mealType: "Lunch", isEditing: isEditing)
-                MealPlanListSection(entries: dinner, mealType: "Dinner", isEditing: isEditing)
-                MealPlanListSection(entries: snacks, mealType: "Snacks", isEditing: isEditing)
+                MealPlanListSection(entries: breakfast, mealType: "Breakfast", isEditing: isEditing, date: $date)
+                MealPlanListSection(entries: lunch, mealType: "Lunch", isEditing: isEditing, date: $date)
+                MealPlanListSection(entries: dinner, mealType: "Dinner", isEditing: isEditing, date: $date)
+                MealPlanListSection(entries: snacks, mealType: "Snacks", isEditing: isEditing, date: $date)
             }
         }
         .toolbar {
@@ -43,6 +45,6 @@ struct MealPlanListView: View {
 
 #Preview {
     MealPlanListView(
-        breakfast: [], lunch: [], dinner: [], snacks: []
+        breakfast: [], lunch: [], dinner: [], snacks: [], date: .constant(Date())
     )
 }

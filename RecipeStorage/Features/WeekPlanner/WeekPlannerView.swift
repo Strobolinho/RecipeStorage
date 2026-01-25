@@ -12,8 +12,6 @@ struct WeekPlannerView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \MealPlanEntry.day) private var entries: [MealPlanEntry]
-
-    @StateObject private var viewModel = CalendarScrollViewModel()
     
     private var breakfast: [MealPlanEntry] {entries.filter({ ($0.mealType == .breakfast) && ($0.day.formatted(.dateTime.year().month().day()) == date.formatted(.dateTime.year().month().day())) })}
     
@@ -55,7 +53,7 @@ struct WeekPlannerView: View {
                     .padding(.trailing, 40)
                 }
                 
-                MealPlanListView(breakfast: breakfast, lunch: lunch, dinner: dinner, snacks: snacks)
+                MealPlanListView(breakfast: breakfast, lunch: lunch, dinner: dinner, snacks: snacks, date: $date)
             }
         }
     }

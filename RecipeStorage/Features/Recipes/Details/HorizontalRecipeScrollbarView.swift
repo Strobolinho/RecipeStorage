@@ -6,11 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HorizontalRecipeScrollbarView: View {
     
+    @Environment(\.modelContext) private var modelContext
+    
     let title: String
     let recipes: [Recipe]
+    let isAddingToWeekPlanner: Bool
+    let date: Date
+    let mealType: String
+    @Binding var isPresented: Bool
+
     
     var body: some View {
         if !recipes.isEmpty {
@@ -26,10 +34,18 @@ struct HorizontalRecipeScrollbarView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 16) {
                         ForEach(recipes.sorted { $0.name < $1.name }) { recipe in
-                            NavigationLink {
-                                RecipeView(recipe: recipe)
-                            } label: {
-                                RecipeCardView(recipe: recipe)
+                            if !isAddingToWeekPlanner {
+                                NavigationLink {
+                                    RecipeView(recipe: recipe)
+                                } label: {
+                                    RecipeCardView(recipe: recipe)
+                                }
+                            } else {
+                                Button {
+                                    addRecipeToEntries(recipe: recipe, date: date, mealType: mealType)
+                                } label: {
+                                    RecipeCardView(recipe: recipe)
+                                }
                             }
                         }
                     }
@@ -40,8 +56,23 @@ struct HorizontalRecipeScrollbarView: View {
             .padding(.vertical, 2)
         }
     }
+    
+    private func addRecipeToEntries(recipe: Recipe, date: Date, mealType: String) {
+        let entry = MealPlanEntry(day: date, mealType: MealType(rawValue: mealType.lowercased())!, recipe: recipe)
+        modelContext.insert(entry)
+        try? modelContext.save()
+        
+        isPresented = false
+    }
 }
 
 #Preview {
-    HorizontalRecipeScrollbarView(title: "Alle Rezepte", recipes: mockRecipes)
+    HorizontalRecipeScrollbarView(
+        title: "Alle Rezepte",
+        recipes: mockRecipes,
+        isAddingToWeekPlanner: false,
+        date: Date(),
+        mealType: "Dinner",
+        isPresented: .constant(false)
+    )
 }

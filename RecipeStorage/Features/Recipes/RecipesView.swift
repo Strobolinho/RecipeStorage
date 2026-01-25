@@ -20,6 +20,19 @@ struct RecipesView: View {
     private var categories: [String] {
         categoryStore?.categories ?? ["High Protein", "Low Calorie", "Vegetarian", "Vegan", "Low Carb"]
     }
+    
+    // Wenn man von WeekPlannerView kommt
+    let isAddingToWeekPlanner: Bool
+    let date: Date
+    let mealType: String
+    @Binding var isPresented: Bool
+    
+    init(isAddingToWeekPlanner: Bool = false, date: Date = Date(), mealType: String = "Dinner", isPresented: Binding<Bool> = .constant(false)) {
+        self.isAddingToWeekPlanner = isAddingToWeekPlanner
+        self.date = date
+        self.mealType = mealType
+        self._isPresented = isPresented
+    }
 
     var body: some View {
         NavigationStack {
@@ -28,14 +41,25 @@ struct RecipesView: View {
                     ScrollView(.vertical) {
                         HorizontalRecipeScrollbarView(
                             title: "Alle Rezepte 🍽️",
-                            recipes: recipes
+                            recipes: recipes,
+                            isAddingToWeekPlanner: isAddingToWeekPlanner,
+                            date: date,
+                            mealType: mealType,
+                            isPresented: $isPresented
                         )
 
                         ForEach(categories, id: \.self) { category in
                             let filtered = recipes.filter { $0.categories.contains(category) }
                             
                             if !filtered.isEmpty {
-                                HorizontalRecipeScrollbarView(title: category, recipes: filtered)
+                                HorizontalRecipeScrollbarView(
+                                    title: category,
+                                    recipes: filtered,
+                                    isAddingToWeekPlanner: isAddingToWeekPlanner,
+                                    date: date,
+                                    mealType: mealType,
+                                    isPresented: $isPresented
+                                )
                             }
                         }
                         
@@ -62,13 +86,15 @@ struct RecipesView: View {
                     }
                     .padding()
                 }
-
-                NewRecipeButtonView()
+                if !isAddingToWeekPlanner {
+                    NewRecipeButtonView()
+                }
             }
         }
         .task {
             backfillIngredientPositionsIfNeeded()
         }
+        .toolbar(isAddingToWeekPlanner ? .hidden : .visible, for: .tabBar)
     }
 
     private func backfillIngredientPositionsIfNeeded() {
