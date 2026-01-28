@@ -16,7 +16,7 @@ struct MealPlanListView: View {
     
     @Binding var date: Date
     
-    @State private var isEditing: Bool = false
+    @Binding var isEditing: Bool
     
     var body: some View {
         ScrollView {
@@ -28,23 +28,12 @@ struct MealPlanListView: View {
                 MealPlanListSection(entries: snacks, mealType: "Snacks", isEditing: isEditing, date: $date)
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                        isEditing.toggle()
-                    }
-                } label: {
-                    Image(systemName: isEditing ? "checkmark.circle" : "square.and.pencil.circle")
-                        .font(.system(size: 22))
-                }
-            }
-        }
     }
 }
 
 #Preview {
     MealPlanListView(
-        breakfast: [], lunch: [], dinner: [], snacks: [], date: .constant(Date())
+        breakfast: [], lunch: [], dinner: [], snacks: [], date: .constant(Date()),
+        isEditing: .constant(false)
     )
 }
