@@ -23,6 +23,15 @@ enum MealType: String, Codable, CaseIterable {
         case .snacks:     return "Snacks"
         }
     }
+    
+    var sortOrder: Int {
+        switch self {
+        case .breakfast: return 0
+        case .lunch: return 1
+        case .dinner: return 2
+        case .snacks: return 3
+        }
+    }
 }
 
 

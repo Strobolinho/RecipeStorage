@@ -11,19 +11,23 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Recipe Categories") {
+                Section("Item Lists") {
                     NavigationLink {
                         CategorySettingsView()
                     } label: {
-                        Text("Recipe Category Settings")
+                        Text("Recipe Categories")
                     }
-                }
-                
-                Section("Ingredients") {
+                    
                     NavigationLink {
                         IngredientsListView()
                     } label: {
                         Text("Ingredients")
+                    }
+                 
+                    NavigationLink {
+                        MealPlanEntriesView()
+                    } label: {
+                        Text("Mealplan Entries")
                     }
                 }
                 
