@@ -23,12 +23,6 @@ struct SettingsView: View {
                     } label: {
                         Text("Ingredients")
                     }
-                 
-                    NavigationLink {
-                        MealPlanEntriesView()
-                    } label: {
-                        Text("Mealplan Entries")
-                    }
                 }
                 
                 Section("Controls Playground") {

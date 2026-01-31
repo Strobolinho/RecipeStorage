@@ -22,10 +22,10 @@ struct MealPlanListView: View {
         ScrollView {
             VStack(spacing: 20) {
 
-                MealPlanListSection(entries: breakfast, mealType: "Breakfast", isEditing: isEditing, date: $date)
-                MealPlanListSection(entries: lunch, mealType: "Lunch", isEditing: isEditing, date: $date)
-                MealPlanListSection(entries: dinner, mealType: "Dinner", isEditing: isEditing, date: $date)
-                MealPlanListSection(entries: snacks, mealType: "Snacks", isEditing: isEditing, date: $date)
+                MealPlanListSection(entries: breakfast, mealType: "breakfast", isEditing: isEditing, date: $date)
+                MealPlanListSection(entries: lunch, mealType: "lunch", isEditing: isEditing, date: $date)
+                MealPlanListSection(entries: dinner, mealType: "dinner", isEditing: isEditing, date: $date)
+                MealPlanListSection(entries: snacks, mealType: "snacks", isEditing: isEditing, date: $date)
             }
         }
     }

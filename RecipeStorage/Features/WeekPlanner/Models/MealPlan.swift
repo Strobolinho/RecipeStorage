@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 
 enum MealType: String, Codable, CaseIterable {
@@ -30,6 +31,15 @@ enum MealType: String, Codable, CaseIterable {
         case .lunch: return 1
         case .dinner: return 2
         case .snacks: return 3
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .breakfast: return Color.breakfast
+        case .lunch: return Color.lunch
+        case .dinner: return Color.dinner
+        case .snacks: return Color.snacks
         }
     }
 }

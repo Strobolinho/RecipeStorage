@@ -23,10 +23,11 @@ struct MealPlanListSection: View {
     var body: some View {
 
         VStack(alignment: .leading, spacing: 10) {
-            Text(mealType)
+            
+            Text(mealType.capitalized)
                 .font(.title3)
                 .fontWeight(.semibold)
-                .foregroundStyle(.brandPrimary)
+                .foregroundStyle(MealType(rawValue: mealType)?.color ?? .brandPrimary)
                 .padding(.horizontal)
 
             if entries.isEmpty {
@@ -154,12 +155,6 @@ struct MealPlanListSection: View {
             print("❌ Failed to delete MealPlanEntry:", error)
         }
     }
-
-    private func addTapped() {
-        // Hier später: Sheet öffnen / Recipe Picker zeigen
-        print("➕ Add tapped for mealType:", mealType)
-    }
-
 }
 
 

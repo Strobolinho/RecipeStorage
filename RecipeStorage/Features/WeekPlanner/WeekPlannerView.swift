@@ -31,15 +31,18 @@ struct WeekPlannerView: View {
     @State private var date: Date = Date()
     
     @State private var isEditing: Bool = false
+    
+    @State private var showEntriesSheet: Bool = false
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
 
-                DayHeaderView(
-                    date: $date
-                )
-                .padding(.top, 8)
+                Text(date.formatted(.dateTime.weekday(.wide)))
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.brandPrimary)
+                    .padding(.top, -50)
 
                 TabView(selection: $selectedIndex) {
                     ForEach(dates.indices, id: \.self) { index in
@@ -85,15 +88,31 @@ struct WeekPlannerView: View {
                 }
                 
                 ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                            jumpToToday()
+                    HStack {
+                        Button {
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                jumpToToday()
+                            }
+                        } label: {
+                            Image(systemName: "dot.circle.and.hand.point.up.left.fill")
+                                .font(.system(size: 22))
                         }
-                    } label: {
-                        Image(systemName: "dot.circle.and.hand.point.up.left.fill")
-                            .font(.system(size: 22))
+                        
+                        Button {
+                            showEntriesSheet = true
+                        } label: {
+                            Image(systemName: "calendar.circle")
+                                .font(.system(size: 22))
+                        }
                     }
                 }
+                
+                ToolbarItem(placement: .principal) {
+                    DayHeaderView(date: $date)
+                }
+            }
+            .sheet(isPresented: $showEntriesSheet) {
+                MealPlanEntriesView()
             }
         }
     }
