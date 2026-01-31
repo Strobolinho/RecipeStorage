@@ -13,13 +13,17 @@ struct MealPlanEntriesView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \MealPlanEntry.day) private var entries: [MealPlanEntry]
     
+
     private var uniqueDays: [Date] {
         let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
         var seen = Set<Date>()
 
         return entries
             .map { calendar.startOfDay(for: $0.day) }
+            .filter { $0 >= today }
             .filter { seen.insert($0).inserted }
+            .sorted()
     }
 
     
@@ -32,7 +36,7 @@ struct MealPlanEntriesView: View {
             print("❌ Failed to delete MealPlanEntry:", error)
         }
     }
-    
+                                    
     
     var body: some View {
         VStack {
@@ -42,17 +46,17 @@ struct MealPlanEntriesView: View {
                 .foregroundStyle(.brandPrimary)
                 .padding()
             
-            if !entries.isEmpty {
+            if !uniqueDays.isEmpty {
                 Form {
                     ForEach(uniqueDays, id: \.self) { day in
-                        Section("\(day.formatted(.dateTime.year().month().day()))") {
-                            ForEach(
-                                entries
-                                    .filter { Calendar.current.isDate($0.day, inSameDayAs: day) }
-                                    .sorted { $0.mealType.sortOrder < $1.mealType.sortOrder }
-                            ) { entry in
+                        Section(day.formatted(.dateTime.weekday().year().month().day())) {
+                            let dayEntries = entries
+                                .filter { Calendar.current.isDate($0.day, inSameDayAs: day) }
+                                .sorted { $0.mealType.sortOrder < $1.mealType.sortOrder }
+
+                            ForEach(dayEntries) { entry in
                                 HStack {
-                                    Text("\(entry.mealType.title)")
+                                    Text(entry.mealType.title)
                                         .foregroundStyle(entry.mealType.color)
                                         .fontWeight(.semibold)
                                     Spacer()
@@ -60,9 +64,7 @@ struct MealPlanEntriesView: View {
                                         .padding(.leading, 3)
                                 }
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button(role: .destructive) {
-                                        delete_entry(entry)
-                                    } label: {
+                                    Button(role: .destructive) { delete_entry(entry) } label: {
                                         Label("Löschen", systemImage: "trash")
                                     }
                                 }
@@ -71,6 +73,7 @@ struct MealPlanEntriesView: View {
                         .tint(.brandPrimary)
                     }
                 }
+
             } else {
                 
                 Spacer()

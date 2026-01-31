@@ -69,8 +69,8 @@ struct RecipeView: View {
                     viewModel.mealType = .dinner
                     viewModel.showAddToWeekPlannerSheet = true
                 } label: {
-                    Image(systemName: "calendar.circle")
-                        .font(.system(size: 22))
+                    Image(systemName: "calendar.badge.plus")
+                        .font(.system(size: 17))
                 }
             }
             
