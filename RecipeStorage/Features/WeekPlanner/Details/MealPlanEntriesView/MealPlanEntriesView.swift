@@ -13,6 +13,8 @@ struct MealPlanEntriesView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \MealPlanEntry.day) private var entries: [MealPlanEntry]
     
+    @State private var showDeleteDialog: Bool = false
+    
 
     private var uniqueDays: [Date] {
         let calendar = Calendar.current
@@ -25,16 +27,17 @@ struct MealPlanEntriesView: View {
             .filter { seen.insert($0).inserted }
             .sorted()
     }
-
     
-    private func delete_entry(_ entry: MealPlanEntry) {
-        modelContext.delete(entry)
-        
-        do {
-            try modelContext.save()
-        } catch {
-            print("❌ Failed to delete MealPlanEntry:", error)
-        }
+    private var pastDays: [Date] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        var seen = Set<Date>()
+
+        return entries
+            .map { calendar.startOfDay(for: $0.day) }
+            .filter { $0 < today }
+            .filter { seen.insert($0).inserted }
+            .sorted().reversed()
     }
                                     
     
@@ -46,34 +49,43 @@ struct MealPlanEntriesView: View {
                 .foregroundStyle(.brandPrimary)
                 .padding()
             
-            if !uniqueDays.isEmpty {
-                Form {
-                    ForEach(uniqueDays, id: \.self) { day in
-                        Section(day.formatted(.dateTime.weekday().year().month().day())) {
-                            let dayEntries = entries
-                                .filter { Calendar.current.isDate($0.day, inSameDayAs: day) }
-                                .sorted { $0.mealType.sortOrder < $1.mealType.sortOrder }
-
-                            ForEach(dayEntries) { entry in
-                                HStack {
-                                    Text(entry.mealType.title)
-                                        .foregroundStyle(entry.mealType.color)
-                                        .fontWeight(.semibold)
-                                    Spacer()
-                                    Text(entry.recipe?.name ?? "—")
-                                        .padding(.leading, 3)
-                                }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button(role: .destructive) { delete_entry(entry) } label: {
-                                        Label("Löschen", systemImage: "trash")
-                                    }
-                                }
-                            }
+            if !uniqueDays.isEmpty || !pastDays.isEmpty {
+                VStack {
+                    Form {
+                        EntryListView(days: uniqueDays, entries: entries, isFromPast: false)
+                        
+                        
+                        EntryListView(days: pastDays, entries: entries, isFromPast: true)
+                    }
+                    
+                    
+                    Spacer()
+                    
+                    
+                    Button(role: .destructive) {
+                        showDeleteDialog = true
+                    } label: {
+                        HStack {
+                            Text("Delete all Entries").fontWeight(.bold)
+                            Image(systemName: "trash")
                         }
-                        .tint(.brandPrimary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .foregroundStyle(.brandPrimary)
+                    }
+                    .alert("Delete all Entries?", isPresented: $showDeleteDialog) {
+                        Button("Delete All", role: .destructive) {
+                            for entry in entries { modelContext.delete(entry) }
+                            do { try modelContext.save() } catch { print(error) }
+                        }
+                        Button("Delete Past Entries", role: .destructive) {
+                            for entry in entries.filter({ $0.day < Calendar.current.startOfDay(for: Date()) }) { modelContext.delete(entry) }
+                            do { try modelContext.save() } catch { print(error) }
+                        }
+                        Button("Cancel", role: .cancel) { }
+                    } message: {
+                        Text("This will remove meal plan entries permanently.")
                     }
                 }
-
             } else {
                 
                 Spacer()
