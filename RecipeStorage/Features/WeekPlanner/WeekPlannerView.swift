@@ -11,7 +11,8 @@ import SwiftData
 struct WeekPlannerView: View {
 
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \MealPlanEntry.day) private var entries: [MealPlanEntry]
+    @Query(sort: \MealPlanEntry.day) private var mealplanEntries: [MealPlanEntry]
+    @Query(sort: \GroceryListEntry.name) private var groceryEntries: [GroceryListEntry]
 
     // MARK: - Paging
 
@@ -29,10 +30,23 @@ struct WeekPlannerView: View {
 
     /// Aktuelles Datum (für DatePicker etc.)
     @State private var date: Date = Date()
-    
+
     @State private var isEditing: Bool = false
-    
+
     @State private var showEntriesSheet: Bool = false
+    @State private var showAddGroceriesDialog: Bool = false
+
+    func addGroceryItem(_ newGroceryItem: GroceryListEntry) {
+        if let existing = groceryEntries.first(where: { $0.name == newGroceryItem.name && $0.unit == newGroceryItem.unit }) {
+            existing.amount! += newGroceryItem.amount!
+            existing.isChecked = false
+        } else {
+            modelContext.insert(newGroceryItem)
+        }
+
+        do { try modelContext.save() }
+        catch { print("❌ save failed:", error) }
+    }
 
     var body: some View {
         NavigationStack {
@@ -48,7 +62,7 @@ struct WeekPlannerView: View {
                     ForEach(dates.indices, id: \.self) { index in
                         DayPlannerPageView(
                             date: dates[index],
-                            entries: entries,
+                            entries: mealplanEntries,
                             isEditing: $isEditing
                         )
                         .tag(index)
@@ -76,26 +90,8 @@ struct WeekPlannerView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "cart.circle")
-                            .font(.system(size: 22))
-                    }
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                            isEditing.toggle()
-                        }
-                    } label: {
-                        Image(systemName: isEditing ? "checkmark.circle" : "square.and.pencil.circle")
-                            .font(.system(size: 22))
-                    }
-                }
-                
+
+                // ✅ Leading: alles in EIN ToolbarItem bündeln
                 ToolbarItem(placement: .topBarLeading) {
                     HStack {
                         Button {
@@ -104,20 +100,62 @@ struct WeekPlannerView: View {
                             }
                         } label: {
                             Image(systemName: "dot.circle.and.hand.point.up.left.fill")
-                                .font(.system(size: 22))
+                                .font(.system(size: 18))
                         }
-                        
+
                         Button {
                             showEntriesSheet = true
                         } label: {
-                            Image(systemName: "calendar.circle")
-                                .font(.system(size: 22))
+                            Image(systemName: "calendar.badge.plus")
+                                .font(.system(size: 18))
                         }
                     }
                 }
-                
+
+                // ✅ Principal: auf volle Breite zwingen => optisch mittig
                 ToolbarItem(placement: .principal) {
                     DayHeaderView(date: $date)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+
+                // ✅ Trailing: alles in EIN ToolbarItem bündeln
+                ToolbarItem(placement: .topBarTrailing) {
+                    HStack {
+                        Button {
+                            if mealplanEntries.filter({ Calendar.current.isDate($0.day, inSameDayAs: date) }).count > 0 {
+                                showAddGroceriesDialog = true
+                            }
+                        } label: {
+                            Image(systemName: "cart.badge.plus")
+                                .font(.system(size: 18))
+                        }
+                        .alert("Are you sure you want to add these groceries?", isPresented: $showAddGroceriesDialog) {
+                            Button("Add to Grocery List", role: .confirm) {
+                                for entry in mealplanEntries.filter({ Calendar.current.isDate($0.day, inSameDayAs: date) }) {
+                                    for groceryItem in entry.recipe!.ingredients! {
+                                        addGroceryItem(
+                                            GroceryListEntry(
+                                                name: groceryItem.name,
+                                                unit: groceryItem.unit,
+                                                amount: groceryItem.amount,
+                                                isChecked: false
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                            Button("Cancel", role: .cancel) { showAddGroceriesDialog = false }
+                        }
+
+                        Button {
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                isEditing.toggle()
+                            }
+                        } label: {
+                            Image(systemName: isEditing ? "checkmark.circle" : "square.and.pencil.circle")
+                                .font(.system(size: 22))
+                        }
+                    }
                 }
             }
             .sheet(isPresented: $showEntriesSheet) {
@@ -150,6 +188,7 @@ private extension Array {
         return self[index]
     }
 }
+
 
 #Preview {
     WeekPlannerView()

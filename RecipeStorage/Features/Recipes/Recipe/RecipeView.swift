@@ -84,8 +84,8 @@ struct RecipeView: View {
                 Button {
                     viewModel.showAddGroceriesDialog = true
                 } label: {
-                    Image(systemName: "cart.circle")
-                        .font(.system(size: 22))
+                    Image(systemName: "cart.badge.plus")
+                        .font(.system(size: 18))
                 }
                 .alert("Are you sure you want to add these groceries?", isPresented: $viewModel.showAddGroceriesDialog) {
                     Button("Add to Grocery List", role: .confirm) {
