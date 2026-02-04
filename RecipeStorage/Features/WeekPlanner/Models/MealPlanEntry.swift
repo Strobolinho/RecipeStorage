@@ -65,6 +65,4 @@ final class MealPlanEntry {
         self.mealType = mealType
         self.recipe = recipe
     }
-    
-    
 }

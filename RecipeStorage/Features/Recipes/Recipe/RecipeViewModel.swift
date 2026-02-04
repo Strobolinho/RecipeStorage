@@ -13,6 +13,8 @@ final class RecipeViewModel: ObservableObject {
     
     @Published var showDeleteDialog = false
     
+    @Published var showAddGroceriesDialog = false
+    
     @Published var showAddToWeekPlannerSheet: Bool = false
     
     @Published var date: Date = Date()

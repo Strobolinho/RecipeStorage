@@ -44,8 +44,7 @@ struct EntryListView: View {
                         Text(entry.recipe?.name ?? "—")
                             .padding(.leading, 3)
                     }
-                    .opacity(isFromPast ? 0.5 : 1)
-                    .blur(radius: isFromPast ? 1 : 0)
+                    .opacity(isFromPast ? 0.2 : 1)
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) { delete_entry(entry) } label: {
                             Label("Löschen", systemImage: "trash")

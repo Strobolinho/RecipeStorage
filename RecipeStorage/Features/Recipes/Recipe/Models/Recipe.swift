@@ -28,12 +28,12 @@ final class Recipe {
 
     // ✅ CloudKit: Relationship muss optional sein
     // ✅ CloudKit: Relationship braucht inverse
-    @Relationship(deleteRule: .cascade, inverse: \Ingredient.recipe)
+    @Relationship(deleteRule: .nullify, inverse: \Ingredient.recipe)
     var ingredients: [Ingredient]? = []
 
     // ✅ CloudKit: Relationship muss optional sein
     // ✅ CloudKit: Relationship braucht inverse
-    @Relationship(deleteRule: .cascade, inverse: \Spice.recipe)
+    @Relationship(deleteRule: .nullify, inverse: \Spice.recipe)
     var spices: [Spice]? = []
 
     // ✅ CloudKit: Default

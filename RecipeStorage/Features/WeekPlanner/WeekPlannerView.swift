@@ -78,6 +78,15 @@ struct WeekPlannerView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        
+                    } label: {
+                        Image(systemName: "cart.circle")
+                            .font(.system(size: 22))
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
                         withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
                             isEditing.toggle()
                         }
