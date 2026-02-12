@@ -14,9 +14,6 @@ struct GroceryListView: View {
     @Query(sort: \GroceryListEntry.name) private var entries: [GroceryListEntry]
 
     @StateObject private var viewModel = GroceryListViewModel()
-
-    
-
     
 
     var body: some View {

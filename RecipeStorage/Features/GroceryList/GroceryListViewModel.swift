@@ -35,11 +35,6 @@ final class GroceryListViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String? = nil
     
-    func syncRemindersList() {
-        
-    }
-    
-    
 
     private let service = RemindersService()
 
@@ -90,5 +85,19 @@ final class GroceryListViewModel: ObservableObject {
         } catch {
             errorMessage = "Fehler beim Laden der Erinnerungen: \(error.localizedDescription)"
         }
+    }
+    
+    
+    func syncRemindersList() async -> [String] {
+        
+        await reloadRemindersForSelection()
+        
+        var reminderList: [String] = []
+        
+        for rem in reminders.filter({ $0.isCompleted == false }) {
+            reminderList.append(rem.title)
+        }
+        
+        return reminderList
     }
 }

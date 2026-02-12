@@ -9,7 +9,7 @@ import SwiftUI
 import EventKit
 
 struct RemindersImportView: View {
-    @StateObject private var viewModel = RemindersViewModel()
+    @StateObject private var viewModel = GroceryListViewModel()
 
     var body: some View {
         NavigationStack {

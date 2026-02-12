@@ -6,14 +6,28 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SyncRemindersSheet: View {
+    
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \GroceryListEntry.name) private var entries: [GroceryListEntry]
     
     @ObservedObject var viewModel: GroceryListViewModel
     
     var body: some View {
         
         VStack {
+            if let msg = viewModel.errorMessage {
+                Text(msg)
+                    .foregroundStyle(.red)
+                    .padding(.horizontal)
+            }
+            
+            if viewModel.isLoading {
+                ProgressView().padding(.top, 20)
+            }
+            
             Text("Sync Reminder List")
                     .font(.title)
                     .fontWeight(.bold)
@@ -40,7 +54,20 @@ struct SyncRemindersSheet: View {
                     
                     Section {
                         Button {
-                            
+                            Task {
+                                let reminders = await viewModel.syncRemindersList()
+                                
+                                for rem in reminders {
+                                    if !(entries.map { $0.name }.contains(rem)) {
+                                        modelContext.insert(
+                                            GroceryListEntry(name: rem, unit: "", amount: 0, isChecked: false)
+                                        )
+                                    }
+                                }
+                                
+                                do { try modelContext.save() }
+                                catch { print("❌ save failed:", error) }
+                            }
                         } label: {
                             Text("Sync")
                                 .font(.title3)
