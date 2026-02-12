@@ -1,45 +1,21 @@
 //
-//  GroceryListViewModel.swift
+//  RemindersViewModel.swift
 //  RecipeStorage
 //
-//  Created by Nicolas Ströbel on 04.02.26.
+//  Created by Nicolas Ströbel on 11.02.26.
 //
 
 import Foundation
-import SwiftData
 import EventKit
-
+import SwiftUI
 
 @MainActor
-final class GroceryListViewModel: ObservableObject {
-    
-    //    var entries: [GroceryListEntry] = [
-    //        GroceryListEntry(name: "Milch", unit: "ml", amount: 1000, isChecked: false),
-    //        GroceryListEntry(name: "Eier", unit: "Stueck", amount: 3, isChecked: false),
-    //        GroceryListEntry(name: "Milch", unit: "ml", amount: 1000, isChecked: false),
-    //        GroceryListEntry(name: "Milch", unit: "ml", amount: 1000, isChecked: false),
-    //    ]
-    
-    @Published var showAddGrocerySheet: Bool = false
-    @Published var showDeleteAllDialog: Bool = false
-    @Published var showSyncRemindersListSheet: Bool = false
-    
-    @Published var groceryName: String = ""
-    @Published var groceryAmount: Int? = nil
-    @Published var groceryUnit: String = ""
-       
-    
+final class RemindersViewModel: ObservableObject {
     @Published var lists: [EKCalendar] = []
     @Published var selectedListID: String? = nil
     @Published var reminders: [EKReminder] = []
     @Published var isLoading = false
     @Published var errorMessage: String? = nil
-    
-    func syncRemindersList() {
-        
-    }
-    
-    
 
     private let service = RemindersService()
 

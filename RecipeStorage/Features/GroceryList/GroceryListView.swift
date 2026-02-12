@@ -15,50 +15,9 @@ struct GroceryListView: View {
 
     @StateObject private var viewModel = GroceryListViewModel()
 
-    func addGroceryItem(_ newGroceryItem: GroceryListEntry) {
-        if let existing = entries.first(where: { $0.name == newGroceryItem.name && $0.unit == newGroceryItem.unit }) {
-            existing.amount! += newGroceryItem.amount!
-            existing.isChecked = false
-        } else {
-            modelContext.insert(newGroceryItem)
-        }
+    
 
-        do { try modelContext.save() }
-        catch { print("❌ save failed:", error) }
-    }
-
-    enum NewGroceryItemField: Hashable {
-        case groceryItemName
-        case groceryItemAmount
-        case groceryItemUnit
-    }
-
-    @FocusState private var focusedField: NewGroceryItemField?
-
-    private func focusNext() {
-        switch focusedField {
-        case .groceryItemName:   focusedField = .groceryItemAmount
-        case .groceryItemAmount: focusedField = .groceryItemUnit
-        case .groceryItemUnit:   focusedField = nil
-        default:                 focusedField = nil
-        }
-    }
-
-    private func focusPrevious() {
-        switch focusedField {
-        case .groceryItemName:   focusedField = .groceryItemName // bleibt halt dort
-        case .groceryItemAmount: focusedField = .groceryItemName
-        case .groceryItemUnit:   focusedField = .groceryItemAmount
-        default:                 focusedField = nil
-        }
-    }
-
-    private func resetSheetFields() {
-        viewModel.groceryName = ""
-        viewModel.groceryAmount = nil
-        viewModel.groceryUnit = ""
-        focusedField = nil
-    }
+    
 
     var body: some View {
 
@@ -104,6 +63,15 @@ struct GroceryListView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        viewModel.showSyncRemindersListSheet = true
+                    } label : {
+                        Image(systemName: "list.bullet.circle")
+                    }
+                    .font(.system(size: 22))
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
                         viewModel.showDeleteAllDialog = true
                     } label: {
                         Image(systemName: "trash.circle")
@@ -135,69 +103,16 @@ struct GroceryListView: View {
                         .foregroundStyle(.brandPrimary)
                 }
             }
-            .sheet(isPresented: $viewModel.showAddGrocerySheet, onDismiss: {
-                resetSheetFields()
+            .sheet(isPresented: $viewModel.showSyncRemindersListSheet, onDismiss: {
+                viewModel.showSyncRemindersListSheet = false
             }) {
-                Form {
-                    Section {
-                        TextField("Grocery Name", text: $viewModel.groceryName)
-                            .focused($focusedField, equals: .groceryItemName)
-                            .submitLabel(.next)
-                            .onSubmit { focusNext() }
-
-                        TextField("Amount", value: $viewModel.groceryAmount, format: .number)
-                            .keyboardType(.numberPad)
-                            .focused($focusedField, equals: .groceryItemAmount)
-
-                        TextField("Unit", text: $viewModel.groceryUnit)
-                            .focused($focusedField, equals: .groceryItemUnit)
-                            .submitLabel(.done)
-                            .onSubmit { focusedField = nil }
-                    }
-
-                    Section {
-                        Button {
-                            if viewModel.groceryName != ""  {
-
-                                addGroceryItem(
-                                    GroceryListEntry(
-                                        name: viewModel.groceryName,
-                                        unit: viewModel.groceryUnit,
-                                        amount: viewModel.groceryAmount ?? 0
-                                    )
-                                )
-
-                                viewModel.showAddGrocerySheet = false
-                            }
-                        } label: {
-                            Text("Add")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.brandPrimary)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                }
-                .scrollDisabled(true)
-                .presentationDetents([.height(270)])
-
-                // ✅ Keyboard Toolbar MUSS im Sheet sitzen
-                .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Button("<") { focusPrevious() }
-                        Button(">") { focusNext() }
-                        Spacer()
-                        Button("Done") { focusedField = nil }
-                    }
-                }
-
-                // ✅ Fokus 1 Tick später setzen
-                .onAppear {
-                    DispatchQueue.main.async {
-                        focusedField = .groceryItemName
-                    }
-                }
+                SyncRemindersSheet(viewModel: viewModel)
             }
+            
+            .sheet(isPresented: $viewModel.showAddGrocerySheet) {
+                AddGroceryItemSheet(viewModel: viewModel)
+            }
+            .task { await viewModel.start() }
         }
     }
 }

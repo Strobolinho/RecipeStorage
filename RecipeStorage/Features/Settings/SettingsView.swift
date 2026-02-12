@@ -32,6 +32,14 @@ struct SettingsView: View {
                         Text("Controls Playground")
                     }
                 }
+                
+                Section {
+                    NavigationLink {
+                        RemindersImportView()
+                    } label: {
+                        Text("Import Reminders View")
+                    }
+                }
             }
         }
     }
