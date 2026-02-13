@@ -36,8 +36,9 @@ struct CategorySettingsView: View {
                             HStack {
                                 Text(category)
                                 Spacer()
+                                Text("\(recipes.filter( { $0.categories.contains(category) } ).count)")
+                                    .padding(.trailing)
                             }
-                            .contentShape(Rectangle())
                             .onTapGesture {
                                 editingCategory = category
                                 draftName = category
