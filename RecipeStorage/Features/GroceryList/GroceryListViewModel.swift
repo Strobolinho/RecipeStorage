@@ -37,8 +37,32 @@ final class GroceryListViewModel: ObservableObject {
     
 
     private let service = RemindersService()
+    
+    @Published var settings: DefaultReminderList?
 
-    func start() async {
+        func loadOrCreate(in context: ModelContext) throws {
+            let key = "singleton"
+
+            let descriptor = FetchDescriptor<DefaultReminderList>(
+                predicate: #Predicate { $0.key == key }
+            )
+
+            if let existing = try context.fetch(descriptor).first {
+                self.settings = existing
+            } else {
+                let created = DefaultReminderList(key: key, listID: "")
+                context.insert(created)
+                try context.save()
+                self.settings = created
+            }
+        }
+
+        func updateValue(_ newValue: String, in context: ModelContext) throws {
+            settings?.listID = newValue
+            try context.save()
+        }
+
+    func start(using context: ModelContext) async {
         do {
             // 1) Permission
             try await service.requestAccess()
@@ -46,12 +70,25 @@ final class GroceryListViewModel: ObservableObject {
             // 2) Listen laden
             lists = service.fetchLists()
 
-            // 3) Default-Auswahl setzen
-            if selectedListID == nil {
+            // 3) Settings laden/erstellen (damit settings?.listID verfügbar ist)
+            try loadOrCreate(in: context)
+
+            // 4) gespeicherte ID anwenden, wenn gültig
+            let savedID = settings?.listID ?? ""
+            if !savedID.isEmpty,
+               lists.contains(where: { $0.calendarIdentifier == savedID }) {
+                selectedListID = savedID
+            } else {
+                // Fallback: erste Liste
                 selectedListID = lists.first?.calendarIdentifier
+
+                // optional: fallback direkt speichern
+                if let selectedListID {
+                    try? updateValue(selectedListID, in: context)
+                }
             }
 
-            // 4) Reminders laden
+            // 5) Reminders laden
             await reloadRemindersForSelection()
 
         } catch {
@@ -61,6 +98,7 @@ final class GroceryListViewModel: ObservableObject {
             """
         }
     }
+
 
     func reloadRemindersForSelection() async {
         guard let id = selectedListID,

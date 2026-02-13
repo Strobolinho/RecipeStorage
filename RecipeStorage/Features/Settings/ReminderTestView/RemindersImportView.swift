@@ -9,6 +9,9 @@ import SwiftUI
 import EventKit
 
 struct RemindersImportView: View {
+    
+    @Environment(\.modelContext) private var modelContext
+    
     @StateObject private var viewModel = GroceryListViewModel()
 
     var body: some View {
@@ -47,7 +50,7 @@ struct RemindersImportView: View {
                 .listStyle(.insetGrouped)
             }
             .navigationTitle("Erinnerungen")
-            .task { await viewModel.start() }
+            .task { await viewModel.start(using: modelContext) }
         }
     }
 }

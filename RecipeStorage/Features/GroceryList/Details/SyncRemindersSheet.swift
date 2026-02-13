@@ -47,9 +47,16 @@ struct SyncRemindersSheet: View {
                         }
                         .pickerStyle(.menu)
                         .padding(.horizontal)
-                        .onChange(of: viewModel.selectedListID) { _, _ in
-                            Task { await viewModel.reloadRemindersForSelection() }
+                        .onChange(of: viewModel.selectedListID) { _, newValue in
+                            Task { @MainActor in
+                                if let newValue {
+                                    try? viewModel.updateValue(newValue, in: modelContext)
+                                }
+                                await viewModel.reloadRemindersForSelection()
+                            }
                         }
+
+
                     }
                     
                     Section {
@@ -82,6 +89,36 @@ struct SyncRemindersSheet: View {
             .presentationDetents([.height(220)])
             .padding(.top, -30)
         }
+        .task { @MainActor in
+            do {
+                // ✅ 1) Settings laden/erstellen
+                try viewModel.loadOrCreate(in: modelContext)
+
+                // ✅ 2) gespeicherten Wert setzen (nur wenn noch gültig)
+                if let saved = viewModel.settings?.listID, !saved.isEmpty,
+                   viewModel.lists.contains(where: { $0.calendarIdentifier == saved }) {
+                    viewModel.selectedListID = saved
+                }
+
+            } catch {
+                print("❌ loadOrCreate failed:", error)
+            }
+
+            // ✅ 3) Reminders starten (lädt Listen etc.)
+            await viewModel.start(using: modelContext)
+
+            // ✅ 4) NACHdem lists geladen sind: saved nochmal anwenden (korrektes Timing!)
+            if let saved = viewModel.settings?.listID, !saved.isEmpty,
+               viewModel.lists.contains(where: { $0.calendarIdentifier == saved }) {
+                viewModel.selectedListID = saved
+            } else if viewModel.selectedListID == nil {
+                viewModel.selectedListID = viewModel.lists.first?.calendarIdentifier
+            }
+
+            // ✅ 5) Reminders passend zur Auswahl laden
+            await viewModel.reloadRemindersForSelection()
+        }
+
     }
 }
 

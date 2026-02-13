@@ -29,29 +29,32 @@ struct CategorySettingsView: View {
 
     var body: some View {
         Group {
-            if !categories.isEmpty {
-                List {
-                    ForEach(categories, id: \.self) { category in
-                        HStack {
-                            Text(category)
-                            Spacer()
-                            Image(systemName: "pencil")
-                                .foregroundStyle(.secondary)
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            editingCategory = category
-                            draftName = category
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                deleteCategory(category)
-                            } label: {
-                                Label("Delete", systemImage: "trash")
+            if let store = categoryStore, !store.categories.isEmpty {
+                Form {
+                    Section("Categories") {
+                        ForEach(store.categories, id: \.self) { category in
+                            HStack {
+                                Text(category)
+                                Spacer()
                             }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                editingCategory = category
+                                draftName = category
+                            }
+                            .swipeActions(edge: .trailing) {
+                                Button(role: .destructive) { deleteCategory(category) } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
+                        }
+                        .onMove { indices, newOffset in
+                            store.categories.move(fromOffsets: indices, toOffset: newOffset)
+                            try? modelContext.save()
                         }
                     }
                 }
+                .environment(\.editMode, .constant(.active)) // <- kein EditButton nötig
             } else {
                 VStack(spacing: 15) {
                     Text("No Categories found...")

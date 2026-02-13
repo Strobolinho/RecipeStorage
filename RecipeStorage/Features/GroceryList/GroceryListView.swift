@@ -109,7 +109,7 @@ struct GroceryListView: View {
             .sheet(isPresented: $viewModel.showAddGrocerySheet) {
                 AddGroceryItemSheet(viewModel: viewModel)
             }
-            .task { await viewModel.start() }
+            .task { await viewModel.start(using: modelContext) }
         }
     }
 }

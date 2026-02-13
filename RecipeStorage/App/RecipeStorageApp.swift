@@ -21,7 +21,8 @@ struct RecipeStorageApp: App {
             UnitStore.self,
             CategoryStore.self,
             MealPlanEntry.self,
-            GroceryListEntry.self
+            GroceryListEntry.self,
+            DefaultReminderList.self
         ])
 
         let config = ModelConfiguration(
@@ -32,6 +33,7 @@ struct RecipeStorageApp: App {
         do {
             return try ModelContainer(for: schema, configurations: [config])
         } catch {
+            print("❌", String(reflecting: error))
             fatalError("ModelContainer konnte nicht erstellt werden: \(error)")
         }
     }()
