@@ -20,7 +20,7 @@ struct MainTabView: View {
                     Label("Week Planner", systemImage: "calendar")
                 }
             
-            GroceryListView()
+            GroceriesView()
                 .tabItem {
                     Label("Grocery List", systemImage: "cart")
                 }

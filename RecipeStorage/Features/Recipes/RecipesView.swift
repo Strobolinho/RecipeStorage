@@ -12,22 +12,21 @@ struct RecipesView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Recipe.name) private var recipes: [Recipe]
-    //private var recipes: [Recipe] = mockRecipes
-    
-    @Query private var categoryStores: [CategoryStore]
-    private var categoryStore: CategoryStore? { categoryStores.first }
 
-    private var categories: [String] {
-        categoryStore?.categories ?? ["High Protein", "Low Calorie", "Vegetarian", "Vegan", "Low Carb"]
-    }
-    
+    @StateObject private var viewModel = RecipesViewModel()
+
     // Wenn man von WeekPlannerView kommt
     let isAddingToWeekPlanner: Bool
     let date: Date
     let mealType: String
     @Binding var isPresented: Bool
-    
-    init(isAddingToWeekPlanner: Bool = false, date: Date = Date(), mealType: String = "Dinner", isPresented: Binding<Bool> = .constant(false)) {
+
+    init(
+        isAddingToWeekPlanner: Bool = false,
+        date: Date = Date(),
+        mealType: String = "Dinner",
+        isPresented: Binding<Bool> = .constant(false)
+    ) {
         self.isAddingToWeekPlanner = isAddingToWeekPlanner
         self.date = date
         self.mealType = mealType
@@ -38,94 +37,31 @@ struct RecipesView: View {
         NavigationStack {
             ZStack {
                 if !recipes.isEmpty {
-                    ScrollView(.vertical) {
-                        HorizontalRecipeScrollbarView(
-                            title: "Alle Rezepte 🍽️",
-                            recipes: recipes,
-                            isAddingToWeekPlanner: isAddingToWeekPlanner,
-                            date: date,
-                            mealType: mealType,
-                            isPresented: $isPresented
-                        )
-
-                        ForEach(categories, id: \.self) { category in
-                            let filtered = recipes.filter { $0.categories.contains(category) }
-                            
-                            if !filtered.isEmpty {
-                                HorizontalRecipeScrollbarView(
-                                    title: category,
-                                    recipes: filtered,
-                                    isAddingToWeekPlanner: isAddingToWeekPlanner,
-                                    date: date,
-                                    mealType: mealType,
-                                    isPresented: $isPresented
-                                )
-                            }
-                        }
-                        
-                        VStack {}.frame(height: 50)
-                    }
+                    RecipesListView(
+                        recipes: recipes,
+                        isAddingToWeekPlanner: isAddingToWeekPlanner,
+                        date: date,
+                        mealType: mealType,
+                        isPresented: $isPresented,
+                        categories: viewModel.categories
+                    )
                 } else {
-                    VStack(spacing: 16) {
-                        Image(systemName: "fork.knife.circle")
-                            .font(.system(size: 70))
-                            .foregroundStyle(.brandPrimary)
-
-                        Text("No Recipes available")
-                            .font(.title3)
-                            .fontWeight(.semibold)
-
-                        Text("Create your first Recipe")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-
-                        Image(systemName: "arrow.down.circle.fill")
-                            .font(.system(size: 40))
-                            .foregroundStyle(.brandPrimary)
-                    }
-                    .padding()
+                    EmptyRecipesScreenView()
+                        .padding()
                 }
+
                 if !isAddingToWeekPlanner {
                     NewRecipeButtonView()
                 }
             }
         }
         .task {
-            backfillIngredientPositionsIfNeeded()
+            viewModel.onAppear(using: modelContext)
         }
         .toolbar(isAddingToWeekPlanner ? .hidden : .visible, for: .tabBar)
     }
-
-    private func backfillIngredientPositionsIfNeeded() {
-        let descriptor = FetchDescriptor<Recipe>()
-        let recipes = (try? modelContext.fetch(descriptor)) ?? []
-
-        for recipe in recipes {
-            
-            let ingredients = recipe.ingredients ?? []
-            let spices = recipe.spices ?? []
-            
-            for (idx, ing) in ingredients.enumerated() {
-                if ing.position == nil {
-                    ing.position = idx
-                }
-            }
-            for (idx, sp) in spices.enumerated() {
-                if sp.position == nil {
-                    sp.position = idx
-                }
-            }
-        }
-
-        try? modelContext.save()
-    }
 }
-
-
 
 #Preview {
     RecipesView()
 }
-
-

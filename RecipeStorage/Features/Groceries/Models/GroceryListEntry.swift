@@ -18,7 +18,7 @@ final class GroceryListEntry {
     
     var amount: Int? = nil
     var isChecked: Bool = false
-
+    
     init(name: String, unit: String, amount: Int, isChecked: Bool = false) {
         self.id = UUID()
         
