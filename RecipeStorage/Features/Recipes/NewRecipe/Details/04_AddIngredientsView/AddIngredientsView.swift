@@ -1,13 +1,5 @@
-//
-//  AddIngredientsView.swift
-//  RecipeStorage
-//
-//  Created by Nicolas Ströbel on 02.01.26.
-//
-
 import SwiftUI
 import SwiftData
-
 
 enum ingredientField: Hashable {
     case ingredientName
@@ -15,66 +7,33 @@ enum ingredientField: Hashable {
     case newUnit
 }
 
-
 struct AddIngredientsView: View {
-    
+
     @Query private var unitStores: [UnitStore]
     private var unitStore: UnitStore? { unitStores.first }
-    
+
     @ObservedObject var viewModel: NewRecipeViewModel
+
+    @StateObject private var screenVM = AddIngredientsViewModel()
+
     @FocusState private var focusedField: ingredientField?
-    
+
     @EnvironmentObject private var ingredientsStore: IngredientStore
-    
-    private func focusNext() {
-        switch focusedField {
-        case .ingredientName: focusedField = .amount
-        case .amount: focusedField = nil
-        default: focusedField = nil
-        }
-    }
-    
-    private func addNewIngredientUnit() {
-        guard let unitStore else { return }
-        
-        let newUnit = viewModel.newIngredientUnit
-            .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard !newUnit.isEmpty else { return }
-
-        if !unitStore.ingredientUnits.contains(newUnit) {
-            unitStore.ingredientUnits.append(newUnit)
-        }
-
-        viewModel.ingredientUnit = newUnit
-        viewModel.newIngredientUnit = ""
-    }
-    
-    
-    private var ingredientSuggestions: [String] {
-        let input = viewModel.ingredientName
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .lowercased()
-        
-        guard !input.isEmpty else { return [] }
-        
-        return ingredientsStore.ingredientNames
-            .filter { $0.lowercased().contains(input) }
-            .prefix(3)
-            .map { $0 }
-    }
-
-    
     var body: some View {
-        
+
+        let suggestions = screenVM.ingredientSuggestions(for: viewModel.ingredientName)
+        let units = screenVM.units(from: unitStore)
+
         Form {
             Section("New Ingredients") {
+
                 TextField("Ingredient Name", text: $viewModel.ingredientName)
                     .focused($focusedField, equals: .ingredientName)
-                
-                if focusedField == .ingredientName && !ingredientSuggestions.isEmpty {
+
+                if focusedField == .ingredientName && !suggestions.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
-                        ForEach(ingredientSuggestions, id: \.self) { suggestion in
+                        ForEach(suggestions, id: \.self) { suggestion in
                             Button {
                                 viewModel.ingredientName = suggestion
                                 focusedField = .amount
@@ -92,32 +51,31 @@ struct AddIngredientsView: View {
                     }
                     .padding(.vertical, 4)
                 }
-                
+
                 TextField("Amount", value: $viewModel.ingredientAmount, format: .number)
                     .keyboardType(.numberPad)
                     .focused($focusedField, equals: .amount)
-                
+
                 Picker("Unit", selection: $viewModel.ingredientUnit) {
-                    ForEach(unitStore?.ingredientUnits ?? ["Custom Unit", "g", "ml"], id: \.self) { unit in
+                    ForEach(units, id: \.self) { unit in
                         Text(unit)
                     }
                 }
                 .onChange(of: viewModel.ingredientUnit) {
-                    if viewModel.ingredientUnit == "Custom Unit" {
+                    if screenVM.isCustomUnitSelected(viewModel.ingredientUnit) {
                         DispatchQueue.main.async {
                             focusedField = .newUnit
                         }
                     }
                 }
-                
-                
-                if viewModel.ingredientUnit == "Custom Unit" {
+
+                if screenVM.isCustomUnitSelected(viewModel.ingredientUnit) {
                     HStack {
                         TextField("New Unit", text: $viewModel.newIngredientUnit)
                             .focused($focusedField, equals: .newUnit)
-                        
+
                         Button {
-                            addNewIngredientUnit()
+                            screenVM.addNewIngredientUnit(recipeVM: viewModel, unitStore: unitStore)
                         } label: {
                             Text("+")
                                 .font(.title)
@@ -126,19 +84,19 @@ struct AddIngredientsView: View {
                         }
                     }
                 }
-                
+
                 Button {
-                    viewModel.addIngredient()
+                    screenVM.addIngredient(recipeVM: viewModel)
                     focusedField = .ingredientName
                 } label: {
                     Text("Add Ingredient")
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-        
+
             if !viewModel.ingredients.isEmpty {
                 Section("Added Ingredients") {
-                    ForEach(viewModel.ingredients.sorted { ($0.position ?? 0) < ($1.position ?? 0) }) { ingredient in
+                    ForEach(screenVM.sortedIngredients(viewModel.ingredients)) { ingredient in
                         HStack {
                             Text(ingredient.name)
                             Spacer()
@@ -146,40 +104,38 @@ struct AddIngredientsView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
-                                viewModel.deleteIngredient(ingredient)
+                                screenVM.deleteIngredient(ingredient, recipeVM: viewModel)
                             } label: {
                                 Label("Löschen", systemImage: "trash")
                             }
                         }
                     }
                     .onMove { indices, newOffset in
-                        viewModel.ingredients.move(fromOffsets: indices, toOffset: newOffset)
-                        viewModel.reindexIngredients()
+                        screenVM.moveIngredients(fromOffsets: indices, toOffset: newOffset, recipeVM: viewModel)
                     }
                 }
             }
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
-                Button("Next") { focusNext() }
+                Button("Next") {
+                    focusedField = screenVM.nextField(after: focusedField)
+                }
                 Spacer()
                 Button("Done") { focusedField = nil }
             }
         }
         .onAppear {
+            // IngredientStore -> VM sync (nur Daten, keine Logik)
+            screenVM.ingredientNames = ingredientsStore.ingredientNames
+
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                             to: nil, from: nil, for: nil)
             focusedField = .ingredientName
         }
+        .onChange(of: ingredientsStore.ingredientNames) { _, newValue in
+            // falls sich IngredientStore dynamisch ändert
+            screenVM.ingredientNames = newValue
+        }
     }
-}
-
-
-#Preview {
-    AddIngredientsView(viewModel: NewRecipeViewModel())
-        .environmentObject({
-            let store = IngredientStore()
-            store.ingredientNames = ["Tomato", "Tomato Sauce", "Salt", "Sugar", "Olive Oil"]
-            return store
-        }())
 }

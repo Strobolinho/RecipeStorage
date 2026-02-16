@@ -25,7 +25,7 @@ struct RecipesListView: View {
         
         ScrollView(.vertical) {
             HorizontalRecipeScrollbarView(
-                title: "Alle Rezepte 🍽️",
+                title: "All Recipes 🍽️",
                 recipes: recipes,
                 isAddingToWeekPlanner: isAddingToWeekPlanner,
                 date: date,

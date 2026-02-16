@@ -56,16 +56,7 @@ struct RecipeView: View {
                 
                 StepsListView(recipe: recipe)
                 
-                Button(role: .destructive) {
-                    viewModel.showDeleteDialog = true
-                } label: {
-                    HStack {
-                        Text("Delete Recipe").fontWeight(.bold)
-                        Image(systemName: "trash")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .foregroundStyle(.brandPrimary)
-                }
+                DeleteRecipeButtonView(viewModel: viewModel)
                 .confirmationDialog("Rezept wirklich löschen?", isPresented: $viewModel.showDeleteDialog) {
                     Button("Löschen", role: .destructive) {
                         modelContext.delete(recipe)
@@ -80,71 +71,18 @@ struct RecipeView: View {
         }
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    viewModel.showAddGroceriesDialog = true
-                } label: {
-                    Image(systemName: "cart.badge.plus")
-                        .font(.system(size: 18))
-                }
-                .alert("Are you sure you want to add these groceries?", isPresented: $viewModel.showAddGroceriesDialog) {
-                    Button("Add to Grocery List", role: .confirm) {
-                        for ingredient in recipe.ingredients! {
-                            addGroceryItem(GroceryListEntry(name: ingredient.name, unit: ingredient.unit, amount: ingredient.amount))
-                        }
-                    }
-                    Button(role: .cancel) {}
+            RecipeToolbar(viewModel: viewModel, recipe: recipe)
+        }
+        .alert("Are you sure you want to add these groceries?", isPresented: $viewModel.showAddGroceriesDialog) {
+            Button("Add to Grocery List", role: .confirm) {
+                for ingredient in recipe.ingredients! {
+                    addGroceryItem(GroceryListEntry(name: ingredient.name, unit: ingredient.unit, amount: ingredient.amount))
                 }
             }
-            
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    viewModel.date = Date()
-                    viewModel.mealType = .dinner
-                    viewModel.showAddToWeekPlannerSheet = true
-                } label: {
-                    Image(systemName: "calendar.badge.plus")
-                        .font(.system(size: 17))
-                }
-            }
-            
-            ToolbarItem(placement: .topBarTrailing) {
-                NavigationLink {
-                    NewRecipeView(recipeToEdit: recipe)
-                } label: {
-                    Image(systemName: "square.and.pencil.circle")
-                        .font(.system(size: 22))
-                }
-            }
+            Button(role: .cancel) {}
         }
         .sheet(isPresented: $viewModel.showAddToWeekPlannerSheet) {
-            List {
-                Section {
-                    DatePicker("Date", selection: $viewModel.date, displayedComponents: [.date])
-
-                    Picker("Meal Type", selection: $viewModel.mealType) {
-                        ForEach(MealType.allCases, id: \.self) { type in
-                            Text(type.title).tag(type)
-                        }
-                    }
-                }
-
-                Section {
-                    Button {
-                        let entry = MealPlanEntry(day: viewModel.date, mealType: viewModel.mealType, recipe: recipe)
-                        modelContext.insert(entry)
-                        try? modelContext.save()
-
-                        viewModel.showAddToWeekPlannerSheet = false
-                    } label: {
-                        Text("Add to Week Planner")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .fontWeight(.bold)
-                    }
-                }
-            }
-            .presentationDetents([.height(230)])
-            .scrollDisabled(true)
+            AddToWeekplannerSheet(viewModel: viewModel, recipe: recipe)
         }
     }
 }

@@ -1,13 +1,5 @@
-//
-//  AddSpicesView.swift
-//  RecipeStorage
-//
-//  Created by Nicolas Ströbel on 02.01.26.
-//
-
 import SwiftUI
 import SwiftData
-
 
 enum spiceField: Hashable {
     case spiceName
@@ -15,70 +7,50 @@ enum spiceField: Hashable {
     case newUnit
 }
 
-
 struct AddSpicesView: View {
-    
+
     @Query private var unitStores: [UnitStore]
     private var unitStore: UnitStore? { unitStores.first }
-    
+
     @ObservedObject var viewModel: NewRecipeViewModel
+
+    @StateObject private var screenVM = AddSpicesViewModel()
+
     @FocusState private var focusedField: spiceField?
-    
-    private func focusNext() {
-        switch focusedField {
-        case .spiceName: focusedField = .amount
-        case .amount: focusedField = nil
-        default: focusedField = nil
-        }
-    }
-    
-    private func addNewSpiceUnit() {
-        guard let unitStore else { return }
-        
-        let newUnit = viewModel.newSpiceUnit
-            .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard !newUnit.isEmpty else { return }
-
-        if !unitStore.spiceUnits.contains(newUnit) {
-            unitStore.spiceUnits.append(newUnit)
-        }
-
-        viewModel.spiceUnit = newUnit
-        viewModel.newSpiceUnit = ""
-    }
-    
     var body: some View {
-        
+
+        let units = screenVM.units(from: unitStore)
+
         Form {
             Section("New Spices") {
                 TextField("Spice Name", text: $viewModel.spiceName)
                     .focused($focusedField, equals: .spiceName)
-                
+
                 TextField("Amount", value: $viewModel.spiceAmount, format: .number)
                     .keyboardType(.numberPad)
                     .focused($focusedField, equals: .amount)
-                
+
                 Picker("Unit", selection: $viewModel.spiceUnit) {
-                    ForEach(unitStore?.spiceUnits ?? ["Custom Unit", "TL", "EL"], id: \.self) { unit in
+                    ForEach(units, id: \.self) { unit in
                         Text(unit)
                     }
                 }
                 .onChange(of: viewModel.spiceUnit) {
-                    if viewModel.spiceUnit == "Custom Unit" {
+                    if screenVM.isCustomUnitSelected(viewModel.spiceUnit) {
                         DispatchQueue.main.async {
                             focusedField = .newUnit
                         }
                     }
                 }
-                
-                if viewModel.spiceUnit == "Custom Unit" {
+
+                if screenVM.isCustomUnitSelected(viewModel.spiceUnit) {
                     HStack {
                         TextField("New Unit", text: $viewModel.newSpiceUnit)
                             .focused($focusedField, equals: .newUnit)
-                        
+
                         Button {
-                            addNewSpiceUnit()
+                            screenVM.addNewSpiceUnit(recipeVM: viewModel, unitStore: unitStore)
                         } label: {
                             Text("+")
                                 .font(.title)
@@ -87,19 +59,19 @@ struct AddSpicesView: View {
                         }
                     }
                 }
-                
+
                 Button {
-                    viewModel.addSpice()
+                    screenVM.addSpice(recipeVM: viewModel)
                     focusedField = .spiceName
                 } label: {
-                    Text("Add Ingredient")
+                    Text("Add Spice")
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-            
+
             if !viewModel.spices.isEmpty {
                 Section("Added Spices") {
-                    ForEach(viewModel.spices.sorted { ($0.position ?? 0) < ($1.position ?? 0) }) { spice in
+                    ForEach(screenVM.sortedSpices(viewModel.spices)) { spice in
                         HStack {
                             Text(spice.name)
                             Spacer()
@@ -107,22 +79,23 @@ struct AddSpicesView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
-                                viewModel.deleteSpice(spice)
+                                screenVM.deleteSpice(spice, recipeVM: viewModel)
                             } label: {
                                 Label("Löschen", systemImage: "trash")
                             }
                         }
                     }
                     .onMove { indices, newOffset in
-                        viewModel.spices.move(fromOffsets: indices, toOffset: newOffset)
-                        viewModel.reindexSpices()
+                        screenVM.moveSpices(fromOffsets: indices, toOffset: newOffset, recipeVM: viewModel)
                     }
                 }
             }
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
-                Button("Next") { focusNext() }
+                Button("Next") {
+                    focusedField = screenVM.nextField(after: focusedField)
+                }
                 Spacer()
                 Button("Done") { focusedField = nil }
             }
@@ -136,5 +109,5 @@ struct AddSpicesView: View {
 }
 
 #Preview {
-        AddSpicesView(viewModel: NewRecipeViewModel())
+    AddSpicesView(viewModel: NewRecipeViewModel())
 }
