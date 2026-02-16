@@ -13,6 +13,9 @@ struct AddGroceryItemSheet: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \GroceryListEntry.name) private var entries: [GroceryListEntry]
     
+    @Query private var unitStores: [UnitStore]
+    private var unitStore: UnitStore? { unitStores.first }
+    
     @ObservedObject var viewModel: GroceryListViewModel
     
     
@@ -20,6 +23,7 @@ struct AddGroceryItemSheet: View {
         case groceryItemName
         case groceryItemAmount
         case groceryItemUnit
+        case customUnit
     }
 
     @FocusState private var focusedField: NewGroceryItemField?
@@ -45,8 +49,8 @@ struct AddGroceryItemSheet: View {
     private func resetSheetFields() {
         viewModel.groceryName = ""
         viewModel.groceryAmount = nil
-        viewModel.groceryUnit = ""
-        focusedField = nil
+        viewModel.groceryUnit = "g"
+        focusedField = .groceryItemName
     }
     
     
@@ -65,6 +69,8 @@ struct AddGroceryItemSheet: View {
     
     var body: some View {
         
+        let units = viewModel.units(from: unitStore)
+        
         Form {
             Section {
                 TextField("Grocery Name", text: $viewModel.groceryName)
@@ -76,10 +82,34 @@ struct AddGroceryItemSheet: View {
                     .keyboardType(.numberPad)
                     .focused($focusedField, equals: .groceryItemAmount)
 
-                TextField("Unit", text: $viewModel.groceryUnit)
-                    .focused($focusedField, equals: .groceryItemUnit)
-                    .submitLabel(.done)
-                    .onSubmit { focusedField = nil }
+                Picker("Unit", selection: $viewModel.groceryUnit) {
+                    ForEach(units, id: \.self) { unit in
+                        Text(unit)
+                    }
+                }
+                .onChange(of: viewModel.groceryUnit) {
+                    if viewModel.isCustomUnitSelected(viewModel.groceryUnit) {
+                        DispatchQueue.main.async {
+                            focusedField = .customUnit
+                        }
+                    }
+                }
+
+                if viewModel.isCustomUnitSelected(viewModel.groceryUnit) {
+                    HStack {
+                        TextField("New Unit", text: $viewModel.newGroceryUnit)
+                            .focused($focusedField, equals: .customUnit)
+
+                        Button {
+                            viewModel.addNewUnit(unitStore: unitStore)
+                        } label: {
+                            Text("+")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.brandPrimary)
+                        }
+                    }
+                }
             }
 
             Section {
@@ -93,8 +123,8 @@ struct AddGroceryItemSheet: View {
                                 amount: viewModel.groceryAmount ?? 0
                             )
                         )
-
-                        viewModel.showAddGrocerySheet = false
+                        
+                        resetSheetFields()
                     }
                 } label: {
                     Text("Add")

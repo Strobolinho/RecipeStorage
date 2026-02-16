@@ -15,7 +15,7 @@ struct GroceriesView: View {
 
     @StateObject private var viewModel = GroceryListViewModel()
     
-
+    
     var body: some View {
 
         NavigationStack {

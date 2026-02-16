@@ -26,7 +26,8 @@ final class GroceryListViewModel: ObservableObject {
     
     @Published var groceryName: String = ""
     @Published var groceryAmount: Int? = nil
-    @Published var groceryUnit: String = ""
+    @Published var groceryUnit: String = "g"
+    @Published var newGroceryUnit: String = ""
        
     
     @Published var lists: [EKCalendar] = []
@@ -61,6 +62,28 @@ final class GroceryListViewModel: ObservableObject {
             settings?.listID = newValue
             try context.save()
         }
+    
+    func isCustomUnitSelected(_ unit: String) -> Bool {
+        unit == "Custom Unit"
+    }
+    
+    func addNewUnit(
+        unitStore: UnitStore?
+    ) {
+        guard let unitStore else { return }
+
+        let newUnit = newGroceryUnit
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !newUnit.isEmpty else { return }
+
+        if !unitStore.ingredientUnits.contains(newUnit) {
+            unitStore.ingredientUnits.append(newUnit)
+        }
+
+        groceryUnit = newUnit
+        newGroceryUnit = ""
+    }
 
     func start(using context: ModelContext) async {
         do {
@@ -137,5 +160,9 @@ final class GroceryListViewModel: ObservableObject {
         }
         
         return reminderList
+    }
+    
+    func units(from unitStore: UnitStore?) -> [String] {
+        unitStore?.ingredientUnits ?? ["Custom Unit", "g", "ml"]
     }
 }

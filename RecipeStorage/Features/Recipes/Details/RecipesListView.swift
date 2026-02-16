@@ -18,37 +18,54 @@ struct RecipesListView: View {
     let mealType: String
     @Binding var isPresented: Bool
     
+    @State private var searchText: String = ""
     
     let categories: [String]
     
     var body: some View {
         
-        ScrollView(.vertical) {
-            HorizontalRecipeScrollbarView(
-                title: "All Recipes 🍽️",
-                recipes: recipes,
-                isAddingToWeekPlanner: isAddingToWeekPlanner,
-                date: date,
-                mealType: mealType,
-                isPresented: $isPresented
-            )
-
-            ForEach(categories, id: \.self) { category in
-                let filtered = recipes.filter { $0.categories.contains(category) }
-                
-                if !filtered.isEmpty {
-                    HorizontalRecipeScrollbarView(
-                        title: category,
-                        recipes: filtered,
-                        isAddingToWeekPlanner: isAddingToWeekPlanner,
-                        date: date,
-                        mealType: mealType,
-                        isPresented: $isPresented
-                    )
+        VStack {
+            TextField("Search for Recipes...", text: $searchText)
+                .padding()
+                .padding(.horizontal)
+                .foregroundStyle(.brandPrimary)
+                .font(.title2)
+                .fontWeight(.semibold)
+                .background {
+                    RoundedRectangle(cornerRadius: 999)
+                        .foregroundStyle(Color(uiColor: .systemGray6))
+                        .padding(.horizontal)
                 }
-            }
             
-            VStack {}.frame(height: 50)
+            ScrollView(.vertical) {
+                let filteredAll = searchText != "" ? recipes.filter( { $0.name.lowercased().contains(searchText.lowercased()) } ) : recipes
+                
+                HorizontalRecipeScrollbarView(
+                    title: "All Recipes 🍽️",
+                    recipes: filteredAll,
+                    isAddingToWeekPlanner: isAddingToWeekPlanner,
+                    date: date,
+                    mealType: mealType,
+                    isPresented: $isPresented
+                )
+                
+                ForEach(categories, id: \.self) { category in
+                    let filteredCategorized = searchText != "" ? recipes.filter( { $0.categories.contains(category) && $0.name.lowercased().contains(searchText.lowercased()) } ) : recipes.filter( { $0.categories.contains(category) } )
+                    
+                    if !filteredCategorized.isEmpty {
+                        HorizontalRecipeScrollbarView(
+                            title: category,
+                            recipes: filteredCategorized,
+                            isAddingToWeekPlanner: isAddingToWeekPlanner,
+                            date: date,
+                            mealType: mealType,
+                            isPresented: $isPresented
+                        )
+                    }
+                }
+                
+                VStack {}.frame(height: 50)
+            }
         }
     }
 }

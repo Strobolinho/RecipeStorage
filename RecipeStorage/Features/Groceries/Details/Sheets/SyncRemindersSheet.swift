@@ -74,6 +74,8 @@ struct SyncRemindersSheet: View {
                                 
                                 do { try modelContext.save() }
                                 catch { print("❌ save failed:", error) }
+                                
+                                viewModel.showSyncRemindersListSheet = false
                             }
                         } label: {
                             Text("Sync")
