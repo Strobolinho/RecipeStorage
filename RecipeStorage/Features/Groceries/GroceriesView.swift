@@ -19,14 +19,18 @@ struct GroceriesView: View {
     var body: some View {
 
         NavigationStack {
-            Group {
-                if !entries.isEmpty {
-                    GroceryListView(entries: entries)
-                        .padding(.top, -30)
-                } else {
-                    EmptyGroceryListView()
-                        .padding()
+            ZStack {
+                Group {
+                    if !entries.isEmpty {
+                        GroceryListView(entries: entries)
+                            .padding(.top, -30)
+                    } else {
+                        EmptyGroceryListView()
+                            .padding()
+                    }
                 }
+                
+                NewGroceryItemButtonView(viewModel: viewModel)
             }
             .toolbar {
                 GroceriesToolbar(showSyncRemindersListSheet: $viewModel.showSyncRemindersListSheet, showDeleteAllDialog: $viewModel.showDeleteAllDialog, showAddGrocerySheet: $viewModel.showAddGrocerySheet)

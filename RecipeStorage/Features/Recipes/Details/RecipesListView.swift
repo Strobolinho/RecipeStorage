@@ -29,7 +29,7 @@ struct RecipesListView: View {
                 .padding()
                 .padding(.horizontal)
                 .foregroundStyle(.brandPrimary)
-                .font(.title2)
+                .font(.headline)
                 .fontWeight(.semibold)
                 .background {
                     RoundedRectangle(cornerRadius: 999)

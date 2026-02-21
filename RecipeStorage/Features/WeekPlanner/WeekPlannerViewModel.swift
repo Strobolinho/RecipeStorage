@@ -84,22 +84,6 @@ final class WeekPlannerViewModel: ObservableObject {
 
     // MARK: - Grocery merge + insert
 
-    func addGroceryItem(
-        _ newItem: GroceryListEntry,
-        existingEntries: [GroceryListEntry],
-        modelContext: ModelContext
-    ) {
-        if let existing = existingEntries.first(where: { $0.name == newItem.name && $0.unit == newItem.unit }) {
-            existing.amount = (existing.amount ?? 0) + (newItem.amount ?? 0)
-            existing.isChecked = false
-        } else {
-            modelContext.insert(newItem)
-        }
-
-        do { try modelContext.save() }
-        catch { print("❌ save failed:", error) }
-    }
-
     /// Erzeugt aus MealPlanEntries (für den Tag) die GroceryListEntries
     func groceryItemsForDay(mealplanEntriesForDay: [MealPlanEntry]) -> [GroceryListEntry] {
         var result: [GroceryListEntry] = []
@@ -121,6 +105,11 @@ final class WeekPlannerViewModel: ObservableObject {
         return result
     }
 
+    
+    private func key(name: String, unit: String) -> String {
+        "\(name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())|\(unit)"
+    }
+
     func addGroceriesForCurrentDay(
         mealplanEntries: [MealPlanEntry],
         groceryEntries: [GroceryListEntry],
@@ -129,10 +118,37 @@ final class WeekPlannerViewModel: ObservableObject {
         let todaysEntries = entries(for: date, in: mealplanEntries)
         let items = groceryItemsForDay(mealplanEntriesForDay: todaysEntries)
 
+        // 1) Items des Tages deduplizieren/aufsummieren
+        var summed: [String: GroceryListEntry] = [:]
         for item in items {
-            addGroceryItem(item, existingEntries: groceryEntries, modelContext: modelContext)
+            let k = key(name: item.name, unit: item.unit)
+            if let existing = summed[k] {
+                existing.amount = (existing.amount ?? 0) + (item.amount ?? 0)
+            } else {
+                summed[k] = item
+            }
         }
+
+        // 2) Gegen bestehende Liste mergen
+        var working = groceryEntries
+
+        for item in summed.values {
+            if let existing = working.first(where: {
+                key(name: $0.name, unit: $0.unit) == key(name: item.name, unit: item.unit)
+            }) {
+                existing.amount = (existing.amount ?? 0) + (item.amount ?? 0)
+                existing.isChecked = false
+            } else {
+                modelContext.insert(item)
+                working.append(item)
+            }
+        }
+
+        do { try modelContext.save() }
+        catch { print("❌ save failed:", error) }
     }
+
+
 
     // MARK: - UI Actions
 

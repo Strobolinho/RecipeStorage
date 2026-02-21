@@ -23,6 +23,7 @@ final class GroceryListViewModel: ObservableObject {
     @Published var showAddGrocerySheet: Bool = false
     @Published var showDeleteAllDialog: Bool = false
     @Published var showSyncRemindersListSheet: Bool = false
+    @Published var showNewGroceryItemTextField: Bool = false
     
     @Published var groceryName: String = ""
     @Published var groceryAmount: Int? = nil

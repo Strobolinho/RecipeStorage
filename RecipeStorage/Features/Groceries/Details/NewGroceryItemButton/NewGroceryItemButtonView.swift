@@ -1,23 +1,25 @@
 //
-//  NewRecipeButtonView.swift
+//  NewGroceryItemButtonView.swift
 //  RecipeStorage
 //
-//  Created by Nicolas Ströbel on 01.01.26.
+//  Created by Nicolas Ströbel on 16.02.26.
 //
 
 import SwiftUI
 
-struct NewRecipeButtonView: View {
+struct NewGroceryItemButtonView: View {
+    
+    @ObservedObject var viewModel: GroceryListViewModel
     
     var body: some View {
         VStack {
             Spacer()
             
-            NavigationLink {
-                NewRecipeView(recipeToEdit: nil)
+            Button {
+                viewModel.showNewGroceryItemTextField = true
             } label: {
                 ZStack {
-                    Text("New Recipe")
+                    Text("New Grocery Item")
                         .font(.title2)
                         .fontWeight(.bold)
                         .background(
@@ -34,5 +36,5 @@ struct NewRecipeButtonView: View {
 }
 
 #Preview {
-    NewRecipeButtonView()
+    NewGroceryItemButtonView(viewModel: GroceryListViewModel())
 }

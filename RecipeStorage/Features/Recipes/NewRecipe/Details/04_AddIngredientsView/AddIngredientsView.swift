@@ -22,7 +22,7 @@ struct AddIngredientsView: View {
 
     var body: some View {
 
-        let suggestions = screenVM.ingredientSuggestions(for: viewModel.ingredientName)
+        let suggestions = Array(Set(screenVM.ingredientSuggestions(for: viewModel.ingredientName))).sorted()
         let units = screenVM.units(from: unitStore)
 
         Form {
@@ -32,22 +32,22 @@ struct AddIngredientsView: View {
                     .focused($focusedField, equals: .ingredientName)
 
                 if focusedField == .ingredientName && !suggestions.isEmpty {
-                    VStack(alignment: .leading, spacing: 10) {
-                        ForEach(suggestions, id: \.self) { suggestion in
+                    VStack(alignment: .leading, spacing: 20) {
+                        ForEach(Array(suggestions.enumerated()), id: \.offset) { i, suggestion in
                             Button {
                                 viewModel.ingredientName = suggestion
                                 focusedField = .amount
                             } label: {
-                                Text(suggestion)
-                                    .foregroundStyle(.black)
-                                    .padding(.horizontal, 5)
+                                Text("   \(suggestion)")
+                                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
                                     .background {
-                                        RoundedRectangle(cornerRadius: 999)
-                                            .foregroundStyle(.brandPrimary)
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .foregroundStyle(.brandPrimary.opacity(0.5))
                                     }
-                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
+                            .buttonStyle(.plain)
                         }
+
                     }
                     .padding(.vertical, 4)
                 }
