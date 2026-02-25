@@ -15,14 +15,14 @@ final class NewRecipeViewModel: ObservableObject {
     // Basic Data
     @Published var name: String = ""
     @Published var imageData: Data? = nil
-    @Published var servings: Int? = nil
+    @Published var servings: Double? = nil
     @Published var duration: Int? = nil
     @Published var categories: Set<String> = []
 
     // Macros
-    @Published var protein: Int? = nil
-    @Published var carbs: Int? = nil
-    @Published var fats: Int? = nil
+    @Published var protein: Double? = nil
+    @Published var carbs: Double? = nil
+    @Published var fats: Double? = nil
 
     @Published var isCustomCalories: Bool = false
     @Published var customCalories: Int? = nil
@@ -32,14 +32,14 @@ final class NewRecipeViewModel: ObservableObject {
 
     // New Ingredient Inputs
     @Published var ingredientName: String = ""
-    @Published var ingredientAmount: Int? = nil
+    @Published var ingredientAmount: Double? = nil
     @Published var ingredientUnit: String = "g"
     @Published var newIngredientUnit: String = ""
 
     // Spices
     @Published var spices: [Spice] = []
     @Published var spiceName: String = ""
-    @Published var spiceAmount: Int? = nil
+    @Published var spiceAmount: Double? = nil
     @Published var spiceUnit: String = "TL"
     @Published var newSpiceUnit: String = ""
 
@@ -162,9 +162,11 @@ final class NewRecipeViewModel: ObservableObject {
         else { return }
 
         let nextPos = ingredients.count
-        ingredients.append(
-            Ingredient(name: ingredientName, amount: amount, unit: ingredientUnit, position: nextPos)
-        )
+        
+        let ing = Ingredient(name: name, amount: amount, unit: ingredientUnit, position: nextPos)
+        ing.amount = Double(ing.amount)
+        
+        ingredients.append(ing)
 
         ingredientName = ""
         ingredientAmount = nil
@@ -186,9 +188,11 @@ final class NewRecipeViewModel: ObservableObject {
         else { return }
 
         let nextPos = spices.count
-        spices.append(
-            Spice(name: spiceName, amount: amount, unit: spiceUnit, position: nextPos)
-        )
+        
+        let spi = Spice(name: name, amount: amount, unit: spiceUnit, position: nextPos)
+        spi.amount = Double(spi.amount)
+        
+        spices.append(spi)
 
         spiceName = ""
         spiceAmount = nil

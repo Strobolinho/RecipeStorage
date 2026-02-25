@@ -11,19 +11,18 @@ import SwiftData
 @Model
 final class Spice {
 
-    // ✅ CloudKit: .unique raus + Default
     var id: UUID = UUID()
 
-    // ✅ CloudKit: Defaults
     var name: String = ""
-    var amount: Int = 0
+
+    var amount: Double = 0
+
     var unit: String = ""
     var position: Int?
 
-    // ✅ CloudKit: Inverse Relationship (muss optional sein)
     var recipe: Recipe?
 
-    init(name: String, amount: Int, unit: String, position: Int? = nil) {
+    init(name: String, amount: Double, unit: String, position: Int? = nil) {
         self.id = UUID()
         self.name = name
         self.amount = amount

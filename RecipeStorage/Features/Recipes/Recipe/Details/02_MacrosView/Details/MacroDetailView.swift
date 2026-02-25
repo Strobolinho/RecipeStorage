@@ -10,7 +10,7 @@ import SwiftUI
 struct MacroDetailView: View {
     
     let macroName: String
-    let macroAmount: Int
+    let macroAmount: Double
     let color: Color
     
     var body: some View {

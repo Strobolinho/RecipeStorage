@@ -44,6 +44,7 @@ struct RecipeStorageApp: App {
                 .environmentObject(ingredientsStore)
                 .task {
                     ingredientsStore.load(from: sharedModelContainer)
+                    //DataMigration.migrateMacrosIfNeeded(container: sharedModelContainer)
                 }
         }
         .modelContainer(sharedModelContainer)

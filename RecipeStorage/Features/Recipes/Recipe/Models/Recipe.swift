@@ -4,77 +4,68 @@ import SwiftData
 @Model
 final class Recipe {
 
-    // ✅ CloudKit: .unique wird nicht unterstützt -> entfernen
-    // ✅ CloudKit: Default am Property setzen
     var id: UUID = UUID()
 
     @Attribute(.externalStorage) var imageData: Data?
 
-    // ✅ CloudKit: non-optional braucht Default (auch wenn du es im init setzt)
     var name: String = ""
-    var servings: Int = 0
     var duration: Int = 0
     var categories: Set<String> = []
 
-    var protein: Int = 0
-    var carbs: Int = 0
-    var fats: Int = 0
-
-    var calories: Int {
-        Int((4.1 * Double(protein + carbs)) + (9.3 * Double(fats)))
-    }
+    // NEU (ab jetzt im UI verwenden)
+    var servings: Double = 0
+    var protein: Double = 0
+    var carbs: Double = 0
+    var fats: Double = 0
 
     var customCalories: Int?
 
-    // ✅ CloudKit: Relationship muss optional sein
-    // ✅ CloudKit: Relationship braucht inverse
+    var calories: Int {
+        let value = 4.1 * (protein + carbs) + 9.3 * fats
+        return Int(value.rounded())
+    }
+
     @Relationship(deleteRule: .nullify, inverse: \Ingredient.recipe)
     var ingredients: [Ingredient]? = []
 
-    // ✅ CloudKit: Relationship muss optional sein
-    // ✅ CloudKit: Relationship braucht inverse
     @Relationship(deleteRule: .nullify, inverse: \Spice.recipe)
     var spices: [Spice]? = []
 
-    // ✅ CloudKit: Default
     var steps: [String] = []
-    
+
     @Relationship(deleteRule: .nullify)
     var mealPlanEntries: [MealPlanEntry]? = []
 
     init(
         imageData: Data? = nil,
         name: String,
-        servings: Int,
+        servings: Double,
         duration: Int,
         categories: Set<String>,
-        protein: Int,
-        carbs: Int,
-        fats: Int,
+        protein: Double,
+        carbs: Double,
+        fats: Double,
         customCalories: Int?,
         ingredients: [Ingredient],
         spices: [Spice],
         steps: [String]
     ) {
-        // id hat Default, aber du kannst es explizit lassen wenn du willst:
         self.id = UUID()
-
         self.imageData = imageData
         self.name = name
-        self.servings = servings
         self.duration = duration
         self.categories = categories
-        self.protein = protein
-        self.carbs = carbs
-        self.fats = fats
-        self.customCalories = customCalories
 
-        // ✅ CloudKit: optional relationship
+        self.servings = servings
+        self.protein = Double(protein)
+        self.carbs = Double(carbs)
+        self.fats = Double(fats)
+
+        self.customCalories = customCalories
         self.ingredients = ingredients
         self.spices = spices
         self.steps = steps
 
-        // ✅ CloudKit: inverse sauber setzen (macht es robust)
         ingredients.forEach { $0.recipe = self }
         spices.forEach { $0.recipe = self }
     }

@@ -16,10 +16,10 @@ final class GroceryListEntry {
     
     var unit: String = ""
     
-    var amount: Int? = nil
+    var amount: Double? = nil
     var isChecked: Bool = false
     
-    init(name: String, unit: String, amount: Int, isChecked: Bool = false) {
+    init(name: String, unit: String, amount: Double, isChecked: Bool = false) {
         self.id = UUID()
         
         self.name = name

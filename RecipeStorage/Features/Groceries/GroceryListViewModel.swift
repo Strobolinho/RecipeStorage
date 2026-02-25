@@ -26,7 +26,7 @@ final class GroceryListViewModel: ObservableObject {
     @Published var showNewGroceryItemTextField: Bool = false
     
     @Published var groceryName: String = ""
-    @Published var groceryAmount: Int? = nil
+    @Published var groceryAmount: Double? = nil
     @Published var groceryUnit: String = "g"
     @Published var newGroceryUnit: String = ""
        

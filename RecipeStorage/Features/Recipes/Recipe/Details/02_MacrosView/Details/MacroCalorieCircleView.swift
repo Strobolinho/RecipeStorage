@@ -11,7 +11,7 @@ struct MacroCalorieCircleView: View {
     
     let recipe: Recipe
     
-    func calcMacroPercentage(amount: Int, multiplier: Double) -> Double {
+    func calcMacroPercentage(amount: Double, multiplier: Double) -> Double {
         return ((Double(amount) * multiplier) / Double(recipe.calories))
     }
     

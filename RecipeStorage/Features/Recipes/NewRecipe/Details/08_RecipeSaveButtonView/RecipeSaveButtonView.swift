@@ -58,13 +58,19 @@ struct RecipeSaveButtonView: View {
                         spices: viewModel.spices,
                         steps: viewModel.steps
                     )
-                    
+
                     modelContext.insert(recipe)
                 }
                 
-                ingredientsStore.load(from: modelContext.container)
-
-                dismiss()
+                do {
+                    try modelContext.save()
+                    ingredientsStore.load(from: modelContext.container)
+                    dismiss()
+                } catch {
+                    // erstmal minimal: loggen
+                    print("❌ Save failed:", error)
+                    // optional: zeig ein Alert (kannst du später ergänzen)
+                }
             } label: {
                 Text(recipeToEdit == nil ? "Save Recipe" : "Update Recipe")
                     .frame(maxWidth: .infinity, alignment: .center)
