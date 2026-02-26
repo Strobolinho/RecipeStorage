@@ -26,7 +26,7 @@ struct GroceryListEntryView: View {
             
             Text(entry.name)
             Spacer()
-            Text("\(entry.amount! > 0 ? (String(describing: entry.amount!)) : "") \(entry.unit)")
+            Text("\(entry.amount! > 0 ? (String(describing: entry.amount!.formatted(.number.precision(.fractionLength(0...1))))) : "") \(entry.unit)")
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button(role: .destructive) {

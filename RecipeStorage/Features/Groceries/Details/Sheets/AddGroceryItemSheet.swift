@@ -79,7 +79,7 @@ struct AddGroceryItemSheet: View {
                     .onSubmit { focusNext() }
 
                 TextField("Amount", value: $viewModel.groceryAmount, format: .number)
-                    .keyboardType(.numberPad)
+                    .keyboardType(.decimalPad)
                     .focused($focusedField, equals: .groceryItemAmount)
 
                 Picker("Unit", selection: $viewModel.groceryUnit) {

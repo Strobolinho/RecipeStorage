@@ -21,7 +21,7 @@ struct IngredientListView: View {
                     
                     Spacer()
                     
-                    Text("\(ingredient.amount) \(ingredient.unit)")
+                    Text("\(ingredient.amount.formatted(.number.precision(.fractionLength(0...1)))) \(ingredient.unit)")
                 }
             }
         }

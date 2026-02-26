@@ -32,7 +32,7 @@ struct AddSpicesButtonView: View {
                     HStack {
                         Text(spice.name)
                         Spacer()
-                        Text("\(spice.amount) \(spice.unit)")
+                        Text("\(spice.amount.formatted(.number.precision(.fractionLength(0...1)))) \(spice.unit)")
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) {

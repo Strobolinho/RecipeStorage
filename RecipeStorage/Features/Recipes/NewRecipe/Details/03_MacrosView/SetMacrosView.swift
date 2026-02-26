@@ -31,15 +31,15 @@ struct SetMacrosView: View {
             Toggle("Custom Calories", isOn: $viewModel.isCustomCalories)
             
             TextField("Protein", value: $viewModel.protein, format: .number)
-                .keyboardType(.numberPad)
+                .keyboardType(.decimalPad)
                 .focused(focusedField, equals: .protein)
             
             TextField("Carbs", value: $viewModel.carbs, format: .number)
-                .keyboardType(.numberPad)
+                .keyboardType(.decimalPad)
                 .focused(focusedField, equals: .carbs)
             
             TextField("Fats", value: $viewModel.fats, format: .number)
-                .keyboardType(.numberPad)
+                .keyboardType(.decimalPad)
                 .focused(focusedField, equals: .fats)
         }
     }

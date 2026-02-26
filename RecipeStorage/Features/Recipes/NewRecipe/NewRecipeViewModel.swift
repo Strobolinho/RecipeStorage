@@ -54,9 +54,9 @@ final class NewRecipeViewModel: ObservableObject {
     // MARK: - Derived
 
     var calories: Int {
-        let p = Double(protein ?? 0)
-        let c = Double(carbs ?? 0)
-        let f = Double(fats ?? 0)
+        let p = protein ?? 0
+        let c = carbs ?? 0
+        let f = fats ?? 0
         let total = (p + c) * 4.1 + f * 9.3
         return Int(total)
     }
@@ -162,11 +162,11 @@ final class NewRecipeViewModel: ObservableObject {
         else { return }
 
         let nextPos = ingredients.count
+    
         
-        let ing = Ingredient(name: name, amount: amount, unit: ingredientUnit, position: nextPos)
-        ing.amount = Double(ing.amount)
-        
-        ingredients.append(ing)
+        ingredients.append(
+            Ingredient(name: name, amount: amount, unit: ingredientUnit, position: nextPos)
+        )
 
         ingredientName = ""
         ingredientAmount = nil
@@ -189,10 +189,9 @@ final class NewRecipeViewModel: ObservableObject {
 
         let nextPos = spices.count
         
-        let spi = Spice(name: name, amount: amount, unit: spiceUnit, position: nextPos)
-        spi.amount = Double(spi.amount)
-        
-        spices.append(spi)
+        spices.append(
+            Spice(name: name, amount: amount, unit: spiceUnit, position: nextPos)
+        )
 
         spiceName = ""
         spiceAmount = nil

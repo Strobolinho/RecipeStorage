@@ -17,7 +17,7 @@ struct MacroDetailView: View {
         VStack {
             Text(macroName)
                 .foregroundStyle(color)
-            Text("\(macroAmount) g")
+            Text("\(macroAmount.formatted(.number.precision(.fractionLength(0...1)))) g")
         }
     }
 }

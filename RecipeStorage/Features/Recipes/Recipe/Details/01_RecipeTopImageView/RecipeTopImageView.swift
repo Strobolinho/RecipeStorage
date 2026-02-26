@@ -38,7 +38,7 @@ struct RecipeTopImageView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "person.fill")
-                    Text("\(recipe.servings)")
+                    Text("\(recipe.servings.formatted(.number.precision(.fractionLength(0...2))))")
                     
                     Spacer()
                     

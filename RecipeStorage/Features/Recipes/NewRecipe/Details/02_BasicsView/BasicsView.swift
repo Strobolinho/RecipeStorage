@@ -19,7 +19,7 @@ struct BasicsView: View {
                 .focused(focusedField, equals: .recipeName)
 
             TextField("Servings", value: $viewModel.servings, format: .number)
-                .keyboardType(.numberPad)
+                .keyboardType(.decimalPad)
                 .focused(focusedField, equals: .servings)
             
             TextField("Duration", value: $viewModel.duration, format: .number)

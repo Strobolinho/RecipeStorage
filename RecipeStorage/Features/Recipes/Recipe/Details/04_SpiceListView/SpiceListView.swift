@@ -23,7 +23,7 @@ struct SpiceListView: View {
                         
                         Spacer()
                         
-                        Text("\(spice.amount) \(spice.unit)")
+                        Text("\(spice.amount.formatted(.number.precision(.fractionLength(0...1)))) \(spice.unit)")
                     }
                 }
             }

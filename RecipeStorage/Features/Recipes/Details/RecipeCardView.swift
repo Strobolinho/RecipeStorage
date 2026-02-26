@@ -62,7 +62,7 @@ struct RecipeCardView: View {
                     
                     Image(systemName: "person.fill")
                     
-                    Text("\(recipe.servings)")
+                    Text("\(recipe.servings.formatted(.number.precision(.fractionLength(0...2))))")
                         .font(.footnote)
                         .fontWeight(.bold)
                     

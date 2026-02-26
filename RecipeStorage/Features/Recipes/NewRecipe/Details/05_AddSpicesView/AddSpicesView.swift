@@ -28,7 +28,7 @@ struct AddSpicesView: View {
                     .focused($focusedField, equals: .spiceName)
 
                 TextField("Amount", value: $viewModel.spiceAmount, format: .number)
-                    .keyboardType(.numberPad)
+                    .keyboardType(.decimalPad)
                     .focused($focusedField, equals: .amount)
 
                 Picker("Unit", selection: $viewModel.spiceUnit) {
@@ -75,7 +75,7 @@ struct AddSpicesView: View {
                         HStack {
                             Text(spice.name)
                             Spacer()
-                            Text("\(spice.amount) \(spice.unit)")
+                            Text("\(spice.amount.formatted(.number.precision(.fractionLength(0...1)))) \(spice.unit)")
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
