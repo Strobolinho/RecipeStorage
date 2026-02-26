@@ -20,4 +20,6 @@ final class RecipeViewModel: ObservableObject {
     @Published var date: Date = Date()
     
     @Published var mealType: MealType = .dinner
+    
+    @Published var multiplier: Double = 1.0
 }
