@@ -163,10 +163,9 @@ final class NewRecipeViewModel: ObservableObject {
 
         let nextPos = ingredients.count
     
-        
-        ingredients.append(
-            Ingredient(name: name, amount: amount, unit: ingredientUnit, position: nextPos)
-        )
+        let ingName = ingredientName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        ingredients.append(Ingredient(name: ingName, amount: amount, unit: ingredientUnit, position: nextPos))
 
         ingredientName = ""
         ingredientAmount = nil
@@ -189,9 +188,9 @@ final class NewRecipeViewModel: ObservableObject {
 
         let nextPos = spices.count
         
-        spices.append(
-            Spice(name: name, amount: amount, unit: spiceUnit, position: nextPos)
-        )
+        let spiName = spiceName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        spices.append(Spice(name: spiName, amount: amount, unit: spiceUnit, position: nextPos))
 
         spiceName = ""
         spiceAmount = nil
