@@ -10,6 +10,7 @@ import SwiftUI
 struct IngredientListView: View {
     
     let recipe: Recipe
+    let multiplier: Double
     
     var body: some View {
         Section("Ingredients") {
@@ -21,7 +22,7 @@ struct IngredientListView: View {
                     
                     Spacer()
                     
-                    Text("\(ingredient.amount.formatted(.number.precision(.fractionLength(0...1)))) \(ingredient.unit)")
+                    Text("\((ingredient.amount * multiplier).formatted(.number.precision(.fractionLength(0...1)))) \(ingredient.unit)")
                 }
             }
         }
@@ -29,5 +30,5 @@ struct IngredientListView: View {
 }
 
 #Preview {
-    IngredientListView(recipe: mockRecipes[0])
+    IngredientListView(recipe: mockRecipes[0], multiplier: 1.0)
 }

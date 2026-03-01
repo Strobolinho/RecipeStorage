@@ -10,9 +10,10 @@ import SwiftUI
 struct MacroCalorieCircleView: View {
     
     let recipe: Recipe
+    let multiplier: Double
     
-    func calcMacroPercentage(amount: Double, multiplier: Double) -> Double {
-        return ((amount * multiplier) / Double(recipe.calories))
+    func calcMacroPercentage(amount: Double, multiplierMacro: Double) -> Double {
+        return ((amount * multiplierMacro) / Double(recipe.calories))
     }
     
     var body: some View {
@@ -22,30 +23,30 @@ struct MacroCalorieCircleView: View {
                 start: 0.005,
                 end: calcMacroPercentage(
                     amount: recipe.protein,
-                    multiplier: 4.1) - 0.005,
+                    multiplierMacro: 4.1) - 0.005,
                 color: .protein
             )
             
             RingSegment(
                 start: calcMacroPercentage(
                     amount: recipe.protein,
-                    multiplier: 4.1) + 0.005,
+                    multiplierMacro: 4.1) + 0.005,
                 end: calcMacroPercentage(
                     amount: recipe.protein + recipe.carbs,
-                    multiplier: 4.1) - 0.005,
+                    multiplierMacro: 4.1) - 0.005,
                 color: .carbs
             )
             
             RingSegment(
                 start: calcMacroPercentage(
                     amount: recipe.protein + recipe.carbs,
-                    multiplier: 4.1) + 0.005,
+                    multiplierMacro: 4.1) + 0.005,
                 end: 0.995,
                 color: .fats
             )
             
             VStack {
-                Text("\(recipe.customCalories ?? recipe.calories)")
+                Text("\(Int(Double(recipe.customCalories ?? recipe.calories) * multiplier))")
                 Text("kcal")
             }
         }
@@ -54,7 +55,7 @@ struct MacroCalorieCircleView: View {
 }
 
 #Preview {
-    MacroCalorieCircleView(recipe: mockRecipes[0])
+    MacroCalorieCircleView(recipe: mockRecipes[0], multiplier: 1.0)
 }
 
 

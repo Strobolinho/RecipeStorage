@@ -21,5 +21,5 @@ final class RecipeViewModel: ObservableObject {
     
     @Published var mealType: MealType = .dinner
     
-    @Published var multiplier: Double = 1.0
+    @Published var portions: Double = 1.0
 }

@@ -55,14 +55,17 @@ final class MealPlanEntry {
 
     var mealType: MealType = MealType.lunch
     
+    var multiplier: Double = 1.0
+    
     @Relationship(deleteRule: .nullify, inverse: \Recipe.mealPlanEntries)
     var recipe: Recipe? = nil
 
-    init(day: Date, mealType: MealType, recipe: Recipe? = nil) {
+    init(day: Date, mealType: MealType, recipe: Recipe? = nil, multiplier: Double = 1.0) {
         self.id = UUID()
 
         self.day = Calendar.current.startOfDay(for: day)
         self.mealType = mealType
         self.recipe = recipe
+        self.multiplier = multiplier
     }
 }

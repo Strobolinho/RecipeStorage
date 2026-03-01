@@ -38,41 +38,25 @@ struct AddToWeekplannerSheet: View {
                     }
                 } label: {
                     HStack {
-                        Text("Multiplier")
+                        Text("Servings")
                         Spacer()
-                        Text(viewModel.multiplier.formatted(.number.precision(.fractionLength(0...2))))
+                        Text(viewModel.portions.formatted(.number.precision(.fractionLength(0...2))))
                             .foregroundStyle(.secondary)
                     }
                 }
 
                 if showMultiplierPicker {
-                    TwoDecimalPicker(value: $viewModel.multiplier, intRange: 0...5)
+                    TwoDecimalPicker(value: $viewModel.portions, intRange: 0...(Int(recipe.servings) * 5))
                         .frame(height: 180)
                 }
             }
 
             Section {
                 Button {
-                    var ingredientsEdited: [Ingredient] = []
-                    var spicesEdited: [Spice] = []
                     
-                    for ing in recipe.ingredients! {
-                        ingredientsEdited.append(
-                            Ingredient(name: ing.name, amount: ing.amount * viewModel.multiplier, unit: ing.unit, position: ing.position)
-                        )
-                    }
+                    let multiplier: Double = viewModel.portions / recipe.servings
                     
-                    if let spices = recipe.spices {
-                        for spi in spices {
-                            spicesEdited.append(
-                                Spice(name: spi.name, amount: spi.amount * viewModel.multiplier, unit: spi.unit, position: spi.position)
-                            )
-                        }
-                    }
-                    
-                    let recipeEdited = Recipe(imageData: recipe.imageData, name: recipe.name, servings: recipe.servings * viewModel.multiplier, duration: recipe.duration, categories: recipe.categories, protein: recipe.protein * viewModel.multiplier, carbs: recipe.carbs * viewModel.multiplier, fats: recipe.fats * viewModel.multiplier, customCalories: recipe.customCalories, ingredients: ingredientsEdited, spices: spicesEdited, steps: recipe.steps)
-                    
-                    let entry = MealPlanEntry(day: viewModel.date, mealType: viewModel.mealType, recipe: recipeEdited)
+                    let entry = MealPlanEntry(day: viewModel.date, mealType: viewModel.mealType, recipe: recipe, multiplier: multiplier)
                     
                     modelContext.insert(entry)
                     try? modelContext.save()
@@ -85,6 +69,9 @@ struct AddToWeekplannerSheet: View {
                         .fontWeight(.bold)
                 }
             }
+        }
+        .onAppear {
+            viewModel.portions = recipe.servings
         }
         .presentationDetents(
             [.height(280), .height(500)],

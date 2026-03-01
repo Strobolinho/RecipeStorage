@@ -16,7 +16,7 @@ struct TwoDecimalPicker: View {
     @State private var integerPart: Int = 0
 
     // Wrap-around wheel config
-    private let decimals = Array(0..<100)
+    private let decimals = Array(stride(from: 0, through: 95, by: 5))
     private let repeats = 7                 // ungerade Zahl ist praktisch
     private var totalDecimalItems: Int { decimals.count * repeats }
     private var middleOffset: Int { (repeats / 2) * decimals.count }
@@ -45,8 +45,8 @@ struct TwoDecimalPicker: View {
             // Nachkommastellen (00–99), "wrap-around" via Repeats
             Picker("Decimal", selection: $decimalSelectionIndex) {
                 ForEach(0..<totalDecimalItems, id: \.self) { i in
-                    let d = i % 100
-                    Text(String(format: "%02d", d)).tag(i)
+                    let d = decimals[i % decimals.count]
+                    Text(String(format: "%02d", d))
                 }
             }
             .pickerStyle(.wheel)
@@ -61,7 +61,7 @@ struct TwoDecimalPicker: View {
     }
 
     private var decimalPart: Int {
-        ((decimalSelectionIndex % 100) + 100) % 100
+        decimals[((decimalSelectionIndex % decimals.count) + decimals.count) % decimals.count]
     }
 
     private func updateValue() {
@@ -74,10 +74,9 @@ struct TwoDecimalPicker: View {
 
         // decimals (2 Stellen)
         let fractional = abs(value - Double(integerPart))
-        let dec = Int((fractional * 100.0).rounded()) % 100
-
-        // starte in der Mitte, damit "endlos" wirkt
-        decimalSelectionIndex = middleOffset + dec
+        let dec = Int((fractional * 20.0).rounded()) // 20 Steps pro Einheit
+        let safeIndex = min(max(dec, 0), decimals.count - 1)
+        decimalSelectionIndex = middleOffset + safeIndex
     }
 
     private func recenterDecimalWheelIfNeeded(old: Int, new: Int) {

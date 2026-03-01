@@ -24,6 +24,7 @@ struct RecipeView: View {
     
     let recipe: Recipe
     
+    let multiplier: Double
     
     func addGroceryItem(_ newGroceryItem: GroceryListEntry) {
         if let existing = groceryEntries.first(where: { $0.name == newGroceryItem.name && $0.unit == newGroceryItem.unit }) {
@@ -42,17 +43,18 @@ struct RecipeView: View {
         VStack {
             RecipeTopImageView(
                 imageData: recipe.imageData,
-                recipe: recipe
+                recipe: recipe,
+                multiplier: multiplier
             )
             
             Form {
                 CategoriesView(recipe: recipe)
                 
-                MacrosView(recipe: recipe)
+                MacrosView(recipe: recipe, multiplier: multiplier)
                 
-                IngredientListView(recipe: recipe)
+                IngredientListView(recipe: recipe, multiplier: multiplier)
                 
-                SpiceListView(recipe: recipe)
+                SpiceListView(recipe: recipe, multiplier: multiplier)
                 
                 StepsListView(recipe: recipe)
                 
@@ -88,6 +90,6 @@ struct RecipeView: View {
 }
 
 #Preview {
-    RecipeView(recipe: mockRecipes[0])
+    RecipeView(recipe: mockRecipes[0], multiplier: 1.0)
 }
 

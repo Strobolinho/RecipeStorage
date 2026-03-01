@@ -11,6 +11,7 @@ struct RecipeTopImageView: View {
     
     let imageData: Data?
     let recipe: Recipe
+    let multiplier: Double
     
     var body: some View {
         ZStack {
@@ -38,7 +39,7 @@ struct RecipeTopImageView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "person.fill")
-                    Text("\(recipe.servings.formatted(.number.precision(.fractionLength(0...2))))")
+                    Text("\((recipe.servings * multiplier).formatted(.number.precision(.fractionLength(0...2))))")
                     
                     Spacer()
                     
@@ -90,6 +91,7 @@ struct RecipeTopImageView: View {
 #Preview {
     RecipeTopImageView(
         imageData: UIImage(named: "lasagna")?.jpegData(compressionQuality: 0.8),
-        recipe: mockRecipes[0]
+        recipe: mockRecipes[0],
+        multiplier: 1.0
     )
 }

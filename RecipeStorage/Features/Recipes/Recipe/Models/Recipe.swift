@@ -12,7 +12,6 @@ final class Recipe {
     var duration: Int = 0
     var categories: Set<String> = []
 
-    // NEU (ab jetzt im UI verwenden)
     var servings: Double = 0
     var protein: Double = 0
     var carbs: Double = 0

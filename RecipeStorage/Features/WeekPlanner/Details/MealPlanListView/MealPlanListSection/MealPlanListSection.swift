@@ -105,12 +105,12 @@ struct MealPlanListSection: View {
             ZStack {
                 Group {
                     if isEditing {
-                        MealPlanRecipeCardView(imageData: recipe.imageData, recipe: recipe)
+                        MealPlanRecipeCardView(imageData: recipe.imageData, recipe: recipe, multiplier: entry.multiplier)
                     } else {
                         NavigationLink {
-                            RecipeView(recipe: recipe)
+                            RecipeView(recipe: recipe, multiplier: entry.multiplier)
                         } label: {
-                            MealPlanRecipeCardView(imageData: recipe.imageData, recipe: recipe)
+                            MealPlanRecipeCardView(imageData: recipe.imageData, recipe: recipe, multiplier: entry.multiplier)
                         }
                         .buttonStyle(.plain)
                     }
