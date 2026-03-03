@@ -12,6 +12,8 @@ struct HorizontalRecipeScrollbarView: View {
     
     @Environment(\.modelContext) private var modelContext
     
+    @ObservedObject var viewModel: RecipesViewModel
+    
     let title: String
     let recipes: [Recipe]
     let isAddingToWeekPlanner: Bool
@@ -42,7 +44,8 @@ struct HorizontalRecipeScrollbarView: View {
                                 }
                             } else {
                                 Button {
-                                    addRecipeToEntries(recipe: recipe, date: date, mealType: mealType)
+                                    viewModel.multiplier = recipe.servings
+                                    viewModel.selectedRecipeForWeekPlanner = recipe
                                 } label: {
                                     RecipeCardView(recipe: recipe)
                                 }
@@ -56,20 +59,11 @@ struct HorizontalRecipeScrollbarView: View {
             .padding(.vertical, 2)
         }
     }
-    
-    private func addRecipeToEntries(recipe: Recipe, date: Date, mealType: String, multiplier: Double = 1.0) {
-        
-        let entry = MealPlanEntry(day: date, mealType: MealType(rawValue: mealType.lowercased())!, recipe: recipe, multiplier: multiplier)
-        
-        modelContext.insert(entry)
-        try? modelContext.save()
-        
-        isPresented = false
-    }
 }
 
 #Preview {
     HorizontalRecipeScrollbarView(
+        viewModel: RecipesViewModel(),
         title: "Alle Rezepte",
         recipes: mockRecipes,
         isAddingToWeekPlanner: false,

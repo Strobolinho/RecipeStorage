@@ -13,6 +13,8 @@ final class RecipesViewModel: ObservableObject {
 
     // MARK: - Public state (optional)
     @Published private(set) var categories: [String] = []
+    @Published var multiplier: Double = 1.0
+    @Published var selectedRecipeForWeekPlanner: Recipe? = nil
 
     // MARK: - Defaults
     private let defaultCategories: [String] = [

@@ -32,6 +32,16 @@ struct RecipesView: View {
         self.mealType = mealType
         self._isPresented = isPresented
     }
+    
+    private func addRecipeToEntries(recipe: Recipe, date: Date, mealType: String, multiplier: Double = 1.0) {
+        
+        let entry = MealPlanEntry(day: date, mealType: MealType(rawValue: mealType.lowercased())!, recipe: recipe, multiplier: (multiplier / recipe.servings))
+        
+        modelContext.insert(entry)
+        try? modelContext.save()
+        
+        isPresented = false
+    }
 
     var body: some View {
         NavigationStack {
@@ -39,6 +49,7 @@ struct RecipesView: View {
                 if !recipes.isEmpty {
                     RecipesListView(
                         recipes: recipes,
+                        viewModel: viewModel,
                         isAddingToWeekPlanner: isAddingToWeekPlanner,
                         date: date,
                         mealType: mealType,
@@ -53,6 +64,30 @@ struct RecipesView: View {
                 if !isAddingToWeekPlanner {
                     NewRecipeButtonView()
                 }
+            }
+            .sheet(item: $viewModel.selectedRecipeForWeekPlanner) { recipe in
+                List {
+                    Section("Servings") {
+                        TwoDecimalPicker(
+                            value: $viewModel.multiplier,
+                            intRange: 0...Int(recipe.servings * 5)
+                        )
+                    }
+
+                    Section {
+                        Button {
+                            addRecipeToEntries(recipe: recipe, date: date, mealType: mealType, multiplier: viewModel.multiplier)
+                            
+                            viewModel.selectedRecipeForWeekPlanner = nil
+                        } label: {
+                            Text("Add to Week Planner")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .fontWeight(.bold)
+                        }
+                    }
+                }
+                .scrollDisabled(true)
+                .presentationDetents([.height(360)])
             }
         }
         .task {

@@ -95,7 +95,7 @@ final class WeekPlannerViewModel: ObservableObject {
                     GroceryListEntry(
                         name: ing.name,
                         unit: ing.unit,
-                        amount: ing.amount,
+                        amount: ing.amount * entry.multiplier,
                         isChecked: false
                     )
                 )

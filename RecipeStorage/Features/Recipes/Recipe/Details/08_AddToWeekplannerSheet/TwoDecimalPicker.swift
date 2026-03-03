@@ -54,8 +54,8 @@ struct TwoDecimalPicker: View {
         }
         .onAppear { splitInitialValue() }
         .onChange(of: integerPart) { _ in updateValue() }
-        .onChange(of: decimalSelectionIndex) { old, new in
-            recenterDecimalWheelIfNeeded(old: old, new: new)
+        .onChange(of: decimalSelectionIndex) { _, new in
+            recenterDecimalWheelIfNeeded(new: new)
             updateValue()
         }
     }
@@ -79,14 +79,22 @@ struct TwoDecimalPicker: View {
         decimalSelectionIndex = middleOffset + safeIndex
     }
 
-    private func recenterDecimalWheelIfNeeded(old: Int, new: Int) {
-        // Wenn du zu nah an die Ränder scrollst, springe in die Mitte (selber Wert mod 100)
-        let threshold = 100 // 1 Block Abstand
+    private func recenterDecimalWheelIfNeeded(new: Int) {
+        let block = decimals.count                 // 20
+        let threshold = block                      // "1 Block" Abstand reicht völlig
 
-        if new < threshold {
-            decimalSelectionIndex = middleOffset + (new % 100)
-        } else if new > totalDecimalItems - threshold {
-            decimalSelectionIndex = middleOffset + (new % 100)
+        // wenn wir schon im sicheren Bereich sind, nichts tun
+        if new >= threshold && new <= totalDecimalItems - threshold {
+            return
+        }
+
+        let centered = middleOffset + (new % block)
+
+        // Wichtig: nicht synchron im selben onChange erneut setzen -> async
+        if centered != new {
+            DispatchQueue.main.async {
+                decimalSelectionIndex = centered
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 //
 //  RecipesListView.swift
-//  RecipeStorage
+//  RecipeStorageaddRecipeToEntries(recipe: recipe, date: date, mealType: mealType, multiplier: 1.0)
 //
 //  Created by Nicolas Ströbel on 15.02.26.
 //
@@ -11,6 +11,8 @@ import SwiftData
 struct RecipesListView: View {
     
     let recipes: [Recipe]
+    
+    @ObservedObject var viewModel: RecipesViewModel
     
     // Wenn man von WeekPlannerView kommt
     let isAddingToWeekPlanner: Bool
@@ -41,6 +43,7 @@ struct RecipesListView: View {
                 let filteredAll = searchText != "" ? recipes.filter( { $0.name.lowercased().contains(searchText.lowercased()) } ) : recipes
                 
                 HorizontalRecipeScrollbarView(
+                    viewModel: viewModel,
                     title: "All Recipes 🍽️",
                     recipes: filteredAll,
                     isAddingToWeekPlanner: isAddingToWeekPlanner,
@@ -54,6 +57,7 @@ struct RecipesListView: View {
                     
                     if !filteredCategorized.isEmpty {
                         HorizontalRecipeScrollbarView(
+                            viewModel: viewModel,
                             title: category,
                             recipes: filteredCategorized,
                             isAddingToWeekPlanner: isAddingToWeekPlanner,
@@ -71,5 +75,5 @@ struct RecipesListView: View {
 }
 
 #Preview {
-    RecipesListView(recipes: mockRecipes, isAddingToWeekPlanner: false, date: Date(), mealType: "Dinner", isPresented: .constant(false), categories: ["High Protein", "Low Carb", "Low Calories"])
+    RecipesListView(recipes: mockRecipes, viewModel: RecipesViewModel(), isAddingToWeekPlanner: false, date: Date(), mealType: "Dinner", isPresented: .constant(false), categories: ["High Protein", "Low Carb", "Low Calories"])
 }

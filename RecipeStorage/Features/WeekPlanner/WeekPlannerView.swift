@@ -27,7 +27,6 @@ struct WeekPlannerView: View {
                             isEditing: $viewModel.isEditing
                         )
                         .tag(index)
-                        .padding(.top, 4)
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
