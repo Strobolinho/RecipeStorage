@@ -10,16 +10,19 @@ import SwiftUI
 struct NewGroceryItemButtonView: View {
     
     @ObservedObject var viewModel: GroceryListViewModel
+
+    var focusedField: FocusState<NewGroceryItemField?>.Binding
     
     var body: some View {
         VStack {
             Spacer()
             
             Button {
-                viewModel.showNewGroceryItemTextField = true
+                viewModel.showNewGroceryItemTextField.toggle()
+                focusedField.wrappedValue = .groceryItemName
             } label: {
                 ZStack {
-                    Text("New Grocery Item")
+                    Text(viewModel.showNewGroceryItemTextField ? "Done" : "New Grocery Item")
                         .font(.title2)
                         .fontWeight(.bold)
                         .background(
@@ -33,8 +36,4 @@ struct NewGroceryItemButtonView: View {
             }
         }
     }
-}
-
-#Preview {
-    NewGroceryItemButtonView(viewModel: GroceryListViewModel())
 }

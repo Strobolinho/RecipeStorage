@@ -14,15 +14,16 @@ struct GroceriesView: View {
     @Query(sort: \GroceryListEntry.name) private var entries: [GroceryListEntry]
 
     @StateObject private var viewModel = GroceryListViewModel()
-    
+
+    @FocusState private var focusedField: NewGroceryItemField?
     
     var body: some View {
 
         NavigationStack {
             ZStack {
                 Group {
-                    if !entries.isEmpty {
-                        GroceryListView(entries: entries)
+                    if !entries.isEmpty || viewModel.showNewGroceryItemTextField {
+                        GroceryListView(entries: entries, viewModel: viewModel, focusedField: $focusedField)
                             .padding(.top, -30)
                     } else {
                         EmptyGroceryListView()
@@ -30,7 +31,7 @@ struct GroceriesView: View {
                     }
                 }
                 
-                NewGroceryItemButtonView(viewModel: viewModel)
+                NewGroceryItemButtonView(viewModel: viewModel, focusedField: $focusedField)
             }
             .toolbar {
                 GroceriesToolbar(showSyncRemindersListSheet: $viewModel.showSyncRemindersListSheet, showDeleteAllDialog: $viewModel.showDeleteAllDialog, showAddGrocerySheet: $viewModel.showAddGrocerySheet)

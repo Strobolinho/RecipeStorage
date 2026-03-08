@@ -32,3 +32,7 @@ final class GroceryListEntry {
         self.isChecked.toggle()
     }
 }
+
+enum NewGroceryItemField: Hashable {
+    case groceryItemName
+}
