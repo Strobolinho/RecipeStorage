@@ -13,6 +13,8 @@ struct GroceryListEntryView: View {
     
     var entry: GroceryListEntry
     
+    @ObservedObject var viewModel: GroceryListViewModel
+    
     var body: some View {
         HStack {
             Button {
@@ -21,12 +23,23 @@ struct GroceryListEntryView: View {
                 }
             } label: {
                 Image(systemName: entry.isChecked ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(.brandPrimary)
             }
-            .tint(.brandPrimary)
+            .buttonStyle(.plain)
             
-            Text(entry.name)
-            Spacer()
-            Text("\(entry.amount! > 0 ? (String(describing: entry.amount!.formatted(.number.precision(.fractionLength(0...1))))) : "") \(entry.unit)")
+            Button {
+                viewModel.groceryName = entry.name
+                viewModel.groceryAmount = entry.amount
+                viewModel.groceryUnit = entry.unit
+                viewModel.showAddGrocerySheet = true
+                viewModel.updateGroceryItem = true
+                viewModel.groceryEntryToDelete = entry
+            } label: {
+                Text(entry.name)
+                Spacer()
+                Text("\(entry.amount! > 0 ? (String(describing: entry.amount!.formatted(.number.precision(.fractionLength(0...1))))) : "") \(entry.unit)")
+            }
+            .buttonStyle(.plain)
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button(role: .destructive) {
@@ -42,6 +55,7 @@ struct GroceryListEntryView: View {
 
 #Preview {
     List {
-        GroceryListEntryView(entry: GroceryListEntry(name: "Eier", unit: "Stueck", amount: 3, isChecked: false))
+        GroceryListEntryView(entry: GroceryListEntry(name: "Eier", unit: "Stueck", amount: 3, isChecked: false),
+        viewModel: GroceryListViewModel())
     }
 }

@@ -24,11 +24,13 @@ final class GroceryListViewModel: ObservableObject {
     @Published var showDeleteAllDialog: Bool = false
     @Published var showSyncRemindersListSheet: Bool = false
     @Published var showNewGroceryItemTextField: Bool = false
+    @Published var updateGroceryItem: Bool = false
     
     @Published var groceryName: String = ""
     @Published var groceryAmount: Double? = nil
     @Published var groceryUnit: String = "g"
     @Published var newGroceryUnit: String = ""
+    @Published var groceryEntryToDelete: GroceryListEntry? = nil
        
     
     @Published var lists: [EKCalendar] = []

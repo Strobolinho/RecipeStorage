@@ -50,7 +50,14 @@ struct AddGroceryItemSheet: View {
         viewModel.groceryName = ""
         viewModel.groceryAmount = nil
         viewModel.groceryUnit = "g"
-        focusedField = .groceryItemName
+        
+        if viewModel.updateGroceryItem {
+            viewModel.showAddGrocerySheet = false
+        } else {
+            focusedField = .groceryItemName
+        }
+        
+        viewModel.updateGroceryItem = false
     }
     
     
@@ -116,6 +123,11 @@ struct AddGroceryItemSheet: View {
                 Button {
                     if viewModel.groceryName != ""  {
 
+                        if let entry = viewModel.groceryEntryToDelete {
+                            modelContext.delete(entry)
+                            
+                            viewModel.groceryEntryToDelete = nil
+                        }
                         addGroceryItem(
                             GroceryListEntry(
                                 name: viewModel.groceryName,
@@ -127,7 +139,7 @@ struct AddGroceryItemSheet: View {
                         resetSheetFields()
                     }
                 } label: {
-                    Text("Add")
+                    Text(viewModel.updateGroceryItem ? "Update" : "Add")
                         .font(.title3)
                         .fontWeight(.semibold)
                         .foregroundStyle(.brandPrimary)
@@ -150,8 +162,10 @@ struct AddGroceryItemSheet: View {
 
         
         .onAppear {
-            DispatchQueue.main.async {
-                focusedField = .groceryItemName
+            if !viewModel.updateGroceryItem {
+                DispatchQueue.main.async {
+                    focusedField = .groceryItemName
+                }
             }
         }
         

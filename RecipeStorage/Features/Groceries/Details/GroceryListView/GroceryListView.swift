@@ -39,7 +39,7 @@ struct GroceryListView: View {
         List {
             Section("Open Items") {
                 ForEach(openItems) { entry in
-                    GroceryListEntryView(entry: entry)
+                    GroceryListEntryView(entry: entry, viewModel: viewModel)
                 }
                 
                 if viewModel.showNewGroceryItemTextField {
@@ -58,7 +58,7 @@ struct GroceryListView: View {
 
             Section("Collected Items") {
                 ForEach(collectedItems) { entry in
-                    GroceryListEntryView(entry: entry)
+                    GroceryListEntryView(entry: entry, viewModel: viewModel)
                 }
             }
         }
