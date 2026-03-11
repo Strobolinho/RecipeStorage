@@ -40,8 +40,25 @@ struct RecipeSaveButtonView: View {
                     recipeToEdit.carbs = carbs
                     recipeToEdit.fats = fats
                     recipeToEdit.customCalories = viewModel.customCalories
-                    recipeToEdit.ingredients = viewModel.ingredients
-                    recipeToEdit.spices = viewModel.spices
+                    
+                    recipeToEdit.ingredients = viewModel.ingredients.map {
+                        Ingredient(
+                            name: $0.name,
+                            amount: $0.amount,
+                            unit: $0.unit,
+                            position: $0.position
+                        )
+                    }
+
+                    recipeToEdit.spices = viewModel.spices.map {
+                        Spice(
+                            name: $0.name,
+                            amount: $0.amount,
+                            unit: $0.unit,
+                            position: $0.position
+                        )
+                    }
+                    
                     recipeToEdit.steps = viewModel.steps
                 } else {
                     let recipe = Recipe(

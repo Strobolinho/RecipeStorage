@@ -16,7 +16,8 @@ struct SetMacrosView: View {
         
         Section("Macros") {
             
-            if viewModel.isCustomCalories {
+            if (viewModel.isCustomCalories) {
+                
                 TextField("Custom Calories", value: $viewModel.customCalories, format: .number)
                     .keyboardType(.numberPad)
                     .focused(focusedField, equals: .customCalories)
@@ -29,6 +30,11 @@ struct SetMacrosView: View {
             }
             
             Toggle("Custom Calories", isOn: $viewModel.isCustomCalories)
+                .onChange(of: viewModel.isCustomCalories) { _, isOn in
+                    if !isOn {
+                        viewModel.customCalories = nil
+                    }
+                }
             
             TextField("Protein", value: $viewModel.protein, format: .number)
                 .keyboardType(.decimalPad)

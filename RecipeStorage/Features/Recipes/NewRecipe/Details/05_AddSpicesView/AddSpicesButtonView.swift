@@ -17,7 +17,7 @@ struct AddSpicesButtonView: View {
                 AddSpicesView(viewModel: viewModel)
             } label: {
                 HStack(alignment: .center) {
-                    Text("Add Spice")
+                    Text("Add/Edit Spices")
                         .font(.title3)
                         .fontWeight(.bold)
                     Spacer()

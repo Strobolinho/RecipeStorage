@@ -15,6 +15,8 @@ final class AddIngredientsViewModel: ObservableObject {
     // MARK: - Suggestions source
     // wird aus IngredientStore gesetzt (View reicht ingredientNames rein)
     @Published var ingredientNames: [String] = []
+    @Published var updateIngredient: Bool = false
+    @Published var ingredientToEdit: Ingredient?
 
     // MARK: - Derived / UI
 
@@ -70,9 +72,28 @@ final class AddIngredientsViewModel: ObservableObject {
     func addIngredient(recipeVM: NewRecipeViewModel) {
         recipeVM.addIngredient()
     }
+    
+    func updateIngredient(recipeVM: NewRecipeViewModel) {
+        guard let ingredientToEdit else { return }
+
+        recipeVM.updateIngredient(ingredientToEdit)
+
+        self.ingredientToEdit = nil
+        self.updateIngredient = false
+    }
 
     func deleteIngredient(_ ingredient: Ingredient, recipeVM: NewRecipeViewModel) {
         recipeVM.deleteIngredient(ingredient)
+
+        if ingredientToEdit?.id == ingredient.id {
+            ingredientToEdit = nil
+            updateIngredient = false
+
+            recipeVM.ingredientName = ""
+            recipeVM.ingredientAmount = nil
+            recipeVM.ingredientUnit = "g"
+            recipeVM.newIngredientUnit = ""
+        }
     }
 
     func moveIngredients(fromOffsets: IndexSet, toOffset: Int, recipeVM: NewRecipeViewModel) {

@@ -24,7 +24,7 @@ struct EmptyGroceryListView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             
-            Image(systemName: "arrow.up.right.circle.fill")
+            Image(systemName: "arrow.down.circle.fill")
                 .font(.system(size: 40))
                 .foregroundStyle(.brandPrimary)
         }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddIngredientsButtonView: View {
     
-    @ObservedObject  var viewModel: NewRecipeViewModel
+    @ObservedObject var viewModel: NewRecipeViewModel
     
     var body: some View {
         Section("Ingredients") {
@@ -17,7 +17,7 @@ struct AddIngredientsButtonView: View {
                 AddIngredientsView(viewModel: viewModel)
             } label: {
                 HStack(alignment: .center) {
-                    Text("Add Ingredient")
+                    Text("Add/Edit Ingredients")
                         .font(.title3)
                         .fontWeight(.bold)
                     Spacer()

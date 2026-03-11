@@ -50,7 +50,7 @@ struct GroceriesView: View {
                 SyncRemindersSheet(viewModel: viewModel)
             }
             .sheet(isPresented: $viewModel.showAddGrocerySheet) {
-                AddGroceryItemSheet(viewModel: viewModel)
+                AddGroceryItemSheet(viewModel: viewModel, focusedField: $focusedField)
             }
             .task { await viewModel.start(using: modelContext) }
         }

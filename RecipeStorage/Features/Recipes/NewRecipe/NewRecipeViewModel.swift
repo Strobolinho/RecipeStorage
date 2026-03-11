@@ -46,6 +46,8 @@ final class NewRecipeViewModel: ObservableObject {
     // Steps
     @Published var steps: [String] = []
     @Published var step: String = ""
+    @Published var stepToEditIndex: Int? = nil
+    @Published var isUpdatingStep: Bool = false
 
     // UI State (Category Sheet)
     @Published var showAddCategorySheet: Bool = false
@@ -97,8 +99,26 @@ final class NewRecipeViewModel: ObservableObject {
         carbs = recipe.carbs
         fats = recipe.fats
         customCalories = recipe.customCalories
-        ingredients = recipe.ingredients ?? []
-        spices = recipe.spices ?? []
+        isCustomCalories = recipe.customCalories != nil
+        
+        ingredients = (recipe.ingredients ?? []).map {
+            Ingredient(
+                name: $0.name,
+                amount: $0.amount,
+                unit: $0.unit,
+                position: $0.position ?? 0
+            )
+        }
+
+        spices = (recipe.spices ?? []).map {
+            Spice(
+                name: $0.name,
+                amount: $0.amount,
+                unit: $0.unit,
+                position: $0.position ?? 0
+            )
+        }
+        
         steps = recipe.steps
     }
 
@@ -171,6 +191,26 @@ final class NewRecipeViewModel: ObservableObject {
         ingredientAmount = nil
         ingredientUnit = "g"
     }
+    
+    func updateIngredient(_ originalIngredient: Ingredient) {
+        let trimmedName = ingredientName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !trimmedName.isEmpty,
+              ingredientUnit != "Custom Unit",
+              let amount = ingredientAmount
+        else { return }
+
+        guard let index = ingredients.firstIndex(where: { $0.id == originalIngredient.id }) else { return }
+
+        ingredients[index].name = trimmedName
+        ingredients[index].amount = amount
+        ingredients[index].unit = ingredientUnit
+
+        ingredientName = ""
+        ingredientAmount = nil
+        ingredientUnit = "g"
+        newIngredientUnit = ""
+    }
 
     func reindexIngredients() {
         for i in ingredients.indices { ingredients[i].position = i }
@@ -178,6 +218,7 @@ final class NewRecipeViewModel: ObservableObject {
 
     func deleteIngredient(_ ingredient: Ingredient) {
         ingredients.removeAll { $0.id == ingredient.id }
+        reindexIngredients()
     }
 
     func addSpice() {
@@ -196,6 +237,26 @@ final class NewRecipeViewModel: ObservableObject {
         spiceAmount = nil
         spiceUnit = "TL"
     }
+    
+    func updateSpice(_ originalSpice: Spice) {
+        let trimmedName = spiceName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !trimmedName.isEmpty,
+              spiceUnit != "Custom Unit",
+              let amount = spiceAmount
+        else { return }
+
+        guard let index = spices.firstIndex(where: { $0.id == originalSpice.id }) else { return }
+
+        spices[index].name = trimmedName
+        spices[index].amount = amount
+        spices[index].unit = spiceUnit
+
+        spiceName = ""
+        spiceAmount = nil
+        spiceUnit = "g"
+        newSpiceUnit = ""
+    }
 
     func reindexSpices() {
         for i in spices.indices { spices[i].position = i }
@@ -205,8 +266,62 @@ final class NewRecipeViewModel: ObservableObject {
         spices.removeAll { $0.id == spice.id }
     }
 
+    func addStep() {
+        let trimmedStep = step.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedStep.isEmpty else { return }
+
+        steps.append(trimmedStep)
+        step = ""
+    }
+    
+    func startEditingStep(at index: Int) {
+        guard steps.indices.contains(index) else { return }
+
+        step = steps[index]
+        stepToEditIndex = index
+        isUpdatingStep = true
+    }
+    
+    func updateStep() {
+        let trimmedStep = step.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let index = stepToEditIndex,
+              steps.indices.contains(index),
+              !trimmedStep.isEmpty
+        else { return }
+
+        steps[index] = trimmedStep
+        step = ""
+        stepToEditIndex = nil
+        isUpdatingStep = false
+    }
+    
+    func cancelStepEditing() {
+        step = ""
+        stepToEditIndex = nil
+        isUpdatingStep = false
+    }
+    
     func deleteStep(at index: Int) {
         guard steps.indices.contains(index) else { return }
         steps.remove(at: index)
+
+        if let editingIndex = stepToEditIndex {
+            if editingIndex == index {
+                cancelStepEditing()
+            } else if editingIndex > index {
+                stepToEditIndex = editingIndex - 1
+            }
+        }
+    }
+    
+    func moveSteps(fromOffsets: IndexSet, toOffset: Int) {
+        steps.move(fromOffsets: fromOffsets, toOffset: toOffset)
+
+        if let editingIndex = stepToEditIndex,
+           let currentText = step.isEmpty ? nil : step {
+            if let newIndex = steps.firstIndex(of: currentText) {
+                stepToEditIndex = newIndex
+            }
+        }
     }
 }

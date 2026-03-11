@@ -18,33 +18,7 @@ struct AddGroceryItemSheet: View {
     
     @ObservedObject var viewModel: GroceryListViewModel
     
-    
-    enum NewGroceryItemField: Hashable {
-        case groceryItemName
-        case groceryItemAmount
-        case groceryItemUnit
-        case customUnit
-    }
-
-    @FocusState private var focusedField: NewGroceryItemField?
-
-    private func focusNext() {
-        switch focusedField {
-        case .groceryItemName:   focusedField = .groceryItemAmount
-        case .groceryItemAmount: focusedField = .groceryItemUnit
-        case .groceryItemUnit:   focusedField = nil
-        default:                 focusedField = nil
-        }
-    }
-
-    private func focusPrevious() {
-        switch focusedField {
-        case .groceryItemName:   focusedField = .groceryItemName // bleibt halt dort
-        case .groceryItemAmount: focusedField = .groceryItemName
-        case .groceryItemUnit:   focusedField = .groceryItemAmount
-        default:                 focusedField = nil
-        }
-    }
+    var focusedField: FocusState<NewGroceryItemField?>.Binding
 
     private func resetSheetFields() {
         viewModel.groceryName = ""
@@ -54,7 +28,7 @@ struct AddGroceryItemSheet: View {
         if viewModel.updateGroceryItem {
             viewModel.showAddGrocerySheet = false
         } else {
-            focusedField = .groceryItemName
+            focusedField.wrappedValue = .groceryItemName
         }
         
         viewModel.updateGroceryItem = false
@@ -81,13 +55,15 @@ struct AddGroceryItemSheet: View {
         Form {
             Section {
                 TextField("Grocery Name", text: $viewModel.groceryName)
-                    .focused($focusedField, equals: .groceryItemName)
+                    .focused(focusedField, equals: .groceryItemName)
                     .submitLabel(.next)
-                    .onSubmit { focusNext() }
+                    .onSubmit {
+                        focusedField.wrappedValue = .groceryItemAmount
+                    }
 
                 TextField("Amount", value: $viewModel.groceryAmount, format: .number)
                     .keyboardType(.decimalPad)
-                    .focused($focusedField, equals: .groceryItemAmount)
+                    .focused(focusedField, equals: .groceryItemAmount)
 
                 Picker("Unit", selection: $viewModel.groceryUnit) {
                     ForEach(units, id: \.self) { unit in
@@ -97,7 +73,7 @@ struct AddGroceryItemSheet: View {
                 .onChange(of: viewModel.groceryUnit) {
                     if viewModel.isCustomUnitSelected(viewModel.groceryUnit) {
                         DispatchQueue.main.async {
-                            focusedField = .customUnit
+                            focusedField.wrappedValue = .customUnit
                         }
                     }
                 }
@@ -105,7 +81,7 @@ struct AddGroceryItemSheet: View {
                 if viewModel.isCustomUnitSelected(viewModel.groceryUnit) {
                     HStack {
                         TextField("New Unit", text: $viewModel.newGroceryUnit)
-                            .focused($focusedField, equals: .customUnit)
+                            .focused(focusedField, equals: .customUnit)
 
                         Button {
                             viewModel.addNewUnit(unitStore: unitStore)
@@ -149,33 +125,15 @@ struct AddGroceryItemSheet: View {
         }
         .scrollDisabled(true)
         .presentationDetents([.height(270)])
-
-        
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Button("<") { focusPrevious() }
-                Button(">") { focusNext() }
-                Spacer()
-                Button("Done") { focusedField = nil }
-            }
-        }
-
-        
-        .onAppear {
+        .task {
             if !viewModel.updateGroceryItem {
-                DispatchQueue.main.async {
-                    focusedField = .groceryItemName
-                }
+                try? await Task.sleep(for: .milliseconds(500))
+                focusedField.wrappedValue = .groceryItemName
             }
         }
-        
         .onDisappear {
             resetSheetFields()
         }
         
     }
-}
-
-#Preview {
-    AddGroceryItemSheet(viewModel: GroceryListViewModel())
 }

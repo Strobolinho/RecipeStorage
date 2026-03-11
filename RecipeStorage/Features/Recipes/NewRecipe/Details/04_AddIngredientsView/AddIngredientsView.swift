@@ -86,10 +86,15 @@ struct AddIngredientsView: View {
                 }
 
                 Button {
-                    screenVM.addIngredient(recipeVM: viewModel)
+                    if screenVM.updateIngredient {
+                        screenVM.updateIngredient(recipeVM: viewModel)
+                    } else {
+                        screenVM.addIngredient(recipeVM: viewModel)
+                    }
+
                     focusedField = .ingredientName
                 } label: {
-                    Text("Add Ingredient")
+                    Text(screenVM.updateIngredient ? "Update Ingredient" : "Add Ingredient")
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
@@ -97,11 +102,20 @@ struct AddIngredientsView: View {
             if !viewModel.ingredients.isEmpty {
                 Section("Added Ingredients") {
                     ForEach(screenVM.sortedIngredients(viewModel.ingredients)) { ingredient in
-                        HStack {
-                            Text(ingredient.name)
-                            Spacer()
-                            Text("\(ingredient.amount.formatted(.number.precision(.fractionLength(0...1)))) \(ingredient.unit)")
+                        Button {
+                            screenVM.updateIngredient = true
+                            viewModel.ingredientName = ingredient.name
+                            viewModel.ingredientAmount = ingredient.amount
+                            viewModel.ingredientUnit = ingredient.unit
+                            screenVM.ingredientToEdit = ingredient
+                        }label: {
+                            HStack {
+                                Text(ingredient.name)
+                                Spacer()
+                                Text("\(ingredient.amount.formatted(.number.precision(.fractionLength(0...1)))) \(ingredient.unit)")
+                            }
                         }
+                        .buttonStyle(.plain)
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
                                 screenVM.deleteIngredient(ingredient, recipeVM: viewModel)
@@ -136,6 +150,14 @@ struct AddIngredientsView: View {
         .onChange(of: ingredientsStore.ingredientNames) { _, newValue in
             // falls sich IngredientStore dynamisch ändert
             screenVM.ingredientNames = newValue
+        }
+        .onDisappear {
+            screenVM.updateIngredient = false
+            viewModel.ingredientName = ""
+            viewModel.ingredientAmount = nil
+            viewModel.ingredientUnit = "g"
+            viewModel.newIngredientUnit = ""
+            screenVM.ingredientToEdit = nil
         }
     }
 }

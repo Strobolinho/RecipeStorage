@@ -35,4 +35,6 @@ final class GroceryListEntry {
 
 enum NewGroceryItemField: Hashable {
     case groceryItemName
+    case groceryItemAmount
+    case customUnit
 }

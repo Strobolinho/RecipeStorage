@@ -15,16 +15,22 @@ struct AddStepsView: View {
     var body: some View {
         Section("Steps") {
             HStack {
-                TextField("\(viewModel.steps.count + 1). Step", text: $viewModel.step)
+                TextField(
+                    viewModel.isUpdatingStep
+                        ? "Step bearbeiten"
+                        : "\(viewModel.steps.count + 1). Step",
+                    text: $viewModel.step
+                )
                     .focused(focusedField, equals: .steps)
                 
                 Button {
-                    if !viewModel.step.isEmpty {
-                        viewModel.steps.append(viewModel.step)
-                        viewModel.step = ""
+                    if viewModel.isUpdatingStep {
+                        viewModel.updateStep()
+                    } else {
+                        viewModel.addStep()
                     }
                 } label: {
-                    Image(systemName: "cross.circle")
+                    Image(systemName: viewModel.isUpdatingStep ? "checkmark.circle" : "plus.circle")
                         .font(.system(size: 23, weight: .bold))
                         .foregroundStyle(.brandPrimary)
                         .padding(.trailing, 22)
@@ -33,12 +39,19 @@ struct AddStepsView: View {
             
             if !viewModel.steps.isEmpty {
                 ForEach(viewModel.steps.indices, id: \.self) { index in
-                    HStack {
-                        Text("\(index + 1).")
-                            .fontWeight(.bold)
-                            .foregroundStyle(.brandPrimary)
-                        Text(viewModel.steps[index])
+                    Button {
+                        viewModel.startEditingStep(at: index)
+                        focusedField.wrappedValue = .steps
+                    } label: {
+                        HStack {
+                            Text("\(index + 1).")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.brandPrimary)
+                            Text(viewModel.steps[index])
+                            Spacer()
+                        }
                     }
+                    .buttonStyle(.plain)
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) {
                             viewModel.deleteStep(at: index)
@@ -48,7 +61,7 @@ struct AddStepsView: View {
                     }
                 }
                 .onMove { indices, newOffset in
-                    viewModel.steps.move(fromOffsets: indices, toOffset: newOffset)
+                    viewModel.moveSteps(fromOffsets: indices, toOffset: newOffset)
                 }
             }
         }

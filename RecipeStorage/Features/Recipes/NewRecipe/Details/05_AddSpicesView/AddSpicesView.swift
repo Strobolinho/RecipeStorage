@@ -61,10 +61,15 @@ struct AddSpicesView: View {
                 }
 
                 Button {
-                    screenVM.addSpice(recipeVM: viewModel)
+                    if screenVM.updateSpice {
+                        screenVM.updateSpice(recipeVM: viewModel)
+                    } else {
+                        screenVM.addSpice(recipeVM: viewModel)
+                    }
+
                     focusedField = .spiceName
                 } label: {
-                    Text("Add Spice")
+                    Text(screenVM.updateSpice ? "Update Spice" : "Add Spice")
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
@@ -72,11 +77,20 @@ struct AddSpicesView: View {
             if !viewModel.spices.isEmpty {
                 Section("Added Spices") {
                     ForEach(screenVM.sortedSpices(viewModel.spices)) { spice in
-                        HStack {
-                            Text(spice.name)
-                            Spacer()
-                            Text("\(spice.amount.formatted(.number.precision(.fractionLength(0...1)))) \(spice.unit)")
+                        Button {
+                            screenVM.updateSpice = true
+                            viewModel.spiceName = spice.name
+                            viewModel.spiceAmount = spice.amount
+                            viewModel.spiceUnit = spice.unit
+                            screenVM.spiceToEdit = spice
+                        }label: {
+                            HStack {
+                                Text(spice.name)
+                                Spacer()
+                                Text("\(spice.amount.formatted(.number.precision(.fractionLength(0...1)))) \(spice.unit)")
+                            }
                         }
+                        .buttonStyle(.plain)
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
                                 screenVM.deleteSpice(spice, recipeVM: viewModel)
@@ -104,6 +118,14 @@ struct AddSpicesView: View {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                             to: nil, from: nil, for: nil)
             focusedField = .spiceName
+        }
+        .onDisappear {
+            screenVM.updateSpice = false
+            viewModel.spiceName = ""
+            viewModel.spiceAmount = nil
+            viewModel.spiceUnit = "g"
+            viewModel.newSpiceUnit = ""
+            screenVM.spiceToEdit = nil
         }
     }
 }

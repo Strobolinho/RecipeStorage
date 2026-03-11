@@ -12,6 +12,9 @@ import SwiftData
 @MainActor
 final class AddSpicesViewModel: ObservableObject {
 
+    @Published var updateSpice: Bool = false
+    @Published var spiceToEdit: Spice?
+    
     // MARK: - Focus flow
 
     func nextField(after field: spiceField?) -> spiceField? {
@@ -57,9 +60,28 @@ final class AddSpicesViewModel: ObservableObject {
     func addSpice(recipeVM: NewRecipeViewModel) {
         recipeVM.addSpice()
     }
+    
+    func updateSpice(recipeVM: NewRecipeViewModel) {
+        guard let spiceToEdit else { return }
+
+        recipeVM.updateSpice(spiceToEdit)
+
+        self.spiceToEdit = nil
+        self.updateSpice = false
+    }
 
     func deleteSpice(_ spice: Spice, recipeVM: NewRecipeViewModel) {
         recipeVM.deleteSpice(spice)
+        
+        if spiceToEdit?.id == spice.id {
+            spiceToEdit = nil
+            updateSpice = false
+
+            recipeVM.spiceName = ""
+            recipeVM.spiceAmount = nil
+            recipeVM.spiceUnit = "g"
+            recipeVM.newSpiceUnit = ""
+        }
     }
 
     func moveSpices(fromOffsets: IndexSet, toOffset: Int, recipeVM: NewRecipeViewModel) {
