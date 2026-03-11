@@ -75,17 +75,36 @@ struct RecipeView: View {
         .toolbar {
             RecipeToolbar(viewModel: viewModel, recipe: recipe)
         }
-        .alert("Are you sure you want to add these groceries?", isPresented: $viewModel.showAddGroceriesDialog) {
-            Button("Add to Grocery List", role: .confirm) {
-                for ingredient in recipe.ingredients! {
-                    addGroceryItem(GroceryListEntry(name: ingredient.name, unit: ingredient.unit, amount: ingredient.amount))
+        .sheet(isPresented: $viewModel.showAddGroceriesSheet) {
+            List {
+                Section("Servings") {
+                    TwoDecimalPicker(
+                        value: $viewModel.portions,
+                        intRange: 0...Int(recipe.servings * 5)
+                    )
+                }
+
+                Section {
+                    Button {
+                        for ingredient in recipe.ingredients! {
+                            addGroceryItem(GroceryListEntry(name: ingredient.name, unit: ingredient.unit, amount: ((ingredient.amount * viewModel.portions) / recipe.servings)))
+                        }
+                        
+                        viewModel.showAddGroceriesSheet = false
+                    } label: {
+                        Text("Add to Grocery List")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .fontWeight(.bold)
+                    }
                 }
             }
-            Button(role: .cancel) {}
+            .scrollDisabled(true)
+            .presentationDetents([.height(360)])
         }
         .sheet(isPresented: $viewModel.showAddToWeekPlannerSheet) {
             AddToWeekplannerSheet(viewModel: viewModel, recipe: recipe)
         }
+        
     }
 }
 

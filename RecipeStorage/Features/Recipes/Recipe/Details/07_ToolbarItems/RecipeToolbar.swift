@@ -15,7 +15,8 @@ struct RecipeToolbar: ToolbarContent {
     var body: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                viewModel.showAddGroceriesDialog = true
+                viewModel.showAddGroceriesSheet = true
+                viewModel.portions = recipe.servings
             } label: {
                 Image(systemName: "cart.badge.plus")
                     .font(.system(size: 18))
